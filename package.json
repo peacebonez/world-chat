@@ -5,12 +5,12 @@
   "scripts": {
     "debug": "nodemon  --inspect ./bin/www",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000",
-    "client": "cd ../client && npm start --prefix client",
+    "client": "cd client && npm start --prefix client",
     "start": "node server.js",
     "server": "nodemon server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "cd ../client && npm run build",
-    "install-client": "cd ../client && npm install",
+    "build": "cd client && npm run build",
+    "install-client": "cd client && npm install",
     "heroku-postbuild": "npm run install-client && npm run build"
   },
   "dependencies": {
