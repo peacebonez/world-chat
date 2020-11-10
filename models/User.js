@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-//create key for user avatar?
+//TODO's
+//create key for user avatar
 
 const UserSchema = new Schema({
   name: {
@@ -24,7 +25,7 @@ const UserSchema = new Schema({
     required: true,
   },
   contacts: [],
-  date: {
+  dateJoined: {
     type: Date,
     default: Date.now,
   },

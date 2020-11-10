@@ -18,6 +18,9 @@ const ConversationSchema = new Schema({
           type: Schema.Types.ObjectId,
           ref: "users", //references the users model
         },
+        originalLanguage: {
+          type: String,
+        },
         text: {
           type: String,
         },
