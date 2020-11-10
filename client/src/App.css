@@ -23,6 +23,31 @@
   color: #61dafb;
 }
 
+#invitation-link {
+  width: 400px;
+}
+
+.invitation-dialog-p {
+  font-weight: bold;
+  color: #0d79de;
+}
+
+.invitation-dialog-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: #0d79de;
+}
+
+.invitation-emailList {
+  margin-left: 2em;
+  font-size: smaller;
+}
+
+.invitation-emailbtn {
+  font-size: 1px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
