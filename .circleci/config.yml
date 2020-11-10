@@ -17,11 +17,11 @@ jobs: # a collection of steps
           key: dependency-cache-{{ checksum "server/package.json" }}
       - run:
           name: install-npm-wee
-          command: cd server && npm install
+          command: npm install
       - save_cache: # special step to save the dependency cache
           key: dependency-cache-{{ checksum "server/package.json" }}
           paths:
             - server/node_modules
       - run: # run tests
           name: test
-          command: cd server && npm test
+          command: npm test

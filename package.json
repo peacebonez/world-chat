@@ -3,15 +3,15 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "debug": "nodemon  --inspect ./bin/www",
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000",
-    "client": "cd client && npm start --prefix client",
-    "start": "node server.js",
-    "server": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "start": "node app.js",
+    "server": "nodemon app.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "mocha 'test/test.js'",
     "build": "cd client && npm run build",
     "install-client": "cd client && npm install",
     "heroku-postbuild": "npm run install-client && npm run build"
+
   },
   "dependencies": {
     "concurrently": "^5.3.0",
