@@ -23,7 +23,7 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  contacts: [this], // Self-referencing UserSchema.  not sure if this will work.
+  contacts: [],
   date: {
     type: Date,
     default: Date.now,
