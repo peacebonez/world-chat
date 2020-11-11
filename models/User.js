@@ -24,7 +24,7 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  contacts: [],
+  contacts: [{ type: Schema.Types.ObjectId, ref: "users" }],
   dateJoined: {
     type: Date,
     default: Date.now,
