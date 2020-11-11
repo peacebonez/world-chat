@@ -4,7 +4,8 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  Button
  } from '@material-ui/core'
 
 export default function Landing() {
@@ -12,6 +13,11 @@ export default function Landing() {
 
   return (
     <>
+      <p>Already have an account? </p> 
+      <Button variant="outlined" color="primary">
+        Login
+      </Button>
+
       <h1>Create an Account.</h1>
       <TextField label="Email"/>
       <TextField label="Password"/>
@@ -28,6 +34,9 @@ export default function Landing() {
           <MenuItem value={'French'}>French</MenuItem>
         </Select>
       </FormControl>
+      <Button 
+        variant="contained" color="primary"
+      >Create Account</Button>
     </>
   )
 }
