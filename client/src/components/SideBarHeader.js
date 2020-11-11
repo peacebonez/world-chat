@@ -21,10 +21,7 @@ const SideBarHeader = (props) => {
         </div>
         <h4>Steven</h4>
       </div>
-
-      <div>
-        <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
-      </div>
+      <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
     </div>
   );
 };

@@ -1,5 +1,7 @@
 import React from "react";
-import { TextField } from "@material-ui/core";
+import { TextField, InputAdornment, Input } from "@material-ui/core";
+import InsertEmoticonOutlinedIcon from "@material-ui/icons/InsertEmoticonOutlined";
+import PhotoLibraryOutlinedIcon from "@material-ui/icons/PhotoLibraryOutlined";
 import PropTypes from "prop-types";
 
 import useStyles from "../styles/material-styles";
@@ -15,6 +17,12 @@ const ChatInput = (props) => {
           fullWidth
           autoFocus
           placeholder="Type something..."
+          InputProps={{
+            endAdornment: [
+              <InsertEmoticonOutlinedIcon />,
+              <PhotoLibraryOutlinedIcon />,
+            ],
+          }}
         />
       </form>
     </div>
