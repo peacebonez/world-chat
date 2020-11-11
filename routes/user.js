@@ -24,22 +24,20 @@ router.post('/users/register', [
     check('password').isLength({ min: 6 })
 ], (req, res) => {
     const errors = validateResult(req)
-    if (!errors.isEmpty()) {
-        console.log(errors)
-        return res.status(422).json({ errors: errors.array() });
-      }
-      if (req.body.email === '') {
-        res.status(400).json({ message: "Email required" });
-      } else if (req.body.password === '') {
-        res.status(400).json({ message: "Password required" });
-      }
-      User.register(new User({
-        email: req.body.email,
-      }), req.body.password, err => {
-        if (err) res.send(err);
-        // successful making of a new User
-        res.sendStatus(201);
-      })
+    if (!errors.isEmpty()) 
+      return res.status(422).json({ errors: errors.array() });
+    if (req.body.email === '') {
+      res.status(400).json({ message: "Email required" });
+    } else if (req.body.password === '') {
+      res.status(400).json({ message: "Password required" });
+    }
+    User.register(new User({
+      email: req.body.email,
+    }), req.body.password, err => {
+      if (err) res.send(err);
+      // successful making of a new User
+      res.sendStatus(201);
+    })
 })
 
 module.exports = router
