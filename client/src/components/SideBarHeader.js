@@ -5,10 +5,10 @@ import useStyles from "../styles/material-styles";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import happyChatter from "../assets/5e4a118a03239f87632c8f33899048fd2c4af1ca.png";
 
-const SideHeader = (props) => {
+const SideBarHeader = (props) => {
   const classes = useStyles();
   return (
-    <div className={classes.sideHeader}>
+    <div className={classes.sideBarHeader}>
       <div>
         <div className={classes.sideBarImgWrapper}>
           <img src={happyChatter} className={classes.sideBarImg} />
@@ -18,12 +18,12 @@ const SideHeader = (props) => {
         <h4>Steven</h4>
       </div>
       <div>
-        <MoreHorizIcon></MoreHorizIcon>
+        <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
       </div>
     </div>
   );
 };
 
-SideHeader.propTypes = {};
+SideBarHeader.propTypes = {};
 
-export default SideHeader;
+export default SideBarHeader;

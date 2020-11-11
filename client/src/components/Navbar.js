@@ -3,21 +3,21 @@ import PropTypes from "prop-types";
 import useStyles from "../styles/material-styles";
 
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import testFlag from "../assets/testflag.jpg";
 
 const Navbar = (props) => {
   const classes = useStyles();
   return (
     <div className={classes.navBar}>
       <div>
-        <div className={classes.sideBarImgWrapper}>
-          <img src="" className={classes.sideBarImg} />
+        <div>
+          <img src={testFlag} />
           {/* background will depend on online status */}
           <span style={{ background: "#4DED84" }}></span>
         </div>
-        <h4>Steven</h4>
       </div>
       <div>
-        <MoreHorizIcon></MoreHorizIcon>
+        <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
       </div>
     </div>
   );
