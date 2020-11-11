@@ -1,10 +1,13 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
+import {
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 export default function FormDialog() {
@@ -60,11 +63,13 @@ export default function FormDialog() {
         aria-labelledby="form-dialog-title"
         fullWidth={true}
       >
-        <p className="invitation-dialog-title">
+        <Typography variant="p" className="invitation-dialog-title">
           Invite Friends to Join Us on EKLN-Messenger
-        </p>
+        </Typography>
         <DialogContent>
-          <p className="invitation-dialog-p">Enter emails to invite friedns</p>
+          <Typography variant="p" className="invitation-dialog-p">
+            Enter emails to invite friedns
+          </Typography>
           <TextField
             autoFocus
             margin="dense"
@@ -87,7 +92,9 @@ export default function FormDialog() {
           </div>
         ))}
         <DialogContent>
-          <p className="invitation-dialog-p">Copy ref-link to invite</p>
+          <Typography variant="p" className="invitation-dialog-p">
+            Copy ref-link to invite
+          </Typography>
           <div id="invitation-link">{uniqueID}</div>
         </DialogContent>
         <DialogActions>
