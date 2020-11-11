@@ -4,6 +4,7 @@ import useStyles from "../styles/material-styles";
 
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import testFlag from "../assets/testflag.jpg";
+import { Typography } from "@material-ui/core";
 
 const Navbar = (props) => {
   const classes = useStyles();
@@ -12,6 +13,7 @@ const Navbar = (props) => {
       <div>
         <div>
           <img src={testFlag} />
+          <Typography>Santiago</Typography>
           {/* background will depend on online status */}
           <span style={{ background: "#4DED84" }}></span>
         </div>

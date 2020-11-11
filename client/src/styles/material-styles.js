@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   messengerContainer: {
-    border: "solid 1px black",
+    // border: "solid 1px black",
     boxSizing: "border-box",
     background: "#F5F7FB",
     display: "flex",
@@ -28,8 +28,8 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
   },
   sideBar: {
-    border: "solid 1px black",
-    height: "100vh",
+    // border: "solid 1px black",
+    // height: "100vh",
     width: "33.33%",
     background: "#F5F7FB",
     position: "absolute",
@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   sideBarHeader: {
-    marginTop: 10,
     // border: "solid 1px black",
     height: 100,
     width: "85%",
@@ -51,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   sideBarImgWrapper: {
-    border: "solid 1px black",
+    // border: "solid 1px black",
     "& span": {
       width: 12,
       height: 12,
@@ -70,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "15px",
   },
   conversation: {
-    border: "solid 1px black",
+    // border: "solid 1px black",
     background: "#F5F7FB",
     height: "100vh",
     width: "66.66%",
@@ -78,8 +77,7 @@ const useStyles = makeStyles((theme) => ({
     right: 0,
   },
   navBar: {
-    boxSizing: "border-box",
-    border: "solid 1px black",
+    // border: "solid 1px black",
     width: "100%",
     padding: "0 25px",
     height: 100,
@@ -97,10 +95,23 @@ const useStyles = makeStyles((theme) => ({
     color: "#BCC8D9",
   },
   chatWindow: {
+    // border: "solid 1px red",
     width: "100%",
-    height: "100%",
+    height: "80vh",
     background: "#fff",
     marginTop: 10,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  chatInput: {
+    width: "90%",
+    marginBottom: 20,
+    textAlign: "center",
+    "& input": {
+      background: "#F5F7FB",
+    },
   },
 }));
 

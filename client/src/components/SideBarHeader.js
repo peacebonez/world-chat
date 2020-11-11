@@ -4,6 +4,7 @@ import useStyles from "../styles/material-styles";
 
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import happyChatter from "../assets/5e4a118a03239f87632c8f33899048fd2c4af1ca.png";
+import { Typography } from "@material-ui/core";
 
 const SideBarHeader = (props) => {
   const classes = useStyles();
@@ -17,6 +18,7 @@ const SideBarHeader = (props) => {
         </div>
         <h4>Steven</h4>
       </div>
+
       <div>
         <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
       </div>
