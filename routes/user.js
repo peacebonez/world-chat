@@ -33,6 +33,7 @@ router.post('/users/register', [
     }
     User.register(new User({
       email: req.body.email,
+      password: req.body.password
     }), req.body.password, err => {
       if (err) res.send(err);
       // successful making of a new User

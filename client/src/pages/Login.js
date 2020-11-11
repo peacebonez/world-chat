@@ -39,10 +39,10 @@ export default function Landing() {
       {/** The right side, the sign up */}
       <Box className={classes.outerMargins} >
         <Box display="flex" style={{ marginBottom: '50%'}}>
-          <Typography variant="h5">Already have an account? </Typography>
-          <Link to="/login">
+          <Typography variant="h5">Don't have an account? </Typography>
+          <Link to="/">
             <Button variant="outlined" color="primary" style={{ marginLeft: '2%' }}>
-              Login
+                Create account
             </Button>
           </Link>
           
@@ -52,7 +52,7 @@ export default function Landing() {
           variant="h4" 
           fontWeight="fontWeightBold"
           style={{ marginBottom: '5%'}}
-        >Create an Account.</Typography>
+        >Welcome back!</Typography>
         <Box display="flex" flexDirection="column">
           <TextField 
             label="Email" 
@@ -65,21 +65,9 @@ export default function Landing() {
             onChange={(event) => setPassword(event.target.value)}
             style={{ marginBottom: '5%'}}
           />
-          <FormControl style={{ marginBottom: '20%'}}>
-            <InputLabel id="demo-simple-select-label">Select a Language</InputLabel>
-            <Select
-              id="language-select"
-              value={language}
-              onChange={(event) => setLanguage(event.target.value)}
-            >
-              <MenuItem value={'English'}>English</MenuItem>
-              <MenuItem value={'Spanish'}>Spanish</MenuItem>
-              <MenuItem value={'French'}>French</MenuItem>
-            </Select>
-          </FormControl>
           <Button 
             variant="contained" color="primary"
-          >Create</Button>
+          >Login</Button>
         </Box>
         
       </Box>
