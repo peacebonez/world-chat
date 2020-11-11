@@ -7,6 +7,7 @@ require("dotenv").config();
 
 const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");
+const invitationRouter = require("./routes/invitation");
 const mongoose = require("mongoose");
 
 const { json, urlencoded } = express;
@@ -55,5 +56,8 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.json({ error: err });
 });
+
+app.use("/invitation", invitationRouter);
+//use the invitations.js file to handle endpoints that start with /invitations
 
 module.exports = app;
