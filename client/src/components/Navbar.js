@@ -1,15 +1,41 @@
 import React from "react";
 import PropTypes from "prop-types";
-import useStyles from "../styles/material-styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import testFlag from "../assets/testflag.jpg";
 import { Typography, Switch } from "@material-ui/core";
 
 //TODOS
-//Will have 2 types of Navbars- group and one-on-one
+//Will have 2 types of Navbars: group and one-on-one
 
 const Navbar = (props) => {
+  const useStyles = makeStyles((theme) => ({
+    navBar: {
+      width: "100%",
+      padding: "0 25px",
+      height: 100,
+      background: "#fff",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      "& img": {
+        width: "10%",
+        borderRadius: "50%",
+      },
+    },
+    dotMenu: {
+      cursor: "pointer",
+      color: "#BCC8D9",
+    },
+    onlineIcon: {
+      width: 12,
+      height: 12,
+      border: "solid white 1px",
+      borderRadius: "50%",
+    },
+  }));
+
   const classes = useStyles();
   return (
     <div className={classes.navBar}>
