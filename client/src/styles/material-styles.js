@@ -52,11 +52,6 @@ const useStyles = makeStyles((theme) => ({
   sideBarImgWrapper: {
     // border: "solid 1px black",
     "& span": {
-      width: 12,
-      height: 12,
-      color: "#4DED84",
-      border: "solid white 1px",
-      borderRadius: "50%",
       position: "relative",
       left: "-32%",
       top: "75%",
@@ -67,6 +62,12 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     width: "70px",
     marginRight: "15px",
+  },
+  onlineIcon: {
+    width: 12,
+    height: 12,
+    border: "solid white 1px",
+    borderRadius: "50%",
   },
   conversation: {
     // border: "solid 1px black",

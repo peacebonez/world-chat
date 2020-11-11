@@ -1,5 +1,5 @@
 import React from "react";
-import { Container } from "@material-ui/core";
+import { Container, Hidden } from "@material-ui/core";
 import useStyles from "../styles/material-styles";
 import PropTypes from "prop-types";
 
@@ -12,7 +12,9 @@ const Messenger = (props) => {
   return (
     <Container className={classes.messengerContainer}>
       <Sidebar />
-      <Conversation />
+      <Hidden smDown>
+        <Conversation />
+      </Hidden>
     </Container>
   );
 };

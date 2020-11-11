@@ -13,6 +13,7 @@ const ChatInput = (props) => {
           id="outlined-basic"
           variant="outlined"
           fullWidth
+          autoFocus
           placeholder="Type something..."
         />
       </form>

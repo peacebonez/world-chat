@@ -14,7 +14,10 @@ const SideBarHeader = (props) => {
         <div className={classes.sideBarImgWrapper}>
           <img src={happyChatter} className={classes.sideBarImg} />
           {/* background will depend on online status */}
-          <span style={{ background: "#4DED84" }}></span>
+          <span
+            className={classes.onlineIcon}
+            style={{ background: "#4DED84" }}
+          ></span>
         </div>
         <h4>Steven</h4>
       </div>
