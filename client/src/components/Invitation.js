@@ -7,15 +7,16 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
+const useStyles = makeStyles((theme) => ({
+  margin: {
+    margin: theme.spacing(3),
+  },
+  extendedIcon: {
+    marginRight: theme.spacing(1),
+  },
+}));
+
 export default function FormDialog() {
-  const useStyles = makeStyles((theme) => ({
-    margin: {
-      margin: theme.spacing(3),
-    },
-    extendedIcon: {
-      marginRight: theme.spacing(1),
-    },
-  }));
   const classes = useStyles();
   const inputRef = React.createRef();
   const [emails, setEmail] = React.useState("");

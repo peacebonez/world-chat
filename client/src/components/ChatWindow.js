@@ -4,19 +4,20 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import ChatInput from "./ChatInput";
 
+const useStyles = makeStyles((theme) => ({
+  chatWindow: {
+    width: "100%",
+    height: "80vh",
+    background: "#fff",
+    marginTop: 10,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+}));
+
 const ChatWindow = (props) => {
-  const useStyles = makeStyles((theme) => ({
-    chatWindow: {
-      width: "100%",
-      height: "80vh",
-      background: "#fff",
-      marginTop: 10,
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "space-between",
-    },
-  }));
   const classes = useStyles();
   return (
     <div className={classes.chatWindow}>

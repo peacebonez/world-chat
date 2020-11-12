@@ -6,17 +6,18 @@ import PropTypes from "prop-types";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-const ChatInput = (props) => {
-  const useStyles = makeStyles((theme) => ({
-    chatInput: {
-      width: "90%",
-      marginBottom: theme.spacing(4),
-      textAlign: "center",
-      "& input": {
-        background: "#F5F7FB",
-      },
+const useStyles = makeStyles((theme) => ({
+  chatInput: {
+    width: "90%",
+    marginBottom: theme.spacing(4),
+    textAlign: "center",
+    "& input": {
+      background: "#F5F7FB",
     },
-  }));
+  },
+}));
+
+const ChatInput = (props) => {
   const classes = useStyles();
   return (
     <div className={classes.chatInput}>

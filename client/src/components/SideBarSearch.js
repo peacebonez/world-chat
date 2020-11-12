@@ -4,17 +4,18 @@ import { Typography, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchOutlinedIcon from "@material-ui/icons/SearchOutlined";
 
-const SideBarSearch = (props) => {
-  const useStyles = makeStyles((theme) => ({
-    chatInput: {
-      width: "90%",
-      marginBottom: 20,
-      textAlign: "center",
-      "& input": {
-        background: "#F5F7FB",
-      },
+const useStyles = makeStyles((theme) => ({
+  chatInput: {
+    width: "90%",
+    marginBottom: 20,
+    textAlign: "center",
+    "& input": {
+      background: "#F5F7FB",
     },
-  }));
+  },
+}));
+
+const SideBarSearch = (props) => {
   const classes = useStyles();
   return (
     <div>
