@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 import { 
   Box,
   Typography,
@@ -10,7 +11,12 @@ import {
   MenuItem,
   Button
  } from '@material-ui/core'
- import { makeStyles} from '@material-ui/core/styles'
+import { makeStyles} from '@material-ui/core/styles'
+
+import Background from '../assets/background.png'
+
+require('dotenv').config();
+const baseURL = process.env.REACT_APP_baseURL
 
 const useStyles = makeStyles({
   inline: {
@@ -29,11 +35,24 @@ export default function Landing() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  const handleSubmit = () => {
+    axios.post(`${baseURL}/api/user/signup`, {
+      email,
+      password,
+      primaryLanguage: language
+    }).then(response => {
+      console.log(response.data)
+      // if (response.status === 200 || response.status === 201){
+
+      // }
+    })
+  }
+
   return (
     <Box display="flex">
       {/** The left side: Image saying "Converse with anyone with any language" */}
-      <Box style={{ backgroundColor: 'red'}}>
-        <h1>Hiiiii</h1>
+      <Box >
+        <img src={Background} style={{ height: '100vh'}}/>
       </Box>
 
       {/** The right side, the sign up */}
@@ -41,7 +60,7 @@ export default function Landing() {
         <Box display="flex" style={{ marginBottom: '50%'}}>
           <Typography variant="h5">Already have an account? </Typography>
           <Link to="/login">
-            <Button variant="outlined" color="primary" style={{ marginLeft: '2%' }}>
+            <Button variant="outlined" color="primary" style={{ marginLeft: '10%' }}>
               Login
             </Button>
           </Link>
@@ -79,6 +98,7 @@ export default function Landing() {
           </FormControl>
           <Button 
             variant="contained" color="primary"
+            onSubmit={handleSubmit}
           >Create</Button>
         </Box>
         

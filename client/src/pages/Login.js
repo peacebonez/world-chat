@@ -12,6 +12,8 @@ import {
  } from '@material-ui/core'
  import { makeStyles} from '@material-ui/core/styles'
 
+ import Background from '../assets/background.png'
+
 const useStyles = makeStyles({
   inline: {
     inline: 'true'
@@ -32,8 +34,8 @@ export default function Landing() {
   return (
     <Box display="flex">
       {/** The left side: Image saying "Converse with anyone with any language" */}
-      <Box style={{ backgroundColor: 'red'}}>
-        <h1>Hiiiii</h1>
+      <Box >
+        <img src={Background} style={{ height: '100vh'}}/>
       </Box>
 
       {/** The right side, the sign up */}
@@ -41,7 +43,7 @@ export default function Landing() {
         <Box display="flex" style={{ marginBottom: '50%'}}>
           <Typography variant="h5">Don't have an account? </Typography>
           <Link to="/">
-            <Button variant="outlined" color="primary" style={{ marginLeft: '2%' }}>
+            <Button variant="outlined" color="primary" style={{ marginLeft: '15%' }}>
                 Create account
             </Button>
           </Link>

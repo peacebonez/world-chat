@@ -6,8 +6,16 @@ const { check, validationResult } = require('express-validator')
 
 require('dotenv').config()
 
+// use this for running async functions
+function runAsyncWrapper (callback) {
+  return function (req, res, next) {
+      callback(req, res, next)
+      .catch(next)
+  }
+}
+
 // User Login
-router.post('/users/login', (req, res) => {
+router.post('/user/login', (req, res) => {
     User.authenticate()(req.body.email, req.body.password, (err, user) => {
         if (err) res.send(err)
         res.json({
@@ -19,7 +27,7 @@ router.post('/users/login', (req, res) => {
 })
 
 // User Registration
-router.post('/users/register', [
+router.post('/user/register', [
     check('email').isEmail(),
     check('password').isLength({ min: 6 })
 ], (req, res) => {
@@ -31,14 +39,21 @@ router.post('/users/register', [
     } else if (req.body.password === '') {
       res.status(400).json({ message: "Password required" });
     }
+    // REGISTER USER!!!
     User.register(new User({
       email: req.body.email,
-      password: req.body.password
+      password: req.body.password,
+      primaryLanguage: req.body.primaryLanguage
     }), req.body.password, err => {
       if (err) res.send(err);
       // successful making of a new User
       res.sendStatus(201);
     })
 })
+
+router.get("user/get_all", runAsyncWrapper(async function(req, res) {
+  let users = await User.find();
+  return res.status(200).json(users);
+}));
 
 module.exports = router
