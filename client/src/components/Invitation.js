@@ -8,6 +8,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
+import { createInvite } from "../actions/user-actions";
+
 const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(3),
@@ -57,7 +59,7 @@ export default function FormDialog() {
   };
 
   /*close dialog function*/
-  const handleClose = async () => {
+  const handleClose = () => {
     setOpen(false);
     setEmail("");
   };
@@ -69,21 +71,18 @@ export default function FormDialog() {
 
   /*push emails to emailList*/
   const addEmail = () => {
-    if (emailList.findIndex((email) => email == email) < 0)
+    // if (emailList.findIndex((email) => email == email) < 0)
+    if (!emailList.includes(email)) {
       setEmailList([...emailList, email]);
-    setEmail("");
+      setEmail("");
+    } else return;
   };
 
   const submitEmail = async () => {
     handleClose();
-    try {
-      await axios.post(
-        "http://localhost:3001/user/5fad63358f96786e507a0b74/invitation",
-        emailList
-      );
-    } catch (err) {
-      console.error(err);
-    }
+
+    //need to grab current user id and email
+    createInvite("5fad63358f96786e507a0b74", emailList);
   };
 
   return (
@@ -122,7 +121,7 @@ export default function FormDialog() {
           </Button>
         </DialogActions>
         {emailList.map((email) => (
-          <div className={classes.invitationEmailList} id={email}>
+          <div key={email} className={classes.invitationEmailList} id={email}>
             -{email}
           </div>
         ))}

@@ -41,7 +41,7 @@ router.post("/:id/invitation", async (req, res) => {
       if (err) {
         return console.error("Email not sent");
       }
-      console.log("Email sent successfully!");
+      res.json({ msg: "Email sent!" });
     });
   } catch (err) {
     console.error(err.message);
