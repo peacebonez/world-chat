@@ -14,6 +14,26 @@ const useStyles = makeStyles((theme) => ({
   extendedIcon: {
     marginRight: theme.spacing(1),
   },
+  invitationLink: {
+    width: 400,
+  },
+  invitationDialogueP: {
+    fontWeight: "bold",
+    color: "#0d79de",
+  },
+  invitationDialogueTitle: {
+    textAlign: "center",
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#0d79de",
+  },
+  invitationEmailList: {
+    marginLeft: "2em",
+    fontSize: "smaller",
+  },
+  invitationEmailBtn: {
+    fontSize: 1,
+  },
 }));
 
 export default function FormDialog() {
@@ -61,11 +81,13 @@ export default function FormDialog() {
         aria-labelledby="form-dialog-title"
         fullWidth={true}
       >
-        <p className="invitation-dialog-title">
+        <p className={classes.invitationDialogueTitle}>
           Invite Friends to Join Us on EKLN-Messenger
         </p>
         <DialogContent>
-          <p className="invitation-dialog-p">Enter emails to invite friedns</p>
+          <p className={classes.invitationDialogueP}>
+            Enter emails to invite friedns
+          </p>
           <TextField
             autoFocus
             margin="dense"
@@ -83,13 +105,13 @@ export default function FormDialog() {
           </Button>
         </DialogActions>
         {emailList.map((email) => (
-          <div className="invitation-emailList" id={email}>
+          <div className={classes.invitationEmailList} id={email}>
             -{email}
           </div>
         ))}
         <DialogContent>
-          <p className="invitation-dialog-p">Copy ref-link to invite</p>
-          <div id="invitation-link">{uniqueID}</div>
+          <p className={classes.invitationDialogueP}>Copy ref-link to invite</p>
+          <div className={classes.invitationLink}>{uniqueID}</div>
         </DialogContent>
         <DialogActions>
           <CopyToClipboard text={uniqueID}>

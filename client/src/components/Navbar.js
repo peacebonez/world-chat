@@ -7,6 +7,10 @@ import testFlag from "../assets/testflag.jpg";
 import { Typography, Switch } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
+  flexCenter: {
+    display: "flex",
+    alignItems: "center",
+  },
   navBar: {
     width: "100%",
     padding: "0 25px",
@@ -24,12 +28,14 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
     color: "#BCC8D9",
   },
-  onlineIcon: {
+  statusIcon: {
     width: 12,
     height: 12,
     border: "solid white 1px",
     borderRadius: "50%",
   },
+  onlineIcon: { background: "#4DED84" },
+  offlineIcon: { background: "lightgray" },
 }));
 
 //TODOS
@@ -40,23 +46,17 @@ const Navbar = (props) => {
   return (
     <div className={classes.navBar}>
       <div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+        <div className={classes.flexCenter}>
           <img src={testFlag} />
           <Typography variant="h5">Santiago</Typography>
           {/* background will depend on online status */}
           <span
-            className={classes.onlineIcon}
-            style={{ background: "#4DED84" }}
+            className={`${classes.statusIcon} ${classes.onlineIcon}`}
           ></span>
           <Typography variant="subtitle1">Online</Typography>
         </div>
       </div>
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div className={classes.flexCenter}>
         <Typography variant="subtitle2">Original Language</Typography>
         <Switch color="primary" name="language" />
         <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>

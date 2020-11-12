@@ -5,8 +5,6 @@ import Invitation from "./components/Invitation";
 import { theme } from "./themes/theme";
 import Messenger from "./components/Messenger";
 
-import "./App.css";
-
 function App() {
   return (
     <MuiThemeProvider theme={theme}>
@@ -14,7 +12,7 @@ function App() {
         <Route path="/">
           <Messenger />
         </Route>
-        <Invitation></Invitation>
+        <Invitation />
       </BrowserRouter>
     </MuiThemeProvider>
   );

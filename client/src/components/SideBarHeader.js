@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import happyChatter from "../assets/5e4a118a03239f87632c8f33899048fd2c4af1ca.png";
+import happyChatter from "../assets/happy-chatter.png";
 import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,12 +30,14 @@ const useStyles = makeStyles((theme) => ({
     width: "70px",
     marginRight: "15px",
   },
-  onlineIcon: {
+  statusIcon: {
     width: 12,
     height: 12,
     border: "solid white 1px",
     borderRadius: "50%",
   },
+  onlineIcon: { background: "#4DED84" },
+  offlineIcon: { background: "lightgray" },
 }));
 
 const SideBarHeader = (props) => {
@@ -47,8 +49,7 @@ const SideBarHeader = (props) => {
           <img src={happyChatter} className={classes.sideBarImg} />
           {/* background will depend on online status */}
           <span
-            className={classes.onlineIcon}
-            style={{ background: "#4DED84" }}
+            className={`${classes.statusIcon} ${classes.onlineIcon}`}
           ></span>
         </div>
         <h4>Steven</h4>

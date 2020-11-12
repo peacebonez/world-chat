@@ -9,7 +9,7 @@ import Conversation from "./Conversation";
 const useStyles = makeStyles((theme) => ({
   messengerContainer: {
     boxSizing: "border-box",
-    background: "#F5F7FB",
+    background: theme.palette.primary.gray,
     display: "flex",
     justifyContent: "flex-start",
     width: "100vw",
