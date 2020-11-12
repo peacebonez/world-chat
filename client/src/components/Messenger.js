@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 
 import Sidebar from "./Sidebar";
 import Conversation from "./Conversation";
+import { UserContext } from "../userContext";
 
 const Messenger = (props) => {
   const classes = useStyles();

@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -8,7 +7,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
-import { createInvite } from "../actions/user-actions";
+import { sendInvite } from "../actions/user-actions";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -82,7 +81,7 @@ export default function FormDialog() {
     handleClose();
 
     //need to grab current user id and email
-    createInvite("5fad63358f96786e507a0b74", emailList);
+    sendInvite("5fad63358f96786e507a0b74", emailList);
   };
 
   return (

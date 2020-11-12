@@ -8,11 +8,10 @@ const User = require("../models/User");
 
 sgMail.setApiKey(process.env.EMAIL_KEY);
 
-//POST create a user invitation
-router.post("/:id/invitation", async (req, res) => {
-  console.log("req.body.emailList:", req.body.emailList);
+//POST send a user invitation
+router.post("/:id/invitation/send", async (req, res) => {
   try {
-    //locate user from paramete
+    //locate user from parameter
     const user = await User.findById(req.params.id);
     console.log("user:", user);
 
@@ -20,22 +19,13 @@ router.post("/:id/invitation", async (req, res) => {
       res.send("User not found");
     }
 
-    //email only sends from teamcocoapuffs1@gmail.com registered with sendgrid
-    // from: user.email,
     const msg = {
       to: req.body.emailList,
       from: "teamcocoapuffs1@gmail.com",
       subject: "Chat-App: A friend has invited you to chat!",
-      text: "Hey! join our platform at http://localhost:3000",
+      text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000`,
     };
     console.log("msg:", msg);
-
-    // const msg = {
-    //   to: ["kevin@rentopiagroup.com", "kmpariso12@gmail.com"],
-    //   from: "teamcocoapuffs1@gmail.com",
-    //   subject: "Chat-App: A friend has invited you to chat!",
-    //   text: "Hey! join our platform at http://localhost:3000",
-    // };
 
     sgMail.send(msg, (err, info) => {
       if (err) {

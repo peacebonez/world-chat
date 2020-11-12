@@ -6,9 +6,10 @@ const config = {
   },
 };
 
-export const createInvite = async (userId, emailList, userEmail) => {
+//Should this also create an invite in the mongoDB?
+export const sendInvite = async (userId, emailList) => {
   try {
-    await axios.post(`/user/${userId}/invitation`, { emailList }, config);
+    await axios.post(`/user/${userId}/invitation/send`, { emailList }, config);
   } catch (err) {
     console.error(err);
   }
