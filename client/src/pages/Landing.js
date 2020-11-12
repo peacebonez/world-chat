@@ -85,7 +85,7 @@ export default function Landing() {
             style={{ marginBottom: '5%'}}
           />
           <FormControl style={{ marginBottom: '20%'}}>
-            <InputLabel id="demo-simple-select-label">Select a Language</InputLabel>
+            <InputLabel id="language-select">Select a Language</InputLabel>
             <Select
               id="language-select"
               value={language}

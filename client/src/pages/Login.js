@@ -6,9 +6,9 @@ import {
   TextField,
   Button
  } from '@material-ui/core'
- import { makeStyles} from '@material-ui/core/styles'
+import { makeStyles} from '@material-ui/core/styles'
 
- import Background from '../assets/background.png'
+import Background from '../assets/background.png'
 
 const useStyles = makeStyles({
   inline: {
@@ -18,14 +18,13 @@ const useStyles = makeStyles({
     marginTop: '2%',
     paddingLeft: '10%'
   }
-})
+});
 
-export default function Landing() {
-  const classes = useStyles()
+export default function Login() {
+  const classes = useStyles();
 
-  const [language, setLanguage] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   return (
     <Box display="flex">

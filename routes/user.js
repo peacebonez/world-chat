@@ -1,9 +1,9 @@
-const router = require('express').Router()
+const router = require('express').Router();
 
 //const passport = require('passport')
-const bcrpyt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const { User } = require('../models')
+const bcrpyt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { User } = require('../models');
 const { check, validationResult } = require('express-validator')
 
 require('dotenv').config()
@@ -27,16 +27,12 @@ router.post('/login', (req, res) => {
   const accessToken = jwt.sign(/* payload */{ email }, process.env.ACCESS_TOKEN_SECRET, {
     algorithm: "HS256",
     expiresIn: JWT_EXPIRY_TIME,
-  })
-  const refreshToken = jwt.sign(/* payload */{ email }, process.env.REFRESH_TOKEN_SECRET, {
-    algorithm: "HS256",
-    expiresIn: JWT_EXPIRY_TIME,
-  })
+  });
 
   // req.session.user = user;
   // return res.status(201).send(user);
-  res.cookie("token", accessToken, { httpOnly: true })
-  res.status(201).send()
+  res.cookie("token", accessToken, { httpOnly: true });
+  res.status(201).send();
 })
 
 // User Registration
@@ -44,7 +40,7 @@ router.post('/signup', [
     check('email').isEmail(),
     check('password').isLength({ min: 6 })
 ], runAsyncWrapper((req, res) => {
-    const errors = validationResult(req)
+    const errors = validationResult(req);
     if (!errors.isEmpty()) 
       return res.status(422).json({ errors: errors.array() });
     if (req.body.email === '') {
@@ -80,4 +76,4 @@ router.get("/get_all", runAsyncWrapper(async function(req, res) {
   return res.status(200).json(users);
 }));
 
-module.exports = router
+module.exports = router;
