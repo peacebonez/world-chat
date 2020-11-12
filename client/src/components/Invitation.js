@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -7,19 +8,41 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
+const useStyles = makeStyles((theme) => ({
+  margin: {
+    margin: theme.spacing(3),
+  },
+  extendedIcon: {
+    marginRight: theme.spacing(1),
+  },
+  invitationLink: {
+    width: 400,
+  },
+  invitationDialogueP: {
+    fontWeight: "bold",
+    color: "#0d79de",
+  },
+  invitationDialogueTitle: {
+    textAlign: "center",
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#0d79de",
+  },
+  invitationEmailList: {
+    marginLeft: "2em",
+    fontSize: "smaller",
+  },
+  invitationEmailBtn: {
+    fontSize: 1,
+  },
+}));
+
 export default function FormDialog() {
-  const useStyles = makeStyles((theme) => ({
-    margin: {
-      margin: theme.spacing(3),
-    },
-    extendedIcon: {
-      marginRight: theme.spacing(1),
-    },
-  }));
   const classes = useStyles();
   const inputRef = React.createRef();
-  const [emails, setEmail] = React.useState("");
+  const [email, setEmail] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  //retrieve user object from DB and set ID
   const [uniqueID, setID] = React.useState(
     "https://www.EKLN-messenger.com/join/" +
       (Math.floor(Math.random() * 90000000) + 10000000)
@@ -34,8 +57,9 @@ export default function FormDialog() {
   };
 
   /*close dialog function*/
-  const handleClose = () => {
+  const handleClose = async () => {
     setOpen(false);
+    setEmail("");
   };
 
   /*Set whatever in input to emails*/
@@ -45,8 +69,21 @@ export default function FormDialog() {
 
   /*push emails to emailList*/
   const addEmail = () => {
-    if (emailList.findIndex((email) => email == emails) < 0)
-      setEmailList([...emailList, emails]);
+    if (emailList.findIndex((email) => email == email) < 0)
+      setEmailList([...emailList, email]);
+    setEmail("");
+  };
+
+  const submitEmail = async () => {
+    handleClose();
+    try {
+      await axios.post(
+        "http://localhost:3001/user/5fad63358f96786e507a0b74/invitation",
+        emailList
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -60,11 +97,13 @@ export default function FormDialog() {
         aria-labelledby="form-dialog-title"
         fullWidth={true}
       >
-        <p className="invitation-dialog-title">
+        <p className={classes.invitationDialogueTitle}>
           Invite Friends to Join Us on EKLN-Messenger
         </p>
         <DialogContent>
-          <p className="invitation-dialog-p">Enter emails to invite friedns</p>
+          <p className={classes.invitationDialogueP}>
+            Enter emails to invite friends!
+          </p>
           <TextField
             autoFocus
             margin="dense"
@@ -72,6 +111,7 @@ export default function FormDialog() {
             label="Email Address"
             type="email"
             fullWidth={true}
+            value={email}
             ref={inputRef}
             onChange={inputEmail}
           />
@@ -82,13 +122,13 @@ export default function FormDialog() {
           </Button>
         </DialogActions>
         {emailList.map((email) => (
-          <div className="invitation-emailList" id={email}>
+          <div className={classes.invitationEmailList} id={email}>
             -{email}
           </div>
         ))}
         <DialogContent>
-          <p className="invitation-dialog-p">Copy ref-link to invite</p>
-          <div id="invitation-link">{uniqueID}</div>
+          <p className={classes.invitationDialogueP}>Copy ref-link to invite</p>
+          <div className={classes.invitationLink}>{uniqueID}</div>
         </DialogContent>
         <DialogActions>
           <CopyToClipboard text={uniqueID}>
@@ -100,7 +140,8 @@ export default function FormDialog() {
           size="large"
           color="primary"
           className={classes.margin}
-          onClick={handleClose}
+          onClick={submitEmail}
+          disabled={emailList.length < 1}
         >
           Send Invitations
         </Button>
