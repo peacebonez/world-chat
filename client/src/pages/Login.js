@@ -4,10 +4,6 @@ import {
   Box,
   Typography,
   TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Button
  } from '@material-ui/core'
  import { makeStyles} from '@material-ui/core/styles'
@@ -35,7 +31,9 @@ export default function Landing() {
     <Box display="flex">
       {/** The left side: Image saying "Converse with anyone with any language" */}
       <Box >
-        <img src={Background} style={{ height: '100vh'}}/>
+        <img src={Background} style={{ height: '100vh'}}
+          alt="People talking and texting, with purpose of the web app."
+        />
       </Box>
 
       {/** The right side, the sign up */}

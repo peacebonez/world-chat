@@ -36,7 +36,7 @@ export default function Landing() {
   const [password, setPassword] = useState('')
 
   const handleSubmit = () => {
-    axios.post(`${baseURL}/api/user/signup`, {
+    axios.post(`${baseURL}/user/signup`, {
       email,
       password,
       primaryLanguage: language
@@ -52,7 +52,7 @@ export default function Landing() {
     <Box display="flex">
       {/** The left side: Image saying "Converse with anyone with any language" */}
       <Box >
-        <img src={Background} style={{ height: '100vh'}}/>
+        <img src={Background} style={{ height: '100vh'}} alt="People talking and texting, with purpose of the web app."/>
       </Box>
 
       {/** The right side, the sign up */}
@@ -98,7 +98,7 @@ export default function Landing() {
           </FormControl>
           <Button 
             variant="contained" color="primary"
-            onSubmit={handleSubmit}
+            onClick={handleSubmit}
           >Create</Button>
         </Box>
         
