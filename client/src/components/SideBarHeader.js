@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     "& div": {
       display: "flex",
+      alignItems: "center",
     },
   },
   sideBarImgWrapper: {
@@ -51,9 +52,7 @@ const SideBarHeader = (props) => {
             className={`${classes.statusIcon} ${classes.onlineIcon}`}
           ></span>
         </div>
-        <Typography variant="h5" display="inline">
-          Steven
-        </Typography>
+        <Typography variant="h5">Steven</Typography>
       </div>
       <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
     </div>
