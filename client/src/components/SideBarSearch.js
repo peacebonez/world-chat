@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 20,
     textAlign: "center",
     "& input": {
-      background: "#F5F7FB",
+      background: theme.palette.primary.gray,
     },
   },
 }));
@@ -28,7 +28,6 @@ const SideBarSearch = (props) => {
       <div className={classes.chatInput}>
         <form noValidate autoComplete="off">
           <TextField
-            id="outlined-basic"
             variant="outlined"
             fullWidth
             autoFocus

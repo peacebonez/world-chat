@@ -8,7 +8,7 @@ import SideBarSearch from "./SideBarSearch";
 const useStyles = makeStyles((theme) => ({
   sideBar: {
     width: "33.33%",
-    background: "#F5F7FB",
+    background: theme.palette.primary.gray,
     position: "absolute",
     left: 0,
     display: "flex",

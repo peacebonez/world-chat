@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "100%",
     overflow: "hidden",
     width: "70px",
-    marginRight: "15px",
+    marginRight: theme.spacing(1),
   },
   statusIcon: {
     width: 12,
@@ -47,12 +47,13 @@ const SideBarHeader = (props) => {
       <div>
         <div className={classes.sideBarImgWrapper}>
           <img src={happyChatter} className={classes.sideBarImg} />
-          {/* background will depend on online status */}
           <span
             className={`${classes.statusIcon} ${classes.onlineIcon}`}
           ></span>
         </div>
-        <h4>Steven</h4>
+        <Typography variant="h5" display="inline">
+          Steven
+        </Typography>
       </div>
       <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
     </div>

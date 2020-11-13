@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(4),
     textAlign: "center",
     "& input": {
-      background: "#F5F7FB",
+      background: theme.palette.primary.gray,
     },
   },
 }));

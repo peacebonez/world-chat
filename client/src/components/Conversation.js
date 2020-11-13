@@ -8,7 +8,7 @@ import Navbar from "./Navbar";
 
 const useStyles = makeStyles((theme) => ({
   conversation: {
-    background: "#F5F7FB",
+    background: theme.palette.primary.gray,
     height: "100vh",
     width: "66.66%",
     position: "absolute",

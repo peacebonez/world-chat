@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 22,
     fontWeight: "bold",
     color: "#0d79de",
+    margin: theme.spacing(4),
   },
   invitationEmailList: {
     marginLeft: "2em",
@@ -85,9 +86,9 @@ export default function FormDialog() {
         aria-labelledby="form-dialog-title"
         fullWidth={true}
       >
-        <p className={classes.invitationDialogueTitle}>
+        <Typography className={classes.invitationDialogueTitle}>
           Invite Friends to Join Us on EKLN-Messenger
-        </p>
+        </Typography>
         <DialogContent>
           <Typography className={classes.invitationDialogueP}>
             Enter emails to invite friends
@@ -109,12 +110,14 @@ export default function FormDialog() {
           </Button>
         </DialogActions>
         {emailList.map((email) => (
-          <div className={classes.invitationEmailList} id={email}>
+          <div className={classes.invitationEmailList} key={email}>
             -{email}
           </div>
         ))}
         <DialogContent>
-          <p className={classes.invitationDialogueP}>Copy ref-link to invite</p>
+          <Typography className={classes.invitationDialogueP}>
+            Copy ref-link to invite
+          </Typography>
           <div className={classes.invitationLink}>{uniqueID}</div>
         </DialogContent>
         <DialogActions>
