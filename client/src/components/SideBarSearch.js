@@ -1,8 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Typography, TextField } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import SearchOutlinedIcon from "@material-ui/icons/SearchOutlined";
-import useStyles from "../styles/material-styles";
+
+const useStyles = makeStyles((theme) => ({
+  chatInput: {
+    width: "90%",
+    marginBottom: 20,
+    textAlign: "center",
+    "& input": {
+      background: theme.palette.primary.gray,
+    },
+  },
+}));
 
 const SideBarSearch = (props) => {
   const classes = useStyles();
@@ -17,7 +28,6 @@ const SideBarSearch = (props) => {
       <div className={classes.chatInput}>
         <form noValidate autoComplete="off">
           <TextField
-            id="outlined-basic"
             variant="outlined"
             fullWidth
             autoFocus

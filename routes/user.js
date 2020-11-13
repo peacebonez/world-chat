@@ -39,6 +39,7 @@ router.post("/:id/invitation", async (req, res) => {
         });
 
         await newInvitation.save();
+        res.json(newInvitation);
       }
     }
 
