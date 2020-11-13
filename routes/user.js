@@ -47,16 +47,10 @@ router.post('/signup', [
     const errors = validationResult(req);
     if (!errors.isEmpty()) 
       return res.status(422).json({ errors: errors.array() });
-    if (req.body.email === '') {
-      console.log('email required')
-      res.status(400).json({ message: "Email required" });
-    } else if (req.body.password === '') {
-      console.log('password required');
-      res.status(400).json({ message: "Password required" });
-    }
+    
     // Email must be unique
     let user1 = await User.findOne({ email: req.body.email})
-    if (user1 != null) {
+    if (user1) {
       console.log('not unique');
       return res.status(400).send('User with this email already exists.')
     }
@@ -69,7 +63,7 @@ router.post('/signup', [
       password: hashed_password,
       primaryLanguage: req.body.primaryLanguage
     })
-    req.session.user = user
+    //req.session.user = user
     return res.status(201).send(user._id)
 }))
 
