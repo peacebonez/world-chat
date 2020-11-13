@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Container, Hidden } from "@material-ui/core";
 import useStyles from "../styles/material-styles";
 import PropTypes from "prop-types";
@@ -8,6 +8,10 @@ import Conversation from "./Conversation";
 import { UserContext } from "../userContext";
 
 const Messenger = (props) => {
+  const user = useContext(UserContext);
+  user.dispatch({ type: "SEND_EMAIL" });
+  console.log("user:", user);
+
   const classes = useStyles();
 
   return (

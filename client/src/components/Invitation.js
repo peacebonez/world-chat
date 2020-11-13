@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -7,7 +7,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
-import { sendInvite } from "../actions/user-actions";
+import { sendInvite } from "../reducers/userReducer";
 
 const useStyles = makeStyles((theme) => ({
   margin: {

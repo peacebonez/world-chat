@@ -5,8 +5,35 @@ require("dotenv").config({ path: "../.env" });
 
 const sgMail = require("@sendgrid/mail");
 const User = require("../models/User");
+const Invitation = require("../models/Invitation");
 
 sgMail.setApiKey(process.env.EMAIL_KEY);
+
+//POST create a user invitation
+router.post("/:id/invitation", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      res.send("User not found");
+    }
+    const emails = req.body.emailList;
+
+    emails.forEach(async (email) => {
+      const newInvitation = new Invitation({
+        referrer: user,
+        toEmail: email,
+      });
+
+      await newInvitation.save();
+    });
+    res.json(emails);
+    //for each email create an invitation instance
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
 
 //POST send a user invitation
 router.post("/:id/invitation/send", async (req, res) => {
