@@ -14,14 +14,12 @@ function App() {
 
   return (
     <MuiThemeProvider theme={theme}>
-      <UserContext.Provider value={{ user, setUser }}>
-        <BrowserRouter>
-          <Route path="/" exact>
-            <Messenger />
-          </Route>
-          <Invitation />
-        </BrowserRouter>
-      </UserContext.Provider>
+      <BrowserRouter>
+        <Route path="/">
+          <Messenger />
+        </Route>
+        <Invitation />
+      </BrowserRouter>
     </MuiThemeProvider>
   );
 }

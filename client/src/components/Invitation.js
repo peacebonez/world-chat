@@ -1,19 +1,18 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import {
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Typography,
+} from "@material-ui/core";
 
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import { sendInvite } from "../actions/user-actions";
-import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-  modal: {
-    padding: "25px",
-  },
   margin: {
     margin: theme.spacing(3),
   },
@@ -26,14 +25,14 @@ const useStyles = makeStyles((theme) => ({
   invitationDialogueP: {
     fontWeight: "bold",
     color: "#0d79de",
-    marginBottom: theme.spacing(2),
   },
   invitationDialogueTitle: {
     textAlign: "center",
     fontSize: 22,
     fontWeight: "bold",
     color: "#0d79de",
-    padding: theme.spacing(6),
+
+    margin: theme.spacing(4),
   },
   invitationEmailList: {
     marginLeft: "2em",
@@ -104,15 +103,12 @@ export default function FormDialog() {
         aria-labelledby="form-dialog-title"
         fullWidth={true}
       >
-        <Typography variant={"h2"} className={classes.invitationDialogueTitle}>
+        <Typography className={classes.invitationDialogueTitle}>
           Invite Friends to Join Us on EKLN-Messenger
         </Typography>
-        <DialogContent className={classes.emailInput}>
-          <Typography
-            variant={"subtitle1"}
-            className={classes.invitationDialogueP}
-          >
-            Enter emails to invite friends!
+        <DialogContent>
+          <Typography className={classes.invitationDialogueP}>
+            Enter emails to invite friends
           </Typography>
           <TextField
             className={classes.emailInput}
@@ -134,11 +130,11 @@ export default function FormDialog() {
           </Button>
         </DialogActions>
         {emailList.map((email) => (
-          <div key={email} className={classes.invitationEmailList} id={email}>
+          <div className={classes.invitationEmailList} key={email}>
             -{email}
           </div>
         ))}
-        <DialogContent className={classes.emailInput}>
+        <DialogContent>
           <Typography className={classes.invitationDialogueP}>
             Copy ref-link to invite
           </Typography>

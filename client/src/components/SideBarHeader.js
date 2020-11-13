@@ -1,10 +1,45 @@
 import React from "react";
 import PropTypes from "prop-types";
-import useStyles from "../styles/material-styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import happyChatter from "../assets/5e4a118a03239f87632c8f33899048fd2c4af1ca.png";
+import happyChatter from "../assets/happy-chatter.png";
 import { Typography } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  sideBarHeader: {
+    height: 100,
+    width: "85%",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    "& div": {
+      display: "flex",
+      alignItems: "center",
+    },
+  },
+  sideBarImgWrapper: {
+    "& span": {
+      position: "relative",
+      left: "-32%",
+      top: "75%",
+    },
+  },
+  sideBarImg: {
+    borderRadius: "100%",
+    overflow: "hidden",
+    width: "70px",
+    marginRight: theme.spacing(1),
+  },
+  statusIcon: {
+    width: 12,
+    height: 12,
+    border: "solid white 1px",
+    borderRadius: "50%",
+  },
+  onlineIcon: { background: "#4DED84" },
+  offlineIcon: { background: "lightgray" },
+}));
 
 const SideBarHeader = (props) => {
   const classes = useStyles();
@@ -13,13 +48,11 @@ const SideBarHeader = (props) => {
       <div>
         <div className={classes.sideBarImgWrapper}>
           <img src={happyChatter} className={classes.sideBarImg} />
-          {/* background will depend on online status */}
           <span
-            className={classes.onlineIcon}
-            style={{ background: "#4DED84" }}
+            className={`${classes.statusIcon} ${classes.onlineIcon}`}
           ></span>
         </div>
-        <h4>Steven</h4>
+        <Typography variant="h5">Steven</Typography>
       </div>
       <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
     </div>
