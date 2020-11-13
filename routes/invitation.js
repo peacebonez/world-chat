@@ -10,12 +10,15 @@ router.put("/:id/approve", async (req, res) => {
     if (!invitation) {
       res.status(404).send("Invitation not found");
     }
+    if (invitation.status !== "pending") {
+      res
+        .status(400)
+        .json({ msg: `Invitation status already ${invitation.status}` });
+    }
 
     invitation.status = "approved";
 
     await invitation.save();
-
-    res.json(invitation);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -25,22 +28,23 @@ router.put("/:id/approve", async (req, res) => {
 //PUT request to reject invitation
 router.put("/:id/reject", async (req, res) => {
   try {
-    try {
-      const invitation = await Invitation.findById(req.params.id);
+    const invitation = await Invitation.findById(req.params.id);
 
-      if (!invitation) {
-        res.status(404).send("Invitation not found");
-      }
-
-      invitation.status = "rejected";
-
-      await invitation.save();
-
-      res.json(invitation);
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send("Server Error");
+    if (!invitation) {
+      res.status(404).send("Invitation not found");
     }
+
+    if (invitation.status !== "pending") {
+      res
+        .status(400)
+        .json({ msg: `Invitation status already ${invitation.status}` });
+    }
+
+    invitation.status = "rejected";
+
+    await invitation.save();
+
+    res.json(invitation);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
