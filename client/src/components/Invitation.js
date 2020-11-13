@@ -1,21 +1,47 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
+import {
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Typography,
+} from "@material-ui/core";
+
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
+const useStyles = makeStyles((theme) => ({
+  margin: {
+    margin: theme.spacing(3),
+  },
+  extendedIcon: {
+    marginRight: theme.spacing(1),
+  },
+  invitationLink: {
+    width: 400,
+  },
+  invitationDialogueP: {
+    fontWeight: "bold",
+    color: "#0d79de",
+  },
+  invitationDialogueTitle: {
+    textAlign: "center",
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#0d79de",
+    margin: theme.spacing(4),
+  },
+  invitationEmailList: {
+    marginLeft: "2em",
+    fontSize: "smaller",
+  },
+  invitationEmailBtn: {
+    fontSize: 1,
+  },
+}));
+
 export default function FormDialog() {
-  const useStyles = makeStyles((theme) => ({
-    margin: {
-      margin: theme.spacing(3),
-    },
-    extendedIcon: {
-      marginRight: theme.spacing(1),
-    },
-  }));
   const classes = useStyles();
   const inputRef = React.createRef();
   const [emails, setEmail] = React.useState("");
@@ -60,11 +86,13 @@ export default function FormDialog() {
         aria-labelledby="form-dialog-title"
         fullWidth={true}
       >
-        <p className="invitation-dialog-title">
+        <Typography className={classes.invitationDialogueTitle}>
           Invite Friends to Join Us on EKLN-Messenger
-        </p>
+        </Typography>
         <DialogContent>
-          <p className="invitation-dialog-p">Enter emails to invite friedns</p>
+          <Typography className={classes.invitationDialogueP}>
+            Enter emails to invite friends
+          </Typography>
           <TextField
             autoFocus
             margin="dense"
@@ -82,13 +110,15 @@ export default function FormDialog() {
           </Button>
         </DialogActions>
         {emailList.map((email) => (
-          <div className="invitation-emailList" id={email}>
+          <div className={classes.invitationEmailList} key={email}>
             -{email}
           </div>
         ))}
         <DialogContent>
-          <p className="invitation-dialog-p">Copy ref-link to invite</p>
-          <div id="invitation-link">{uniqueID}</div>
+          <Typography className={classes.invitationDialogueP}>
+            Copy ref-link to invite
+          </Typography>
+          <div className={classes.invitationLink}>{uniqueID}</div>
         </DialogContent>
         <DialogActions>
           <CopyToClipboard text={uniqueID}>

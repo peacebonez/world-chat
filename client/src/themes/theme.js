@@ -1,6 +1,15 @@
 import { createMuiTheme } from "@material-ui/core";
 
 export const theme = createMuiTheme({
+  overrides: {
+    MuiCssBaseline: {
+      "@global": {
+        "*, *::before, *::after": {
+          boxSizing: "border-box",
+        },
+      },
+    },
+  },
   typography: {
     fontFamily: '"Roboto"',
     fontSize: 12,
@@ -9,6 +18,6 @@ export const theme = createMuiTheme({
     },
   },
   palette: {
-    primary: { main: "#0d79de" },
+    primary: { main: "#3C8FFF", gray: "#F5F7FB" },
   },
 });
