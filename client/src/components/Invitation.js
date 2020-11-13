@@ -89,7 +89,7 @@ export default function FormDialog() {
     handleClose();
 
     //need to grab current user id and email
-    sendInvite("5fad63358f96786e507a0b74", emailList);
+    sendInvite("5fadeb4e66d8372cd6d05d89", emailList);
     //add createInvite function
   };
 
