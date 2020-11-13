@@ -1,10 +1,14 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
+import {
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Typography,
+} from "@material-ui/core";
+
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const useStyles = makeStyles((theme) => ({
@@ -85,9 +89,9 @@ export default function FormDialog() {
           Invite Friends to Join Us on EKLN-Messenger
         </p>
         <DialogContent>
-          <p className={classes.invitationDialogueP}>
-            Enter emails to invite friedns
-          </p>
+          <Typography className={classes.invitationDialogueP}>
+            Enter emails to invite friends
+          </Typography>
           <TextField
             autoFocus
             margin="dense"

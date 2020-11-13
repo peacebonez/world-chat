@@ -23,7 +23,6 @@ const ChatInput = (props) => {
     <div className={classes.chatInput}>
       <form noValidate autoComplete="off">
         <TextField
-          id="outlined-basic"
           variant="outlined"
           fullWidth
           autoFocus
