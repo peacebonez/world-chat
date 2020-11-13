@@ -82,12 +82,27 @@ export default function FormDialog() {
     } else return;
   };
 
-  const submitInvite = async () => {
-    handleClose();
+  //need to grab current user id and email
 
-    //need to grab current user id and email
-    sendInvite("5fadeb4e66d8372cd6d05d89", emailList);
-    createInvite("5fadeb4e66d8372cd6d05d89", emailList);
+  const submitInvite = () => {
+    //handles email invitations
+    // maybe use a Material UI loading component?
+
+    const goodEmails = [];
+    const badEmails = [];
+    emailList.forEach((email) => {
+      let res = createInvite(email);
+      //if res.status === 200 push to good emails
+      //else push to bad emails
+    });
+
+    goodEmails.forEach((email) => {
+      sendInvite(email);
+    });
+
+    //alert of emails sent and bad emails not sent
+
+    handleClose();
   };
 
   //POST config header values
@@ -97,35 +112,32 @@ export default function FormDialog() {
     },
   };
 
-  const sendInvite = async (userId, emailList) => {
+  const userId = "5fadeb4e66d8372cd6d05d89";
+  const createInvite = async (toEmail) => {
     try {
       const res = await axios.post(
-        `/user/${userId}/invitation/send`,
-        { emailList },
+        `/user/${userId}/invitation`,
+        { toEmail },
         config
       );
 
-      const emails = res.data;
       //placeholder alert
-      alert("Send Successful!");
-      return emails;
+      alert("Invite created!");
+      return res.data;
     } catch (err) {
       console.error(err);
     }
   };
 
-  const createInvite = async (userId, emailList) => {
+  const sendInvite = async (toEmail) => {
     try {
       const res = await axios.post(
-        `/user/${userId}/invitation`,
-        { emailList },
+        `/user/${userId}/invitation/send`,
+        { toEmail },
         config
       );
-
-      const emails = res.data;
-      //placeholder alert
-      alert("Invite created!");
-      return emails;
+      console.log("res:", res);
+      return res;
     } catch (err) {
       console.error(err);
     }
