@@ -11,24 +11,38 @@ sgMail.setApiKey(process.env.EMAIL_KEY);
 
 //POST create a user invitation
 router.post("/:id/invitation", async (req, res) => {
+  const referrer = req.params.id;
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(referrer);
 
     if (!user) {
       res.send("User not found");
     }
     const emails = req.body.emailList;
 
-    emails.forEach(async (email) => {
-      const newInvitation = new Invitation({
-        referrer: user,
-        toEmail: email,
-      });
-
-      await newInvitation.save();
-    });
-    res.json(emails);
     //for each email create an invitation instance
+    for (const email of emails) {
+      console.log("email:", email);
+      //determine if referrer already sent invitation to receiver
+      const invitations = await Invitation.find({ toEmail: email });
+
+      const invitationAlreadySent = invitations.find(
+        (invitation) => invitation.referrer.toString() === referrer
+      );
+
+      if (invitationAlreadySent) {
+        console.log("Invitation already sent");
+      } else {
+        const newInvitation = new Invitation({
+          referrer: user,
+          toEmail: email,
+        });
+
+        await newInvitation.save();
+      }
+    }
+
+    res.json(emails);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
