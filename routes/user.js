@@ -22,7 +22,6 @@ router.post("/:id/invitation", async (req, res) => {
 
     //for each email create an invitation instance
     for (const email of emails) {
-      console.log("email:", email);
       //determine if referrer already sent invitation to receiver
       const invitations = await Invitation.find({ toEmail: email });
 
@@ -30,7 +29,8 @@ router.post("/:id/invitation", async (req, res) => {
         (invitation) => invitation.referrer.toString() === referrer
       );
 
-      if (invitationAlreadySent) {
+      //can't send invite if already sent but CAN if the invite was rejected
+      if (invitationAlreadySent && invitation.status !== "rejected") {
         console.log("Invitation already sent");
       } else {
         const newInvitation = new Invitation({
