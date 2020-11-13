@@ -8,8 +8,12 @@ import DialogContent from "@material-ui/core/DialogContent";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { sendInvite } from "../actions/user-actions";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
+  modal: {
+    padding: "25px",
+  },
   margin: {
     margin: theme.spacing(3),
   },
@@ -22,12 +26,14 @@ const useStyles = makeStyles((theme) => ({
   invitationDialogueP: {
     fontWeight: "bold",
     color: "#0d79de",
+    marginBottom: theme.spacing(2),
   },
   invitationDialogueTitle: {
     textAlign: "center",
     fontSize: 22,
     fontWeight: "bold",
     color: "#0d79de",
+    padding: theme.spacing(6),
   },
   invitationEmailList: {
     marginLeft: "2em",
@@ -70,11 +76,14 @@ export default function FormDialog() {
 
   /*push emails to emailList*/
   const addEmail = () => {
-    // if (emailList.findIndex((email) => email == email) < 0)
     if (!emailList.includes(email)) {
       setEmailList([...emailList, email]);
       setEmail("");
-    } else return;
+    } else {
+      //placeholder alert
+      alert("Email already in list");
+      setEmail("");
+    }
   };
 
   const submitEmail = async () => {
@@ -95,16 +104,21 @@ export default function FormDialog() {
         aria-labelledby="form-dialog-title"
         fullWidth={true}
       >
-        <p className={classes.invitationDialogueTitle}>
+        <Typography variant={"h2"} className={classes.invitationDialogueTitle}>
           Invite Friends to Join Us on EKLN-Messenger
-        </p>
-        <DialogContent>
-          <p className={classes.invitationDialogueP}>
+        </Typography>
+        <DialogContent className={classes.emailInput}>
+          <Typography
+            variant={"subtitle1"}
+            className={classes.invitationDialogueP}
+          >
             Enter emails to invite friends!
-          </p>
+          </Typography>
           <TextField
+            className={classes.emailInput}
             autoFocus
             margin="dense"
+            variant="outlined"
             id="email"
             label="Email Address"
             type="email"
@@ -124,8 +138,10 @@ export default function FormDialog() {
             -{email}
           </div>
         ))}
-        <DialogContent>
-          <p className={classes.invitationDialogueP}>Copy ref-link to invite</p>
+        <DialogContent className={classes.emailInput}>
+          <Typography className={classes.invitationDialogueP}>
+            Copy ref-link to invite
+          </Typography>
           <div className={classes.invitationLink}>{uniqueID}</div>
         </DialogContent>
         <DialogActions>
@@ -135,7 +151,6 @@ export default function FormDialog() {
         </DialogActions>
         <Button
           variant="outlined"
-          size="large"
           color="primary"
           className={classes.margin}
           onClick={submitEmail}

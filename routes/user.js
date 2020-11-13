@@ -13,14 +13,13 @@ router.post("/:id/invitation/send", async (req, res) => {
   try {
     //locate user from parameter
     const user = await User.findById(req.params.id);
-    console.log("user:", user);
 
     if (!user) {
       res.send("User not found");
     }
-
+    const emails = req.body.emailList;
     const msg = {
-      to: req.body.emailList,
+      to: emails,
       from: "teamcocoapuffs1@gmail.com",
       subject: "Chat-App: A friend has invited you to chat!",
       text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000`,
@@ -29,9 +28,9 @@ router.post("/:id/invitation/send", async (req, res) => {
 
     sgMail.send(msg, (err, info) => {
       if (err) {
-        return console.error("Email not sent");
+        return res.status(400).send("Email not sent");
       }
-      res.json({ msg: "Email sent!" });
+      res.json({ emails });
     });
   } catch (err) {
     console.error(err.message);
