@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { sendInvite } from "../actions/user-actions";
+import { sendInvite, createInvite } from "../actions/user-actions";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -90,7 +90,7 @@ export default function FormDialog() {
 
     //need to grab current user id and email
     sendInvite("5fadeb4e66d8372cd6d05d89", emailList);
-    //add createInvite function
+    createInvite("5fadeb4e66d8372cd6d05d89", emailList);
   };
 
   return (
