@@ -1,11 +1,23 @@
 import React, { useContext } from "react";
 import { Container, Hidden } from "@material-ui/core";
-import useStyles from "../styles/material-styles";
+import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 
 import Sidebar from "./Sidebar";
 import Conversation from "./Conversation";
 import { UserContext } from "../userContext";
+
+const useStyles = makeStyles((theme) => ({
+  messengerContainer: {
+    boxSizing: "border-box",
+    background: theme.palette.primary.gray,
+    display: "flex",
+    justifyContent: "flex-start",
+    width: "100vw",
+    height: "100vh",
+    overflow: "hidden",
+  },
+}));
 
 const Messenger = (props) => {
   const user = useContext(UserContext);
@@ -13,7 +25,6 @@ const Messenger = (props) => {
   console.log("user:", user);
 
   const classes = useStyles();
-
   return (
     <Container className={classes.messengerContainer}>
       <Sidebar />
