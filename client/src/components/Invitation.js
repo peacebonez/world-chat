@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Button,
@@ -10,8 +11,6 @@ import {
 } from "@material-ui/core";
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
-
-import { sendInvite, createInvite } from "../reducers/userReducer";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -89,6 +88,33 @@ export default function FormDialog() {
     //need to grab current user id and email
     sendInvite("5fadeb4e66d8372cd6d05d89", emailList);
     createInvite("5fadeb4e66d8372cd6d05d89", emailList);
+  };
+
+  //POST config header values
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  const sendInvite = async (userId, emailList) => {
+    try {
+      await axios.post(
+        `/user/${userId}/invitation/send`,
+        { emailList },
+        config
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const createInvite = async (userId, emailList) => {
+    try {
+      await axios.post(`/user/${userId}/invitation`, { emailList }, config);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
