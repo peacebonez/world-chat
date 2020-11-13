@@ -16,7 +16,7 @@ router.post("/:id/invitation", async (req, res) => {
     const user = await User.findById(referrer);
 
     if (!user) {
-      res.send("User not found");
+      res.status(404).send("User not found");
     }
     const emails = req.body.emailList;
 
@@ -58,7 +58,7 @@ router.post("/:id/invitation/send", async (req, res) => {
     console.log("user:", user);
 
     if (!user) {
-      res.send("User not found");
+      res.res.status(404).send("User not found");
     }
 
     const msg = {

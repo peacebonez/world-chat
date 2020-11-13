@@ -99,11 +99,16 @@ export default function FormDialog() {
 
   const sendInvite = async (userId, emailList) => {
     try {
-      await axios.post(
+      const res = await axios.post(
         `/user/${userId}/invitation/send`,
         { emailList },
         config
       );
+
+      const emails = res.data;
+      //placeholder alert
+      alert("Send Successful!");
+      return emails;
     } catch (err) {
       console.error(err);
     }
@@ -111,7 +116,16 @@ export default function FormDialog() {
 
   const createInvite = async (userId, emailList) => {
     try {
-      await axios.post(`/user/${userId}/invitation`, { emailList }, config);
+      const res = await axios.post(
+        `/user/${userId}/invitation`,
+        { emailList },
+        config
+      );
+
+      const emails = res.data;
+      //placeholder alert
+      alert("Invite created!");
+      return emails;
     } catch (err) {
       console.error(err);
     }
