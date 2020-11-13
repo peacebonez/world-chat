@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 //const passport = require('passport')
-const bcrpyt = require('bcrypt');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const { check, validationResult } = require('express-validator')
@@ -18,11 +18,15 @@ function runAsyncWrapper (callback) {
 }
 
 // User Login
-router.post('/login', (req, res) => {
+router.post('/login', runAsyncWrapper( async (req, res) => {
   let email = req.body.email
   let user = await User.findOne({ email: email });
-  if (!user) { return res.status(400).send("No user with this email"); } 
-  else if (!bcrypt.compareSync(req.body.password, artist.password)) { return res.status(400).send("Incorrect Password"); } 
+  if (!user) { 
+    return res.status(400).send("No user with this email"); 
+  } 
+  else if (!bcrypt.compareSync(req.body.password, user.password)) {
+    return res.status(400).send("Incorrect Password"); 
+  } 
   // success -> Get a JWT Token
   const accessToken = jwt.sign(/* payload */{ email }, process.env.ACCESS_TOKEN_SECRET, {
     algorithm: "HS256",
@@ -33,31 +37,34 @@ router.post('/login', (req, res) => {
   // return res.status(201).send(user);
   res.cookie("token", accessToken, { httpOnly: true });
   res.status(201).send();
-})
+}))
 
 // User Registration
 router.post('/signup', [
     check('email').isEmail(),
     check('password').isLength({ min: 6 })
-], runAsyncWrapper((req, res) => {
+], runAsyncWrapper( async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) 
       return res.status(422).json({ errors: errors.array() });
     if (req.body.email === '') {
+      console.log('email required')
       res.status(400).json({ message: "Email required" });
     } else if (req.body.password === '') {
+      console.log('password required');
       res.status(400).json({ message: "Password required" });
     }
     // Email must be unique
-    let user = await User.findOne({ email: req.body.email})
-    if (user != null) {
+    let user1 = await User.findOne({ email: req.body.email})
+    if (user1 != null) {
+      console.log('not unique');
       return res.status(400).send('User with this email already exists.')
     }
 
     const salt = bcrypt.genSaltSync();
     const hashed_password = bcrypt.hashSync(req.body.password, salt);
     // REGISTER USER!!!
-    user = await User.create( {
+    let user = await User.create( {
       email: req.body.email,
       password: hashed_password,
       primaryLanguage: req.body.primaryLanguage

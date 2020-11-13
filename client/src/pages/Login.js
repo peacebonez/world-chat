@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 import { 
   Box,
   Typography,
@@ -10,6 +11,9 @@ import { makeStyles} from '@material-ui/core/styles'
 
 import Background from '../assets/background.png'
 
+require('dotenv').config();
+const baseURL = process.env.REACT_APP_baseURL;
+
 const useStyles = makeStyles({
   inline: {
     inline: 'true'
@@ -17,7 +21,19 @@ const useStyles = makeStyles({
   outerMargins: {
     marginTop: '2%',
     paddingLeft: '10%'
-  }
+  },
+  image: {
+    height: '100vh'
+  },
+  marginBottom50: {
+    marginBottom: '50%'
+  },
+  marginLeft15: {
+    marginLeft: '15%'
+  },
+  marginBottom5: {
+    marginBottom: '5%'
+  },
 });
 
 export default function Login() {
@@ -25,6 +41,15 @@ export default function Login() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleClick = () => {
+    axios.post(`${baseURL}/user/login`, {
+      email,
+      password
+    }).then(response => {
+      console.log(response)
+    }).catch(error => console.error(error))
+  };
 
   return (
     <Box display="flex">
@@ -37,10 +62,10 @@ export default function Login() {
 
       {/** The right side, the sign up */}
       <Box className={classes.outerMargins} >
-        <Box display="flex" style={{ marginBottom: '50%'}}>
+        <Box display="flex" className={classes.marginBottom50}>
           <Typography variant="h5">Don't have an account? </Typography>
           <Link to="/">
-            <Button variant="outlined" color="primary" style={{ marginLeft: '15%' }}>
+            <Button variant="outlined" color="primary" className={classes.marginLeft15}>
                 Create account
             </Button>
           </Link>
@@ -50,22 +75,23 @@ export default function Login() {
         <Typography 
           variant="h4" 
           fontWeight="fontWeightBold"
-          style={{ marginBottom: '5%'}}
+          className={classes.marginBottom5}
         >Welcome back!</Typography>
         <Box display="flex" flexDirection="column">
           <TextField 
             label="Email" 
             onChange={(event) => setEmail(event.target.value)}
-            style={{ marginBottom: '5%'}}
+            className={classes.marginBottom5}
           />
           <TextField 
             label="Password" 
             type="password"
             onChange={(event) => setPassword(event.target.value)}
-            style={{ marginBottom: '5%'}}
+            className={classes.marginBottom5}
           />
           <Button 
             variant="contained" color="primary"
+            onClick={handleClick}
           >Login</Button>
         </Box>
         
