@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function FormDialog() {
+  const userId = "5fadeb4e66d8372cd6d05d89";
   const classes = useStyles();
   const inputRef = React.createRef();
   const [email, setEmail] = React.useState("");
@@ -75,7 +76,6 @@ export default function FormDialog() {
 
   /*push emails to emailList*/
   const addEmail = () => {
-    // if (emailList.findIndex((email) => email == email) < 0)
     if (!emailList.includes(email)) {
       setEmailList([...emailList, email]);
       setEmail("");
@@ -87,21 +87,39 @@ export default function FormDialog() {
   const submitInvite = () => {
     //handles email invitations
     // maybe use a Material UI loading component?
-
     const goodEmails = [];
     const badEmails = [];
-    emailList.forEach((email) => {
-      let res = createInvite(email);
-      //if res.status === 200 push to good emails
-      //else push to bad emails
+    emailList.forEach(async (email) => {
+      let res = await createInvite(email);
+      console.log("res:", res);
+
+      //separating good emails from bad emails
+      if (res.status === 200) goodEmails.push(res.data.toEmail);
+      else badEmails.push(res.data.toEmail);
     });
 
-    goodEmails.forEach((email) => {
-      sendInvite(email);
+    console.log("goodEmails:", goodEmails);
+    console.log("badEmails:", badEmails);
+
+    //send invites only to good emails
+    goodEmails.forEach(async (email) => {
+      await sendInvite(email);
     });
 
-    //alert of emails sent and bad emails not sent
+    //placeholer alert of emails sent and bad emails not sent
+    const alertMsg = {
+      good: {
+        msg: "Successfully sent emails",
+        goodEmails,
+      },
+      bad: {
+        msg: "Failed emails",
+        badEmails,
+      },
+    };
 
+    alert(JSON.stringify(alertMsg));
+    setEmailList([]);
     handleClose();
   };
 
@@ -112,7 +130,6 @@ export default function FormDialog() {
     },
   };
 
-  const userId = "5fadeb4e66d8372cd6d05d89";
   const createInvite = async (toEmail) => {
     try {
       const res = await axios.post(
@@ -122,8 +139,8 @@ export default function FormDialog() {
       );
 
       //placeholder alert
-      alert("Invite created!");
-      return res.data;
+      alert(`Invite created for ${toEmail}!`);
+      return res;
     } catch (err) {
       console.error(err);
     }
@@ -131,13 +148,8 @@ export default function FormDialog() {
 
   const sendInvite = async (toEmail) => {
     try {
-      const res = await axios.post(
-        `/user/${userId}/invitation/send`,
-        { toEmail },
-        config
-      );
-      console.log("res:", res);
-      return res;
+      await axios.post(`/user/${userId}/invitation/send`, { toEmail }, config);
+      alert(`Invite sent to ${toEmail}!`);
     } catch (err) {
       console.error(err);
     }

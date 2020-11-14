@@ -10,44 +10,58 @@ const Invitation = require("../models/Invitation");
 sgMail.setApiKey(process.env.EMAIL_KEY);
 
 //POST create a user invitation
-router.post("/:id/invitation", async (req, res) => {
-  const referrer = req.params.id;
-  const toEmail = req.body.toEmail;
+router.post(
+  "/:id/invitation",
+  [check("toEmail", "Email required").isEmail().trim()],
+  async (req, res) => {
+    const errors = validationResult(req);
 
-  try {
-    const user = await User.findById(referrer);
-
-    if (!user) {
-      res.status(404).json({ msg: "User not found", toEmail });
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    //determine if referrer already sent invitation to receiver
-    const invitations = await Invitation.find({ toEmail });
+    const referrer = req.params.id;
+    const toEmail = req.body.toEmail;
 
-    const invitationAlreadySent = invitations.find(
-      (invitation) => invitation.referrer.toString() === referrer
-    );
+    try {
+      const user = await User.findById(referrer);
 
-    //can't send invite if already sent but CAN if the invite was rejected
-    if (invitationAlreadySent && invitation.status !== "rejected") {
-      res.status(400).json({ msg: "Invitation already sent", toEmail });
-    } else {
-      const newInvitation = new Invitation({
-        referrer: user,
-        toEmail: email,
-      });
+      if (!user) {
+        res.status(404).json({ msg: "User not found", toEmail });
+      }
 
-      await newInvitation.save();
-      res.json(newInvitation);
+      //determine if referrer already sent invitation to receiver
+      const invitations = await Invitation.find({ toEmail });
+
+      const invitationAlreadySent = invitations.find(
+        (invitation) => invitation.referrer.toString() === referrer
+      );
+
+      //can't send invite if already sent but CAN if the invite was rejected
+      if (
+        invitationAlreadySent &&
+        invitationAlreadySent.status !== "rejected"
+      ) {
+        res.status(400).json({ msg: "Invitation already sent", toEmail });
+      } else {
+        const newInvitation = new Invitation({
+          referrer: user,
+          toEmail,
+        });
+
+        await newInvitation.save();
+        res.status(200).json({ msg: "Invitation sent!", toEmail });
+      }
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
     }
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
   }
-});
+);
 
 //POST send a user invitation
 router.post("/:id/invitation/send", async (req, res) => {
+  const toEmail = req.body.toEmail;
   try {
     //locate user from parameter
     const user = await User.findById(req.params.id);
@@ -58,10 +72,10 @@ router.post("/:id/invitation/send", async (req, res) => {
     }
 
     const msg = {
-      to: req.body.toEmail,
+      to: toEmail,
       from: "teamcocoapuffs1@gmail.com",
       subject: "Chat-App: A friend has invited you to chat!",
-      text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000`,
+      text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000/register`,
     };
     console.log("msg:", msg);
 
