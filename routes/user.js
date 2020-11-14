@@ -9,11 +9,35 @@ const Invitation = require("../models/Invitation");
 
 sgMail.setApiKey(process.env.EMAIL_KEY);
 
-//GET all user invitations
-router.get("/:id/invitations", async (req, res) => {
+//GET all user outgoing invitations
+router.get("/:id/invitations/out", async (req, res) => {
   const userId = req.params.id;
   try {
     const invites = await Invitation.find({ referrer: userId });
+    console.log("invites:", invites);
+
+    if (invites.length < 1) {
+      res.status(404).send("No invitations found.");
+    }
+
+    res.json(invites);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+//GET all user incoming invitations
+router.get("/:id/invitations/in", async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      res.status(404).send("User not found");
+    }
+
+    const invites = await Invitation.find({ toEmail: user.email });
     console.log("invites:", invites);
 
     if (invites.length < 1) {
