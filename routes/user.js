@@ -9,6 +9,24 @@ const Invitation = require("../models/Invitation");
 
 sgMail.setApiKey(process.env.EMAIL_KEY);
 
+//GET all user invitations
+router.get("/:id/invitations", async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const invites = await Invitation.find({ referrer: userId });
+    console.log("invites:", invites);
+
+    if (invites.length < 1) {
+      res.status(404).send("No invitations found.");
+    }
+
+    res.json(invites);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
 //POST create a user invitation
 router.post("/:id/invitation", async (req, res) => {
   const referrer = req.params.id;
