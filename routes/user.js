@@ -122,4 +122,25 @@ router.post("/:id/invitation/send", async (req, res) => {
   }
 });
 
+//GET user contacts
+router.get("/:id/contacts", async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      res.status(404).send("User not found");
+    }
+
+    if (user.contacts.length < 1) {
+      return res.status(404).send("No contacts found.");
+    }
+
+    res.json(user.contacts);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
 module.exports = router;
