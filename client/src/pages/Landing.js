@@ -12,16 +12,11 @@ import {
   Button
  } from '@material-ui/core';
 import { makeStyles} from '@material-ui/core/styles';
-
 import Background from '../assets/background.png';
-
 require('dotenv').config();
 const baseURL = process.env.REACT_APP_baseURL;
 
 const useStyles = makeStyles({
-  inline: {
-    inline: 'true'
-  },
   outerMargins: {
     marginTop: '2%',
     paddingLeft: '10%'
@@ -40,27 +35,45 @@ const useStyles = makeStyles({
   },
   marginBottom20: {
     marginBottom: '20%'
+  },
+  errors: {
+    color: 'red'
   }
 })
 
 export default function Landing() {
   const classes = useStyles();
 
+  const [errorEmail, setErrorEmail] = useState('')
+  const [errorPassword, setErrorPassword] = useState('')
   const [language, setLanguage] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorLanguage, setErrorLanguage] = useState('')
+
+  const isEmail = email => /^\S+@\S+$/.test(email)
 
   const handleSubmit = () => {
-    axios.post(`${baseURL}/user/signup`, {
-      email,
-      password,
-      primaryLanguage: language
-    }).then(response => {
-      console.log(response.data)
-      // if (response.status === 200 || response.status === 201){
-
-      // }
-    })
+    if (isEmail(email) && password.length >= 6 && language) {
+      axios.post(`${baseURL}/user/signup`, {
+        email,
+        password,
+        primaryLanguage: language
+      }).then(response => {
+        console.log(response.data)
+        // if (response.status === 200 || response.status === 201){
+  
+        // }
+      })
+    } else {
+      // one or both or all three may happen, hence the if statement structure. Also disable errors once criteria is met.
+      if (password.length < 6) setErrorPassword('Password must be at least 6 characters.');
+      if (!isEmail(email)) setErrorEmail('Invalid email.');
+      if (!language) setErrorLanguage('Please select a language.')
+      if (password.length >= 6) setErrorPassword('');
+      if (isEmail(email)) setErrorEmail('')
+      if (language) setErrorLanguage('')
+    }
   }
 
   return (
@@ -93,12 +106,14 @@ export default function Landing() {
             onChange={(event) => setEmail(event.target.value)}
             className={classes.marginBottom5}
           />
+          <Typography variant="h6" className={classes.errors}>{errorEmail}</Typography>
           <TextField 
             label="Password" 
             type="password"
             onChange={(event) => setPassword(event.target.value)}
             className={classes.marginBottom5}
           />
+          <Typography variant="h6" className={classes.errors}>{errorPassword}</Typography>
           <FormControl className={classes.marginBottom20}>
             <InputLabel id="language-select">Select a Language</InputLabel>
             <Select
@@ -111,6 +126,7 @@ export default function Landing() {
               <MenuItem value={'French'}>French</MenuItem>
             </Select>
           </FormControl>
+          <Typography variant="h6" className={classes.errors}>{errorLanguage}</Typography>
           <Button 
             variant="contained" color="primary"
             onClick={handleSubmit}

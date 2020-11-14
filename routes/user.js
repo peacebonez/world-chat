@@ -1,13 +1,11 @@
 const router = require('express').Router();
-
-//const passport = require('passport')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const { check, validationResult } = require('express-validator')
 
 require('dotenv').config()
-const JWT_EXPIRY_TIME = 15 * 60; // 15 minutes
+const JWT_EXPIRY_TIME = 30 * 60 * 60 * 24; // 30 days
 
 // use this for running async functions
 function runAsyncWrapper (callback) {
@@ -20,7 +18,7 @@ function runAsyncWrapper (callback) {
 // User Login
 router.post('/login', runAsyncWrapper( async (req, res) => {
   let email = req.body.email
-  let user = await User.findOne({ email: email });
+  const user = await User.findOne({ email: email });
   if (!user) { 
     return res.status(400).send("No user with this email"); 
   } 
@@ -49,16 +47,15 @@ router.post('/signup', [
       return res.status(422).json({ errors: errors.array() });
     
     // Email must be unique
-    let user1 = await User.findOne({ email: req.body.email})
+    const user1 = await User.findOne({ email: req.body.email})
     if (user1) {
-      console.log('not unique');
       return res.status(400).send('User with this email already exists.')
     }
 
     const salt = bcrypt.genSaltSync();
     const hashed_password = bcrypt.hashSync(req.body.password, salt);
     // REGISTER USER!!!
-    let user = await User.create( {
+    const user = await User.create( {
       email: req.body.email,
       password: hashed_password,
       primaryLanguage: req.body.primaryLanguage
@@ -68,12 +65,12 @@ router.post('/signup', [
 }))
 
 router.get("/get_by_id/:id", runAsyncWrapper(async function(req, res) {
-  let user = await User.findById(req.params.id);
+  const user = await User.findById(req.params.id);
   return res.status(200).json(user);
 }));
 
 router.get("/get_all", runAsyncWrapper(async function(req, res) {
-  let users = await User.find();
+  const users = await User.find();
   return res.status(200).json(users);
 }));
 

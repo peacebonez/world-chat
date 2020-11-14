@@ -4,10 +4,8 @@ import { BrowserRouter, Route } from "react-router-dom";
 import { theme } from "./themes/theme";
 import LandingPage from "./pages/Landing";
 import Login from './pages/Login'
-import "./App.css";
-import Invitation from "./components/Invitation";
 
-import Messenger from "./components/Messenger";
+import Messenger from "./pages/Messenger";
 
 function App() {
   return (
@@ -15,6 +13,7 @@ function App() {
       <BrowserRouter>
         <Route exact path="/" component={LandingPage} />
         <Route exact path="/login" component={Login} />
+        <Route exact path="/messenger" component={Messenger}/>
       </BrowserRouter>
     </MuiThemeProvider>
   );

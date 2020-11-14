@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import axios from 'axios'
 import { 
   Box,
@@ -38,6 +38,7 @@ const useStyles = makeStyles({
 
 export default function Login() {
   const classes = useStyles();
+  const history = useHistory();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -47,7 +48,7 @@ export default function Login() {
       email,
       password
     }).then(response => {
-      console.log(response)
+      history.push('/messenger');
     }).catch(error => console.error(error))
   };
 
@@ -55,7 +56,7 @@ export default function Login() {
     <Box display="flex">
       {/** The left side: Image saying "Converse with anyone with any language" */}
       <Box >
-        <img src={Background} style={{ height: '100vh'}}
+        <img src={Background} className={classes.image} 
           alt="People talking and texting, with purpose of the web app."
         />
       </Box>
