@@ -21,8 +21,7 @@ const useStyles = makeStyles((theme) => ({
   sideBarImgWrapper: {
     "& span": {
       position: "relative",
-      left: "-32%",
-      top: "75%",
+      transform: "translate(-200%,180%)",
     },
   },
   sideBarImg: {
