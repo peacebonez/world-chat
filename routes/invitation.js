@@ -12,8 +12,6 @@ router.put("/:id/approve", async (req, res) => {
       res.status(404).send("Invitation not found");
     }
 
-    //invitation
-
     if (invitation.status === "pending") {
       invitation.status = "approved";
     } else {
@@ -38,8 +36,6 @@ router.put("/:id/reject", async (req, res) => {
     if (!invitation) {
       res.status(404).send("Invitation not found");
     }
-
-    //invitation
 
     if (invitation.status === "pending") {
       invitation.status = "rejected";
