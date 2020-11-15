@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, createRef } from "react";
 import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -46,15 +46,15 @@ const useStyles = makeStyles((theme) => ({
 export default function FormDialog() {
   const userId = "5fadeb4e66d8372cd6d05d89";
   const classes = useStyles();
-  const inputRef = React.createRef();
-  const [email, setEmail] = React.useState("");
-  const [open, setOpen] = React.useState(false);
+  const inputRef = createRef();
+
+  const [email, setEmail] = useState("");
+  const [emailList, setEmailList] = useState([]);
+  const [open, setOpen] = useState(false);
   //retrieve user object from DB and set ID
-  const [uniqueID, setID] = React.useState(
-    "https://www.EKLN-messenger.com/join/" +
-      (Math.floor(Math.random() * 90000000) + 10000000)
+  const [inviteUrl, setID] = useState(
+    "https://www.EKLN-messenger.com/join/" + userId
   );
-  const [emailList, setEmailList] = React.useState([]);
 
   /*generate unique id for URL */
 
@@ -76,35 +76,34 @@ export default function FormDialog() {
 
   /*push emails to emailList*/
   const addEmail = () => {
+    if (!email) return;
     if (!emailList.includes(email)) {
       setEmailList([...emailList, email]);
       setEmail("");
-    } else return;
+    } else {
+      return;
+    }
   };
 
-  //need to grab current user id and email
+  //handles email invitations
+  // maybe use a Material UI loading component?
+  const submitInvite = async () => {
+    handleClose();
 
-  const submitInvite = () => {
-    //handles email invitations
-    // maybe use a Material UI loading component?
-    const goodEmails = [];
-    const badEmails = [];
-    emailList.forEach(async (email) => {
+    let goodEmails = [];
+    let badEmails = [];
+
+    //separate each email into goodEmail or badEmail
+    for (const email of emailList) {
       let res = await createInvite(email);
-      console.log("res:", res);
-
-      //separating good emails from bad emails
-      if (res.status === 200) goodEmails.push(res.data.toEmail);
-      else badEmails.push(res.data.toEmail);
-    });
-
-    console.log("goodEmails:", goodEmails);
-    console.log("badEmails:", badEmails);
+      if (res) goodEmails = [...goodEmails, email];
+      else badEmails = [...badEmails, email];
+    }
 
     //send invites only to good emails
-    goodEmails.forEach(async (email) => {
+    for (const email of goodEmails) {
       await sendInvite(email);
-    });
+    }
 
     //placeholer alert of emails sent and bad emails not sent
     const alertMsg = {
@@ -120,7 +119,6 @@ export default function FormDialog() {
 
     alert(JSON.stringify(alertMsg));
     setEmailList([]);
-    handleClose();
   };
 
   //POST config header values
@@ -200,10 +198,10 @@ export default function FormDialog() {
             Copy ref-link to invite
           </Typography>
 
-          <div className={classes.invitationLink}>{uniqueID}</div>
+          <div className={classes.invitationLink}>{inviteUrl}</div>
         </DialogContent>
         <DialogActions>
-          <CopyToClipboard text={uniqueID}>
+          <CopyToClipboard text={inviteUrl}>
             <Button color="primary">Copy</Button>
           </CopyToClipboard>
         </DialogActions>

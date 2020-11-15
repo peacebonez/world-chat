@@ -27,22 +27,25 @@ router.post(
       const user = await User.findById(referrer);
 
       if (!user) {
-        res.status(404).json({ msg: "User not found", toEmail });
+        return res.status(404).json({ msg: "User not found", toEmail });
       }
 
-      //determine if referrer already sent invitation to receiver
+      //find all outgoing invitations to the toEmail (array)
       const invitations = await Invitation.find({ toEmail });
 
+      //see if an invitation was alreasdy sent from user to toEmail
       const invitationAlreadySent = invitations.find(
         (invitation) => invitation.referrer.toString() === referrer
       );
 
-      //can't send invite if already sent but CAN if the invite was rejected
-      if (
-        invitationAlreadySent &&
-        invitationAlreadySent.status !== "rejected"
-      ) {
-        res.status(400).json({ msg: "Invitation already sent", toEmail });
+      console.log("invitationAlreadySent:", invitationAlreadySent);
+
+      //can't send invite if already sent
+      if (invitationAlreadySent) {
+        console.log("INVITE ALREADY SENT");
+        return res
+          .status(400)
+          .json({ msg: "Invitation already sent", toEmail });
       } else {
         const newInvitation = new Invitation({
           referrer: user,
