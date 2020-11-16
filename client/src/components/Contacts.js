@@ -5,22 +5,22 @@ import PropTypes from "prop-types";
 import Contact from "./Contact";
 
 const testContacts = [
-  { avatar: happyChatter, name: "Doug", isOnline: true },
-  { avatar: happyChatter, name: "Sandra", isOnline: false },
-  { avatar: happyChatter, name: "Michael", isOnline: false },
-  { avatar: happyChatter, name: "Chet", isOnline: true },
-  { avatar: happyChatter, name: "Kwame", isOnline: false },
-  { avatar: happyChatter, name: "Dong", isOnline: true },
-  { avatar: happyChatter, name: "a", isOnline: true },
-  { avatar: happyChatter, name: "b", isOnline: true },
-  { avatar: happyChatter, name: "c", isOnline: true },
-  { avatar: happyChatter, name: "d", isOnline: true },
-  { avatar: happyChatter, name: "e", isOnline: true },
-  { avatar: happyChatter, name: "f", isOnline: true },
-  { avatar: happyChatter, name: "g", isOnline: true },
-  { avatar: happyChatter, name: "h", isOnline: true },
-  { avatar: happyChatter, name: "i", isOnline: true },
-  { avatar: happyChatter, name: "j", isOnline: true },
+  { avatar: happyChatter, name: "Doug", isOnline: true, id: 0 },
+  { avatar: happyChatter, name: "Sandra", isOnline: false, id: 1 },
+  { avatar: happyChatter, name: "Michael", isOnline: false, id: 2 },
+  { avatar: happyChatter, name: "Chet", isOnline: true, id: 3 },
+  { avatar: happyChatter, name: "Kwame", isOnline: false, id: 4 },
+  { avatar: happyChatter, name: "Dong", isOnline: true, id: 5 },
+  { avatar: happyChatter, name: "a", isOnline: true, id: 6 },
+  { avatar: happyChatter, name: "b", isOnline: true, id: 7 },
+  { avatar: happyChatter, name: "c", isOnline: true, id: 8 },
+  { avatar: happyChatter, name: "d", isOnline: true, id: 9 },
+  { avatar: happyChatter, name: "e", isOnline: true, id: 10 },
+  { avatar: happyChatter, name: "f", isOnline: true, id: 11 },
+  { avatar: happyChatter, name: "g", isOnline: true, id: 12 },
+  { avatar: happyChatter, name: "h", isOnline: true, id: 13 },
+  { avatar: happyChatter, name: "i", isOnline: true, id: 14 },
+  { avatar: happyChatter, name: "j", isOnline: true, id: 15 },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -39,8 +39,10 @@ const Contacts = (props) => {
       <h1>Contacts</h1>
       <ul className={classes.contactList}>
         {testContacts.map((contact) => {
-          const { avatar, name, isOnline } = contact;
-          return <Contact avatar={avatar} name={name} isOnline={isOnline} />;
+          const { avatar, name, isOnline, id } = contact;
+          return (
+            <Contact avatar={avatar} name={name} isOnline={isOnline} key={id} />
+          );
         })}
       </ul>
     </div>

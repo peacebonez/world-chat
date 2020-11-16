@@ -45,7 +45,7 @@ const Contact = ({ avatar, name, isOnline }) => {
     <li className={classes.sideBarHeader}>
       <div>
         <div className={classes.sideBarImgWrapper}>
-          <img src={avatar} className={classes.sideBarImg} />
+          <img src={avatar} alt="user avatar" className={classes.sideBarImg} />
           <span
             className={`${classes.statusIcon} ${
               isOnline ? classes.onlineIcon : classes.offlineIcon
