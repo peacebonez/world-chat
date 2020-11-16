@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Button,
@@ -10,6 +10,8 @@ import {
 } from "@material-ui/core";
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
+
+import { sendInvite } from "../reducers/userReducer";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -44,8 +46,9 @@ const useStyles = makeStyles((theme) => ({
 export default function FormDialog() {
   const classes = useStyles();
   const inputRef = React.createRef();
-  const [emails, setEmail] = React.useState("");
+  const [email, setEmail] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  //retrieve user object from DB and set ID
   const [uniqueID, setID] = React.useState(
     "https://www.EKLN-messenger.com/join/" +
       (Math.floor(Math.random() * 90000000) + 10000000)
@@ -62,6 +65,7 @@ export default function FormDialog() {
   /*close dialog function*/
   const handleClose = () => {
     setOpen(false);
+    setEmail("");
   };
 
   /*Set whatever in input to emails*/
@@ -71,8 +75,18 @@ export default function FormDialog() {
 
   /*push emails to emailList*/
   const addEmail = () => {
-    if (emailList.findIndex((email) => email == emails) < 0)
-      setEmailList([...emailList, emails]);
+    // if (emailList.findIndex((email) => email == email) < 0)
+    if (!emailList.includes(email)) {
+      setEmailList([...emailList, email]);
+      setEmail("");
+    } else return;
+  };
+
+  const submitEmail = async () => {
+    handleClose();
+
+    //need to grab current user id and email
+    sendInvite("5fad63358f96786e507a0b74", emailList);
   };
 
   return (
@@ -100,6 +114,7 @@ export default function FormDialog() {
             label="Email Address"
             type="email"
             fullWidth={true}
+            value={email}
             ref={inputRef}
             onChange={inputEmail}
           />
@@ -130,7 +145,8 @@ export default function FormDialog() {
           size="large"
           color="primary"
           className={classes.margin}
-          onClick={handleClose}
+          onClick={submitEmail}
+          disabled={emailList.length < 1}
         >
           Send Invitations
         </Button>
