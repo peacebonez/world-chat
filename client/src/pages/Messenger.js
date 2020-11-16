@@ -3,8 +3,8 @@ import { Container, Hidden } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 
-import Sidebar from "./Sidebar";
-import Conversation from "./Conversation";
+import Sidebar from "../components/Sidebar";
+import Conversation from "../components/Conversation";
 
 const useStyles = makeStyles((theme) => ({
   messengerContainer: {
