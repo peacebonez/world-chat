@@ -1,11 +1,14 @@
-import React, { useEffect } from "react";
-import { MuiThemeProvider } from "@material-ui/core";
-import { BrowserRouter, Route } from "react-router-dom";
-import Invitation from "./components/Invitation";
-import { theme } from "./themes/theme";
-import { UserProvider } from "./userContext";
+import React, { useEffect } from 'react';
+import { MuiThemeProvider } from '@material-ui/core';
+import { BrowserRouter, Route } from 'react-router-dom';
+import { theme } from './themes/theme';
 
-import Messenger from "./components/Messenger";
+import { UserProvider } from './userContext';
+
+import LandingPage from './pages/Landing';
+import Login from './pages/Login';
+
+import Messenger from './pages/Messenger';
 
 function App() {
   useEffect(() => {
@@ -16,10 +19,9 @@ function App() {
     <MuiThemeProvider theme={theme}>
       <UserProvider>
         <BrowserRouter>
-          <Route path="/" exact>
-            <Messenger />
-          </Route>
-          <Invitation />
+          <Route exact path="/" component={LandingPage} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/messenger" component={Messenger} />
         </BrowserRouter>
       </UserProvider>
     </MuiThemeProvider>

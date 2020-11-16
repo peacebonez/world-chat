@@ -8,17 +8,16 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
   },
   email: {
     type: String,
     required: true,
-    lowercase: true,
     unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
   },
   primaryLanguage: {
     type: String,
@@ -31,4 +30,5 @@ const UserSchema = new Schema({
   },
 });
 
+//UserSchema.plugin(require('passport-local-mongoose'));
 module.exports = User = mongoose.model("user", UserSchema);
