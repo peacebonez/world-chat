@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sidebar = (props) => {
-  const [chatShown, setChatShown] = useState(true);
+  const [chatShown, setChatShown] = useState(false);
   const classes = useStyles();
   return (
     <div className={classes.sideBar}>
