@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    borderBottom: "solid 1px #ddd",
     "& div": {
       display: "flex",
       alignItems: "center",
@@ -19,8 +20,7 @@ const useStyles = makeStyles((theme) => ({
   sideBarImgWrapper: {
     "& span": {
       position: "relative",
-      left: "-32%",
-      top: "75%",
+      transform: "translate(-200%,180%)",
     },
   },
   sideBarImg: {

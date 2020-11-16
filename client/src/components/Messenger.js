@@ -14,7 +14,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "flex-start",
     width: "100vw",
-    height: "100vh",
+    maxHeight: "100vh",
+    marginTop: theme.spacing(2),
     overflow: "hidden",
   },
 }));
