@@ -53,7 +53,7 @@ export default function FormDialog() {
   const [open, setOpen] = useState(false);
   //retrieve user object from DB and set ID
   const [inviteUrl, setID] = useState(
-    "https://www.EKLN-messenger.com/join/" + userId
+    "https://www.EK-messenger.com/join/" + userId
   );
 
   /*generate unique id for URL */
@@ -165,7 +165,7 @@ export default function FormDialog() {
         fullWidth={true}
       >
         <Typography className={classes.invitationDialogueTitle}>
-          Invite Friends to Join Us on EKLN-Messenger
+          Invite Friends to Join Us on EK-Messenger
         </Typography>
         <DialogContent>
           <Typography className={classes.invitationDialogueP}>

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 
 import SideBarHeader from "./SideBarHeader";
 import SideBarSearch from "./SideBarSearch";
+import Contacts from "./Contacts";
+import ChatList from "./ChatList";
 
 const useStyles = makeStyles((theme) => ({
   sideBar: {
@@ -18,11 +20,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sidebar = (props) => {
+  const [chatShown, setChatShown] = useState(true);
   const classes = useStyles();
   return (
     <div className={classes.sideBar}>
       <SideBarHeader />
-      <SideBarSearch />
+      <SideBarSearch setChatShown={setChatShown} />
+      {chatShown ? <ChatList /> : <Contacts />}
     </div>
   );
 };

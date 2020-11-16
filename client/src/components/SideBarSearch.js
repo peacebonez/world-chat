@@ -13,18 +13,31 @@ const useStyles = makeStyles((theme) => ({
       background: theme.palette.primary.gray,
     },
   },
+  noStyleBtn: {
+    border: "none",
+    background: "none",
+    outline: "none",
+    cursor: "pointer",
+  },
 }));
 
-const SideBarSearch = (props) => {
+const SideBarSearch = ({ setChatShown }) => {
   const classes = useStyles();
   return (
     <div>
-      <Typography display="inline" variant="h6">
-        Chats
-      </Typography>
-      <Typography display="inline" variant="h6">
-        Contacts
-      </Typography>
+      <button className={classes.noStyleBtn} onClick={() => setChatShown(true)}>
+        <Typography display="inline" variant="h6">
+          Chats
+        </Typography>
+      </button>
+      <button
+        className={classes.noStyleBtn}
+        onClick={() => setChatShown(false)}
+      >
+        <Typography display="inline" variant="h6">
+          Contacts
+        </Typography>
+      </button>
       <div className={classes.chatInput}>
         <form noValidate autoComplete="off">
           <TextField
