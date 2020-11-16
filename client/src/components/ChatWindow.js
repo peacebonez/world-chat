@@ -1,8 +1,10 @@
 import React from "react";
+import io from 'socket.io-client';
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-
+require('dotenv').config();
 import ChatInput from "./ChatInput";
+const BASE_URL = process.env.REACT_APP_baseURL;
 
 const useStyles = makeStyles((theme) => ({
   chatWindow: {
@@ -18,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ChatWindow = (props) => {
+  let socket = io(BASE_URL.toString());
   const classes = useStyles();
   return (
     <div className={classes.chatWindow}>

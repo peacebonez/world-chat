@@ -15,6 +15,8 @@ const { json, urlencoded } = express;
 const userRouter = require('./routes/user')
 
 var app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
 //connect mongoDB database
 const connectDB = async () => {
@@ -61,8 +63,14 @@ app.use(function (err, req, res, next) {
   res.json({ error: err.message });
 });
 
-app.listen(3001, () => {
-  console.log("Server has started...");
+io.on('connection', (socket) => { /* socket object may be used to send specific messages to the new connected client */
+  console.log('new client connected');
+  socket.emit('connection', null);
 });
+
+http.listen(3001, () => {
+  console.log('listening on *:3001');
+});
+
 
 module.exports = app;
