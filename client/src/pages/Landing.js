@@ -11,10 +11,15 @@ import {
   MenuItem,
   Button
  } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles} from '@material-ui/core/styles';
 import Background from '../assets/background.png';
 require('dotenv').config();
 const baseURL = process.env.REACT_APP_baseURL;
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles({
   outerMargins: {
@@ -44,18 +49,26 @@ const useStyles = makeStyles({
 export default function Landing() {
   const classes = useStyles();
 
-  const [errorEmail, setErrorEmail] = useState('')
-  const [errorPassword, setErrorPassword] = useState('')
-  const [language, setLanguage] = useState('');
+  const [open, setOpen] = useState(false);
+
+  const [errorName, setErrorName] = useState('');
+  const [errorEmail, setErrorEmail] = useState('');
+  const [errorPassword, setErrorPassword] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [language, setLanguage] = useState('');
+  
   const [errorLanguage, setErrorLanguage] = useState('')
 
+  // Npm email-validator is acting up; if anyone has a better email validation function
+  // feel free to replace the function below
   const isEmail = email => /^\S+@\S+$/.test(email)
 
   const handleSubmit = () => {
     if (isEmail(email) && password.length >= 6 && language) {
       axios.post(`${baseURL}/user/signup`, {
+        name, // name: name (shorthand)
         email,
         password,
         primaryLanguage: language
@@ -66,10 +79,12 @@ export default function Landing() {
         // }
       })
     } else {
-      // one or both or all three may happen, hence the if statement structure. Also disable errors once criteria is met.
+      // one or both or all four may happen, hence the if statement structure. Also disable errors once criteria is met.
+      if (!name) setErrorName('Name required.')
       if (password.length < 6) setErrorPassword('Password must be at least 6 characters.');
       if (!isEmail(email)) setErrorEmail('Invalid email.');
       if (!language) setErrorLanguage('Please select a language.')
+      if (name) setErrorName('')
       if (password.length >= 6) setErrorPassword('');
       if (isEmail(email)) setErrorEmail('')
       if (language) setErrorLanguage('')
@@ -101,6 +116,12 @@ export default function Landing() {
           className={classes.marginBottom5}
         >Create an Account.</Typography>
         <Box display="flex" flexDirection="column">
+          <TextField 
+            label="Name" 
+            onChange={(event) => setName(event.target.value)}
+            className={classes.marginBottom5}
+          />
+          <Typography variant="h6" className={classes.errors}>{errorName}</Typography>
           <TextField 
             label="Email" 
             onChange={(event) => setEmail(event.target.value)}

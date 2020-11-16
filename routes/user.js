@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const auth = require('../middleware/auth');
 const { User } = require('../models');
 const { check, validationResult } = require('express-validator')
 
@@ -16,7 +17,7 @@ function runAsyncWrapper (callback) {
 }
 
 // User Login
-router.post('/login', runAsyncWrapper( async (req, res) => {
+router.post('/login', auth, runAsyncWrapper( async (req, res) => {
   let email = req.body.email
   const user = await User.findOne({ email: email });
   if (!user) { 
@@ -40,8 +41,9 @@ router.post('/login', runAsyncWrapper( async (req, res) => {
 // User Registration
 router.post('/signup', [
     check('email').isEmail(),
-    check('password').isLength({ min: 6 })
-], runAsyncWrapper( async (req, res) => {
+    check('password').isLength({ min: 6 }),
+    check('primaryLanguage').isLength({ min: 1})
+], auth, runAsyncWrapper( async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) 
       return res.status(422).json({ errors: errors.array() });
@@ -60,6 +62,12 @@ router.post('/signup', [
       password: hashed_password,
       primaryLanguage: req.body.primaryLanguage
     })
+    // success -> Get a JWT Token
+    const accessToken = jwt.sign(/* payload */{ email }, process.env.ACCESS_TOKEN_SECRET, {
+      algorithm: "HS256",
+      expiresIn: JWT_EXPIRY_TIME,
+    });
+    res.cookie("token", accessToken, { httpOnly: true });
     //req.session.user = user
     return res.status(201).send(user._id)
 }))
