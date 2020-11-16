@@ -14,7 +14,6 @@ router.get("/:id/invitations/out", async (req, res) => {
   const userId = req.params.id;
   try {
     const invites = await Invitation.find({ referrer: userId });
-    console.log("invites:", invites);
 
     if (invites.length < 1) {
       res.status(404).send("No invitations found.");
@@ -38,10 +37,9 @@ router.get("/:id/invitations/in", async (req, res) => {
     }
 
     const invites = await Invitation.find({ toEmail: user.email });
-    console.log("invites:", invites);
 
     if (invites.length < 1) {
-      res.status(404).send("No invitations found.");
+      res.status(204).send("No invitations found.");
     }
 
     res.json(invites);
