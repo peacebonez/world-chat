@@ -31,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
     width: '70px',
     marginRight: theme.spacing(1),
   },
+  dotMenu: {
+    cursor: 'pointer',
+    color: '#BCC8D9',
+  },
   statusIcon: {
     width: 12,
     height: 12,

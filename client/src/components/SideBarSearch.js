@@ -15,9 +15,9 @@ const useStyles = makeStyles((theme) => ({
   searchInput: {
     width: '80%',
     marginBottom: 20,
-    background: '#E9EEF9',
+    background: theme.palette.secondary.main,
     '& input': {
-      background: '#E9EEF9',
+      background: theme.palette.secondary.main,
     },
   },
   noStyleBtn: {
@@ -25,6 +25,15 @@ const useStyles = makeStyles((theme) => ({
     background: 'none',
     outline: 'none',
     cursor: 'pointer',
+  },
+  header: {
+    color: '#BEC5D3',
+    '&:hover': {
+      color: '#000',
+    },
+  },
+  headerActive: {
+    color: '#000',
   },
 }));
 
@@ -60,7 +69,7 @@ const SideBarSearch = ({ setChatShown, setContactsShown, setInvitesShown }) => {
           className={classes.noStyleBtn}
           onClick={(e) => showComponent(e.target.innerHTML)}
         >
-          <Typography display="inline" variant="h6">
+          <Typography display="inline" variant="h6" className={classes.header}>
             Chats
           </Typography>
         </button>
@@ -68,7 +77,7 @@ const SideBarSearch = ({ setChatShown, setContactsShown, setInvitesShown }) => {
           className={classes.noStyleBtn}
           onClick={(e) => showComponent(e.target.innerHTML)}
         >
-          <Typography display="inline" variant="h6">
+          <Typography display="inline" variant="h6" className={classes.header}>
             Contacts
           </Typography>
         </button>
@@ -76,7 +85,7 @@ const SideBarSearch = ({ setChatShown, setContactsShown, setInvitesShown }) => {
           className={classes.noStyleBtn}
           onClick={(e) => showComponent(e.target.innerHTML)}
         >
-          <Typography display="inline" variant="h6">
+          <Typography display="inline" variant="h6" className={classes.header}>
             Invites
           </Typography>
         </button>
