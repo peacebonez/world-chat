@@ -1,5 +1,6 @@
-import React, { useContext } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useContext, useState, createRef } from 'react';
+import axios from 'axios';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
   TextField,
@@ -7,11 +8,12 @@ import {
   DialogActions,
   DialogContent,
   Typography,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import AddIcon from '@material-ui/icons/Add';
 
-import { sendInvite } from "../reducers/userReducer";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import InviteNotification from './InviteNotification';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -20,23 +22,33 @@ const useStyles = makeStyles((theme) => ({
   extendedIcon: {
     marginRight: theme.spacing(1),
   },
+  inviteBtn: {
+    border: 'none',
+    outline: 'none',
+    background: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    color: '#4097E8',
+    fontWeight: 700,
+    cursor: 'pointer',
+  },
   invitationLink: {
     width: 400,
   },
   invitationDialogueP: {
-    fontWeight: "bold",
-    color: "#0d79de",
+    fontWeight: 'bold',
+    color: '#0d79de',
   },
   invitationDialogueTitle: {
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 22,
-    fontWeight: "bold",
-    color: "#0d79de",
+    fontWeight: 'bold',
+    color: '#0d79de',
     margin: theme.spacing(4),
   },
   invitationEmailList: {
-    marginLeft: "2em",
-    fontSize: "smaller",
+    marginLeft: '2em',
+    fontSize: 'smaller',
   },
   invitationEmailBtn: {
     fontSize: 1,
@@ -44,16 +56,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function FormDialog() {
+  const userId = '5fadeb4e66d8372cd6d05d89';
   const classes = useStyles();
-  const inputRef = React.createRef();
-  const [email, setEmail] = React.useState("");
-  const [open, setOpen] = React.useState(false);
+  const inputRef = createRef();
+
+  const [email, setEmail] = useState('');
+  const [emailList, setEmailList] = useState([]);
+  const [successEmails, setSuccessEmails] = useState([]);
+  const [failedEmails, setFailedEmails] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [notifyOpen, setNotifyOpen] = useState(false);
   //retrieve user object from DB and set ID
-  const [uniqueID, setID] = React.useState(
-    "https://www.EKLN-messenger.com/join/" +
-      (Math.floor(Math.random() * 90000000) + 10000000)
-  );
-  const [emailList, setEmailList] = React.useState([]);
+  const inviteUrl = 'https://www.EK-messenger.com/join/' + userId;
 
   /*generate unique id for URL */
 
@@ -65,7 +79,7 @@ export default function FormDialog() {
   /*close dialog function*/
   const handleClose = () => {
     setOpen(false);
-    setEmail("");
+    setEmail('');
   };
 
   /*Set whatever in input to emails*/
@@ -75,25 +89,86 @@ export default function FormDialog() {
 
   /*push emails to emailList*/
   const addEmail = () => {
-    // if (emailList.findIndex((email) => email == email) < 0)
+    if (!email) return;
     if (!emailList.includes(email)) {
       setEmailList([...emailList, email]);
-      setEmail("");
-    } else return;
+      setEmail('');
+    } else {
+      return;
+    }
   };
 
-  const submitEmail = async () => {
+  //handles email invitations
+  const submitInvite = async () => {
     handleClose();
 
-    //need to grab current user id and email
-    sendInvite("5fad63358f96786e507a0b74", emailList);
+    let successEmails = [];
+    let failedEmails = [];
+
+    //attempt to send email
+    for (const email of emailList) {
+      let res = await sendInvite(email);
+      if (res && res.status === 200) successEmails.push(email);
+      else failedEmails.push(email);
+    }
+
+    //create invites for only sent emails
+    for (const email of successEmails) {
+      let res = await createInvite(email);
+
+      //remove email from success emails and add to failed emails if failure
+      if (!res || res.status !== 200) {
+        successEmails.splice(successEmails.indexOf(email), 1);
+        failedEmails.push(email);
+      }
+    }
+
+    setSuccessEmails(successEmails);
+    setFailedEmails(failedEmails);
+    setNotifyOpen(true);
+    setEmailList([]);
   };
 
+  //POST config header values
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const createInvite = async (toEmail) => {
+    try {
+      const res = await axios.post(
+        `/user/${userId}/invitation`,
+        { toEmail },
+        config,
+      );
+
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const sendInvite = async (toEmail) => {
+    try {
+      const res = await axios.post(
+        `/user/${userId}/invitation/send`,
+        { toEmail },
+        config,
+      );
+
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Invite Friends
-      </Button>
+      <button className={classes.inviteBtn} onClick={handleClickOpen}>
+        <AddIcon /> Invite Friends
+      </button>
+      {/* Invitiation Modal Window */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -101,15 +176,17 @@ export default function FormDialog() {
         fullWidth={true}
       >
         <Typography className={classes.invitationDialogueTitle}>
-          Invite Friends to Join Us on EKLN-Messenger
+          Invite Friends to Join Us on EK-Messenger
         </Typography>
         <DialogContent>
           <Typography className={classes.invitationDialogueP}>
             Enter emails to invite friends
           </Typography>
           <TextField
+            className={classes.emailInput}
             autoFocus
             margin="dense"
+            variant="outlined"
             id="email"
             label="Email Address"
             type="email"
@@ -133,24 +210,30 @@ export default function FormDialog() {
           <Typography className={classes.invitationDialogueP}>
             Copy ref-link to invite
           </Typography>
-          <div className={classes.invitationLink}>{uniqueID}</div>
+          <div className={classes.invitationLink}>{inviteUrl}</div>
         </DialogContent>
         <DialogActions>
-          <CopyToClipboard text={uniqueID}>
+          <CopyToClipboard text={inviteUrl}>
             <Button color="primary">Copy</Button>
           </CopyToClipboard>
         </DialogActions>
         <Button
           variant="outlined"
-          size="large"
           color="primary"
           className={classes.margin}
-          onClick={submitEmail}
+          onClick={submitInvite}
           disabled={emailList.length < 1}
         >
           Send Invitations
         </Button>
       </Dialog>
+      {/* Email Confirmation Modal Window */}
+      <InviteNotification
+        successEmails={successEmails}
+        failedEmails={failedEmails}
+        notifyOpen={notifyOpen}
+        setNotifyOpen={setNotifyOpen}
+      />
     </div>
   );
 }

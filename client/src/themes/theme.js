@@ -1,11 +1,11 @@
-import { createMuiTheme } from "@material-ui/core";
+import { createMuiTheme } from '@material-ui/core';
 
 export const theme = createMuiTheme({
   overrides: {
     MuiCssBaseline: {
-      "@global": {
-        "*, *::before, *::after": {
-          boxSizing: "border-box",
+      '@global': {
+        '*, *::before, *::after': {
+          boxSizing: 'border-box',
         },
       },
     },
@@ -18,6 +18,7 @@ export const theme = createMuiTheme({
     },
   },
   palette: {
-    primary: { main: "#3C8FFF", gray: "#F5F7FB" },
+    primary: { main: '#3C8FFF', gray: '#F5F7FB' },
+    secondary: { main: '#E9EEF9' },
   },
 });
