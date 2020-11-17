@@ -1,6 +1,6 @@
-import React, { useContext, useState, createRef } from "react";
-import axios from "axios";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useContext, useState, createRef } from 'react';
+import axios from 'axios';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
   TextField,
@@ -8,9 +8,9 @@ import {
   DialogActions,
   DialogContent,
   Typography,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -23,20 +23,19 @@ const useStyles = makeStyles((theme) => ({
     width: 400,
   },
   invitationDialogueP: {
-    fontWeight: "bold",
-    color: "#0d79de",
+    fontWeight: 'bold',
+    color: '#0d79de',
   },
   invitationDialogueTitle: {
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 22,
-    fontWeight: "bold",
-    color: "#0d79de",
-
+    fontWeight: 'bold',
+    color: '#0d79de',
     margin: theme.spacing(4),
   },
   invitationEmailList: {
-    marginLeft: "2em",
-    fontSize: "smaller",
+    marginLeft: '2em',
+    fontSize: 'smaller',
   },
   invitationEmailBtn: {
     fontSize: 1,
@@ -44,16 +43,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function FormDialog() {
-  const userId = "5fadeb4e66d8372cd6d05d89";
+  const userId = '5fadeb4e66d8372cd6d05d89';
   const classes = useStyles();
   const inputRef = createRef();
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const [emailList, setEmailList] = useState([]);
   const [open, setOpen] = useState(false);
   //retrieve user object from DB and set ID
   const [inviteUrl, setID] = useState(
-    "https://www.EK-messenger.com/join/" + userId
+    'https://www.EK-messenger.com/join/' + userId,
   );
 
   /*generate unique id for URL */
@@ -66,7 +65,7 @@ export default function FormDialog() {
   /*close dialog function*/
   const handleClose = () => {
     setOpen(false);
-    setEmail("");
+    setEmail('');
   };
 
   /*Set whatever in input to emails*/
@@ -79,7 +78,7 @@ export default function FormDialog() {
     if (!email) return;
     if (!emailList.includes(email)) {
       setEmailList([...emailList, email]);
-      setEmail("");
+      setEmail('');
     } else {
       return;
     }
@@ -108,11 +107,11 @@ export default function FormDialog() {
     //placeholer alert of emails sent and bad emails not sent
     const alertMsg = {
       good: {
-        msg: "Successfully sent emails",
+        msg: 'Successfully sent emails',
         goodEmails,
       },
       bad: {
-        msg: "Failed emails",
+        msg: 'Failed emails',
         badEmails,
       },
     };
@@ -124,7 +123,7 @@ export default function FormDialog() {
   //POST config header values
   const config = {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   };
 
@@ -133,7 +132,7 @@ export default function FormDialog() {
       const res = await axios.post(
         `/user/${userId}/invitation`,
         { toEmail },
-        config
+        config,
       );
 
       //placeholder alert
@@ -197,7 +196,6 @@ export default function FormDialog() {
           <Typography className={classes.invitationDialogueP}>
             Copy ref-link to invite
           </Typography>
-
           <div className={classes.invitationLink}>{inviteUrl}</div>
         </DialogContent>
         <DialogActions>
