@@ -8,6 +8,9 @@ import {
   DialogActions,
   DialogContent,
   Typography,
+  DialogTitle,
+  List,
+  ListItem,
 } from '@material-ui/core';
 
 import AddIcon from '@material-ui/icons/Add';
@@ -61,7 +64,10 @@ export default function FormDialog() {
 
   const [email, setEmail] = useState('');
   const [emailList, setEmailList] = useState([]);
+  const [goodEmails, setGoodEmails] = useState([]);
+  const [badEmails, setBadEmails] = useState([]);
   const [open, setOpen] = useState(false);
+  const [notifyOpen, setNotifyOpen] = useState(false);
   //retrieve user object from DB and set ID
   const [inviteUrl, setID] = useState(
     'https://www.EK-messenger.com/join/' + userId,
@@ -101,14 +107,14 @@ export default function FormDialog() {
   const submitInvite = async () => {
     handleClose();
 
-    let goodEmails = [];
-    let badEmails = [];
+    let goodEmailsHolder = [];
+    let badEmailsHolder = [];
 
     //separate each email into goodEmail or badEmail
     for (const email of emailList) {
       let res = await createInvite(email);
-      if (res) goodEmails = [...goodEmails, email];
-      else badEmails = [...badEmails, email];
+      if (res) goodEmailsHolder.push(email);
+      else badEmailsHolder.push(email);
     }
 
     //send invites only to good emails
@@ -128,7 +134,10 @@ export default function FormDialog() {
       },
     };
 
-    alert(JSON.stringify(alertMsg));
+    setGoodEmails(goodEmailsHolder);
+    setBadEmails(badEmailsHolder);
+    // alert(JSON.stringify(alertMsg));
+    setNotifyOpen(true);
     setEmailList([]);
   };
 
@@ -148,7 +157,7 @@ export default function FormDialog() {
       );
 
       //placeholder alert
-      alert(`Invite created for ${toEmail}!`);
+      // alert(`Invite created for ${toEmail}!`);
       return res;
     } catch (err) {
       console.error(err);
@@ -158,17 +167,18 @@ export default function FormDialog() {
   const sendInvite = async (toEmail) => {
     try {
       await axios.post(`/user/${userId}/invitation/send`, { toEmail }, config);
-      alert(`Invite sent to ${toEmail}!`);
+      // alert(`Invite sent to ${toEmail}!`);
     } catch (err) {
       console.error(err);
     }
   };
-
+  console.log('badEmails:', badEmails);
   return (
     <div>
       <button className={classes.inviteBtn} onClick={handleClickOpen}>
         <AddIcon /> Invite Friends
       </button>
+      {/* Invitiation Modal Window */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -226,6 +236,26 @@ export default function FormDialog() {
         >
           Send Invitations
         </Button>
+      </Dialog>
+      {/* Email Confirmation Modal Window */}
+      <Dialog open={notifyOpen} onClose={() => setNotifyOpen(false)}>
+        <DialogContent>
+          <div>
+            <DialogTitle>Emails Sent</DialogTitle>
+            {goodEmails.map((email, i) => (
+              <ListItem key={i}>{email}</ListItem>
+            ))}
+          </div>
+          <div>
+            <DialogTitle>Emails Rejected</DialogTitle>
+            <List>
+              {badEmails.map((email, i) => (
+                <ListItem key={i}>{email}</ListItem>
+              ))}
+            </List>
+          </div>
+          <Button onClick={() => setNotifyOpen(false)}>close</Button>
+        </DialogContent>
       </Dialog>
     </div>
   );
