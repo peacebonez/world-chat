@@ -169,6 +169,7 @@ router.post(
       if (!user) {
         return res.status(404).json({ msg: 'User not found', toEmail });
       }
+      //TODO: SETUP UP CONDITION THAT YOU CANNOT INVITE YOURSELF
 
       //find all outgoing invitations to the toEmail (array)
       const invitations = await Invitation.find({ toEmail });

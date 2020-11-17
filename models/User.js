@@ -23,8 +23,8 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  //leave empty or create a new contactSchema
-  contacts: [{ type: Schema.Types.ObjectId, ref: 'users' }],
+  //leave empty and push in new contacts OR create a new contactSchema
+  contacts: [],
   dateJoined: {
     type: Date,
     default: Date.now,
