@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import tempAvatar from '../assets/temp-avatar.jpg';
 
 import InviteIn from './InviteIn';
 import InviteOut from './InviteOut';
 
-import tempAvatar from '../assets/temp-avatar.jpg';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -40,12 +39,12 @@ const testInvitesIn = [
   { avatar: tempAvatar, email: 'friend5@aol.com' },
 ];
 const testInvitesOut = [
-  { avatar: tempAvatar, email: 'friend6@aol.com' },
-  { avatar: tempAvatar, email: 'friend7@aol.com' },
-  { avatar: tempAvatar, email: 'friend8@aol.com' },
-  { avatar: tempAvatar, email: 'friend9@aol.com' },
-  { avatar: tempAvatar, email: 'friend10@aol.com' },
-  { avatar: tempAvatar, email: 'friend11@aol.com' },
+  'friend6@aol.com',
+  'friend7@aol.com',
+  'friend8@aol.com',
+  'friend9@aol.com',
+  'friend10@aol.com',
+  'friend11@aol.com',
 ];
 
 const Invites = (props) => {
@@ -73,6 +72,7 @@ const Invites = (props) => {
         </button>
       </div>
       <div className={classes.invitesWrapper}>
+        {/* display all pending invites sent TO user */}
         {showRequests && (
           <ul className={classes.inviteUl}>
             {testInvitesIn.map((invite) => (
@@ -80,9 +80,12 @@ const Invites = (props) => {
             ))}
           </ul>
         )}
+        {/* display all pending invites sent BY user */}
         {showSent && (
           <ul className={classes.inviteUl}>
-            <InviteOut invites={testInvitesOut} />
+            {testInvitesOut.map((invite) => (
+              <InviteOut key={invite} invite={invite} />
+            ))}
           </ul>
         )}
       </div>

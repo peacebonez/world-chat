@@ -41,10 +41,6 @@ const Sidebar = (props) => {
   //get converstations from user
   //map out both to their respective components
 
-  useEffect(() => {
-    console.log('UserContext:', user);
-  });
-
   return (
     <div className={classes.sideBar}>
       <SideBarHeader />
