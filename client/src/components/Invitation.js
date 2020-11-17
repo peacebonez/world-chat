@@ -10,6 +10,8 @@ import {
   Typography,
 } from '@material-ui/core';
 
+import AddIcon from '@material-ui/icons/Add';
+
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const useStyles = makeStyles((theme) => ({
@@ -18,6 +20,16 @@ const useStyles = makeStyles((theme) => ({
   },
   extendedIcon: {
     marginRight: theme.spacing(1),
+  },
+  inviteBtn: {
+    border: 'none',
+    outline: 'none',
+    background: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    color: '#4097E8',
+    fontWeight: 700,
+    cursor: 'pointer',
   },
   invitationLink: {
     width: 400,
@@ -154,9 +166,9 @@ export default function FormDialog() {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Invite Friends
-      </Button>
+      <button className={classes.inviteBtn} onClick={handleClickOpen}>
+        <AddIcon /> Invite Friends
+      </button>
       <Dialog
         open={open}
         onClose={handleClose}

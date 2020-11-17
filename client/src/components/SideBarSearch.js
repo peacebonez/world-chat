@@ -24,35 +24,50 @@ const useStyles = makeStyles((theme) => ({
 const SideBarSearch = ({ setChatShown, setContactsShown, setInvitesShown }) => {
   const classes = useStyles();
 
-  const showChats = () => {
-    setChatShown(true);
-    setContactsShown(false);
-    setInvitesShown(false);
-  };
-  const showContacts = () => {
-    setChatShown(false);
-    setContactsShown(true);
-    setInvitesShown(false);
-  };
-  const showInvites = () => {
-    setChatShown(false);
-    setContactsShown(false);
-    setInvitesShown(true);
+  const showComponent = (type) => {
+    switch (type) {
+      case 'Chats':
+        setChatShown(true);
+        setContactsShown(false);
+        setInvitesShown(false);
+        break;
+      case 'Contacts':
+        setChatShown(false);
+        setContactsShown(true);
+        setInvitesShown(false);
+        break;
+      case 'Invites':
+        setChatShown(false);
+        setContactsShown(false);
+        setInvitesShown(true);
+        break;
+      default:
+        break;
+    }
   };
 
   return (
     <div>
-      <button className={classes.noStyleBtn} onClick={showChats}>
+      <button
+        className={classes.noStyleBtn}
+        onClick={(e) => showComponent(e.target.innerHTML)}
+      >
         <Typography display="inline" variant="h6">
           Chats
         </Typography>
       </button>
-      <button className={classes.noStyleBtn} onClick={showContacts}>
+      <button
+        className={classes.noStyleBtn}
+        onClick={(e) => showComponent(e.target.innerHTML)}
+      >
         <Typography display="inline" variant="h6">
           Contacts
         </Typography>
       </button>
-      <button className={classes.noStyleBtn} onClick={showInvites}>
+      <button
+        className={classes.noStyleBtn}
+        onClick={(e) => showComponent(e.target.innerHTML)}
+      >
         <Typography display="inline" variant="h6">
           Invites
         </Typography>
