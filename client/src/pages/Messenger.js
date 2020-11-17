@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Messenger = (props) => {
   const user = useContext(UserContext);
-  user.dispatch({ type: 'SEND_EMAIL' });
   console.log('user:', user);
 
   const classes = useStyles();

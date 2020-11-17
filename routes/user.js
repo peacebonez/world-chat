@@ -174,14 +174,14 @@ router.post(
       const invitations = await Invitation.find({ toEmail });
 
       //see if an invitation was alreasdy sent from user to toEmail
-      const invitationAlreadySent = invitations.find(
+      const invitationAlreadyCreated = invitations.find(
         (invitation) => invitation.referrer.toString() === referrer,
       );
       //can't send invite if already sent
-      if (invitationAlreadySent) {
+      if (invitationAlreadyCreated) {
         return res
           .status(400)
-          .json({ msg: 'Invitation already sent', toEmail });
+          .json({ msg: 'Invitation already created.', toEmail });
       } else {
         const newInvitation = new Invitation({
           referrer: user,
@@ -189,7 +189,7 @@ router.post(
         });
 
         await newInvitation.save();
-        res.status(200).json({ msg: 'Invitation sent!', toEmail });
+        res.status(200).json({ msg: 'Invitation created!', toEmail });
       }
     } catch (err) {
       console.error(err.message);
@@ -201,7 +201,6 @@ router.post(
 //POST send a user invitation
 router.post('/:id/invitation/send', async (req, res) => {
   const toEmail = req.body.toEmail;
-
   try {
     //locate user from parameter
     const user = await User.findById(req.params.id);
@@ -209,7 +208,7 @@ router.post('/:id/invitation/send', async (req, res) => {
     if (!user) {
       res.status(404).json({ msg: 'User not found', toEmail });
     }
-
+    const emails = req.body.emailList;
     const msg = {
       to: toEmail,
       from: 'teamcocoapuffs1@gmail.com',
@@ -221,8 +220,7 @@ router.post('/:id/invitation/send', async (req, res) => {
       if (err) {
         res.status(400).json({ msg: 'Email error', toEmail });
       }
-
-      res.json({ msg: 'Email sent!' });
+      res.status(200).json({ msg: 'Email sent!', toEmail });
     });
   } catch (err) {
     console.error(err.message);

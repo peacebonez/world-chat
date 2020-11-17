@@ -1,17 +1,18 @@
-import React from "react";
-import { TextField } from "@material-ui/core";
-import Smiley from "@material-ui/icons/InsertEmoticonOutlined";
-import PhotosIcon from "@material-ui/icons/PhotoLibraryOutlined";
-import PropTypes from "prop-types";
+import React from 'react';
+import { TextField } from '@material-ui/core';
+import Smiley from '@material-ui/icons/InsertEmoticonOutlined';
+import PhotosIcon from '@material-ui/icons/PhotoLibraryOutlined';
+import PropTypes from 'prop-types';
 
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   chatInput: {
-    width: "90%",
+    width: '90%',
     marginBottom: theme.spacing(4),
-    textAlign: "center",
-    "& input": {
+    textAlign: 'center',
+    background: theme.palette.primary.gray,
+    '& input': {
       background: theme.palette.primary.gray,
     },
   },
