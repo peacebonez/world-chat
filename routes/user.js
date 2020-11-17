@@ -201,14 +201,15 @@ router.post(
 //POST send a user invitation
 router.post('/:id/invitation/send', async (req, res) => {
   const toEmail = req.body.toEmail;
+
   try {
     //locate user from parameter
     const user = await User.findById(req.params.id);
 
     if (!user) {
-      res.status(404).json({ msg: 'User not found', toEmail });
+      return res.status(404).json({ msg: 'User not found', toEmail });
     }
-    const emails = req.body.emailList;
+
     const msg = {
       to: toEmail,
       from: 'teamcocoapuffs1@gmail.com',
@@ -218,13 +219,13 @@ router.post('/:id/invitation/send', async (req, res) => {
 
     sgMail.send(msg, (err, info) => {
       if (err) {
-        res.status(400).json({ msg: 'Email error', toEmail });
+        return res.status(400).json({ msg: 'Email error', toEmail });
       }
-      res.status(200).json({ msg: 'Email sent!', toEmail });
+      return res.status(200).json({ msg: 'Email sent!', toEmail });
     });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    return res.status(500).send('Server Error');
   }
 });
 

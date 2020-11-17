@@ -106,24 +106,19 @@ export default function FormDialog() {
     let successEmails = [];
     let failedEmails = [];
 
-    //separate each email into goodEmail or badEmail
+    //attempt to send email
     for (const email of emailList) {
-      let res = await createInvite(email);
+      let res = await sendInvite(email);
+      let data = await res.json();
+      console.log('data:', data);
       if (res && res.status === 200) successEmails.push(email);
       else failedEmails.push(email);
     }
 
-    //send invites only to good emails
+    //create invites for only sent emails
     for (const email of successEmails) {
-      let res = await sendInvite(email);
-      console.log('res:', res);
-
-      //if no response or a bad response
-      if (!res || res.status !== 200) {
-        //remove email from success emails and add to failed emails
-        successEmails.splice(successEmails.indexOf(email), 1);
-        failedEmails.push(email);
-      }
+      await createInvite(email);
+      //do more verification here
     }
 
     setSuccessEmails(successEmails);
