@@ -10,7 +10,7 @@ const BASE_URL = process.env.REACT_APP_baseURL;
 const useStyles = makeStyles((theme) => ({
   chatWindow: {
     width: "100%",
-    height: "80vh",
+    height: "85vh",
     background: "#fff",
     marginTop: 10,
     display: "flex",
