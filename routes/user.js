@@ -199,34 +199,45 @@ router.post(
 );
 
 //POST send a user invitation
-router.post('/:id/invitation/send', async (req, res) => {
-  const toEmail = req.body.toEmail;
+router.post(
+  '/:id/invitation/send',
+  [check('toEmail', 'Email required').isEmail().trim()],
+  async (req, res) => {
+    const errors = validationResult(req);
 
-  try {
-    //locate user from parameter
-    const user = await User.findById(req.params.id);
-
-    if (!user) {
-      return res.status(404).json({ msg: 'User not found', toEmail });
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    const msg = {
-      to: toEmail,
-      from: 'teamcocoapuffs1@gmail.com',
-      subject: 'WorldChat: A friend has invited you to chat!',
-      text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000/register`,
-    };
+    const toEmail = req.body.toEmail;
+    console.log('toEmail:', toEmail);
 
-    sgMail.send(msg, (err, info) => {
-      if (err) {
-        return res.status(400).json({ msg: 'Email error', toEmail });
+    try {
+      //locate user from parameter
+      const user = await User.findById(req.params.id);
+
+      if (!user) {
+        return res.status(404).json({ msg: 'User not found', toEmail });
       }
-      return res.status(200).json({ msg: 'Email sent!', toEmail });
-    });
-  } catch (err) {
-    console.error(err.message);
-    return res.status(500).send('Server Error');
-  }
-});
+
+      const msg = {
+        to: toEmail,
+        from: 'teamcocoapuffs1@gmail.com',
+        subject: 'WorldChat: A friend has invited you to chat!',
+        text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000/register`,
+      };
+
+      sgMail.send(msg, (err, info) => {
+        if (err) {
+          return res.status(400).json({ msg: 'Email error', toEmail });
+        }
+        return res.status(200).json({ msg: 'Email sent!', toEmail });
+      });
+    } catch (err) {
+      console.error(err.message);
+      return res.status(500).send('Server Error');
+    }
+  },
+);
 
 module.exports = router;
