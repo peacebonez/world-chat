@@ -224,7 +224,7 @@ router.post('/:id/invitation/send', async (req, res) => {
 router.get('/:id/contacts', async (req, res) => {
   const userId = req.params.id;
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).select('-password');
 
     if (!user) {
       res.status(404).send('User not found');
