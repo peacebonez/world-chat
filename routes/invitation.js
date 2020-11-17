@@ -33,7 +33,8 @@ router.put('/:id/approve', async (req, res) => {
 
     //receiver is not a member of the platform
     if (!receiver) {
-      return res.status(200).send('TODO: APPROVE NEW USER INVITE');
+      // TODO: APPROVE NEW USER INVITE
+      console.log('new user approval');
     }
     //receive is already a member and this is a friend request
     else {
