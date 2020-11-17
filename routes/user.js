@@ -24,7 +24,6 @@ sgMail.setApiKey(process.env.EMAIL_KEY);
 // User Login
 router.post(
   '/login',
-  //auth,
   runAsyncWrapper(async (req, res) => {
     let email = req.body.email;
     const user = await User.findOne({ email: email });
@@ -58,7 +57,6 @@ router.post(
     check('password').isLength({ min: 6 }),
     check('primaryLanguage').isLength({ min: 1 }),
   ],
-  //auth,
   runAsyncWrapper(async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty())
@@ -72,7 +70,6 @@ router.post(
 
     const salt = bcrypt.genSaltSync();
     const hashed_password = bcrypt.hashSync(req.body.password, salt);
-    console.log(req.body.email)
     // REGISTER USER!!!
     const user = await User.create({
       name: req.body.name,
