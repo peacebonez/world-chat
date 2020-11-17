@@ -79,7 +79,8 @@ export default function Landing() {
           // if (response.status === 200 || response.status === 201){
 
           // }
-        });
+        })
+        .catch((error) => console.error(error));
     } else {
       // one or both or all four may happen, hence the if statement structure. Also disable errors once criteria is met.
       if (!name) setErrorName('Name required.');
