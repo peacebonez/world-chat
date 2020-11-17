@@ -7,6 +7,8 @@ import { Typography } from '@material-ui/core';
 import InviteIn from './InviteIn';
 import InviteOut from './InviteOut';
 
+import tempAvatar from '../assets/temp-avatar.jpg';
+
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     display: 'flex',
@@ -30,7 +32,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const testInvites = [];
+const testInvitesIn = [
+  { avatar: tempAvatar, email: 'friend1@aol.com' },
+  { avatar: tempAvatar, email: 'friend2@aol.com' },
+  { avatar: tempAvatar, email: 'friend3@aol.com' },
+  { avatar: tempAvatar, email: 'friend4@aol.com' },
+  { avatar: tempAvatar, email: 'friend5@aol.com' },
+];
+const testInvitesOut = [
+  { avatar: tempAvatar, email: 'friend6@aol.com' },
+  { avatar: tempAvatar, email: 'friend7@aol.com' },
+  { avatar: tempAvatar, email: 'friend8@aol.com' },
+  { avatar: tempAvatar, email: 'friend9@aol.com' },
+  { avatar: tempAvatar, email: 'friend10@aol.com' },
+  { avatar: tempAvatar, email: 'friend11@aol.com' },
+];
 
 const Invites = (props) => {
   const [showRequests, setShowRequests] = useState(true);
@@ -57,8 +73,18 @@ const Invites = (props) => {
         </button>
       </div>
       <div className={classes.invitesWrapper}>
-        {showRequests && <ul className={classes.inviteUl}>'REQUESTS!'</ul>}
-        {showSent && <ul className={classes.inviteUl}>'SENT!'</ul>}
+        {showRequests && (
+          <ul className={classes.inviteUl}>
+            {testInvitesIn.map((invite) => (
+              <InviteIn key={invite.email} invite={invite} />
+            ))}
+          </ul>
+        )}
+        {showSent && (
+          <ul className={classes.inviteUl}>
+            <InviteOut invites={testInvitesOut} />
+          </ul>
+        )}
       </div>
     </div>
   );

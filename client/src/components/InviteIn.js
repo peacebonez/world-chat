@@ -1,8 +1,72 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Typography } from '@material-ui/core';
+import CheckIcon from '@material-ui/icons/Check';
+import ClearIcon from '@material-ui/icons/Clear';
+import { makeStyles } from '@material-ui/core/styles';
 
-const InviteIn = (props) => {
-  return <div>InviteIn</div>;
+const useStyles = makeStyles((theme) => ({
+  inviteItem: {
+    height: 100,
+    width: '85%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottom: 'solid 1px #ddd',
+    '& div': {
+      display: 'flex',
+      alignItems: 'center',
+    },
+  },
+  sideBarImg: {
+    borderRadius: '100%',
+    overflow: 'hidden',
+    width: '40px',
+    marginRight: theme.spacing(1),
+  },
+  button: {
+    background: 'none',
+    outline: 'none',
+    border: 'none',
+    cursor: 'pointer',
+  },
+  icon: {
+    fontSize: 30,
+  },
+  check: {
+    color: theme.palette.primary.blue,
+    '&:hover': {
+      color: theme.palette.secondary.green,
+    },
+  },
+  cross: {
+    '&:hover': {
+      color: 'red',
+    },
+  },
+}));
+
+const InviteIn = ({ invite }) => {
+  const { avatar, email } = invite;
+  const classes = useStyles();
+  return (
+    <li className={classes.inviteItem}>
+      <div>
+        <div className={classes.sideBarImgWrapper}>
+          <img src={avatar} alt="user avatar" className={classes.sideBarImg} />
+        </div>
+        <Typography variant="h7">{email}</Typography>
+      </div>
+      <div>
+        <button className={classes.button}>
+          <CheckIcon className={`${classes.icon} ${classes.check}`} />
+        </button>
+        <button className={classes.button}>
+          <ClearIcon className={`${classes.icon} ${classes.cross}`} />
+        </button>
+      </div>
+    </li>
+  );
 };
 
 InviteIn.propTypes = {};
