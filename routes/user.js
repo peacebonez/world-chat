@@ -3,7 +3,7 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const auth = require('../middleware/auth');
+//const auth = require('../middleware/auth');
 require('dotenv').config({ path: '../.env' });
 
 const sgMail = require('@sendgrid/mail');
@@ -24,7 +24,6 @@ sgMail.setApiKey(process.env.EMAIL_KEY);
 // User Login
 router.post(
   '/login',
-  auth,
   runAsyncWrapper(async (req, res) => {
     let email = req.body.email;
     const user = await User.findOne({ email: email });
@@ -58,7 +57,6 @@ router.post(
     check('password').isLength({ min: 6 }),
     check('primaryLanguage').isLength({ min: 1 }),
   ],
-  auth,
   runAsyncWrapper(async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty())
@@ -74,11 +72,13 @@ router.post(
     const hashed_password = bcrypt.hashSync(req.body.password, salt);
     // REGISTER USER!!!
     const user = await User.create({
+      name: req.body.name,
       email: req.body.email,
       password: hashed_password,
       primaryLanguage: req.body.primaryLanguage,
     });
     // success -> Get a JWT Token
+    const email = req.body.email;
     const accessToken = jwt.sign(
       /* payload */ { email },
       process.env.ACCESS_TOKEN_SECRET,
