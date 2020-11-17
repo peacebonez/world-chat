@@ -30,5 +30,12 @@ const UserSchema = new Schema({
   },
 });
 
+UserSchema.methods.toJSON = function () {
+  let obj = this.toObject();
+  obj.contacts.forEach((contact) => {
+    delete contact.password;
+  });
+};
+
 //UserSchema.plugin(require('passport-local-mongoose'));
 module.exports = User = mongoose.model('user', UserSchema);
