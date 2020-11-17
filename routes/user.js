@@ -150,75 +150,95 @@ router.get('/:id/invitations/in', async (req, res) => {
 });
 
 //POST create a user invitation
-router.post('/:id/invitation', async (req, res) => {
-  const referrer = req.params.id;
-  try {
-    const user = await User.findById(referrer);
+router.post(
+  '/:id/invitation',
+  [check('toEmail', 'Email required').isEmail().trim()],
+  async (req, res) => {
+    const errors = validationResult(req);
 
-    if (!user) {
-      res.status(404).send('User not found');
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
-    const emails = req.body.emailList;
 
-    //for each email create an invitation instance
-    for (const email of emails) {
-      //determine if referrer already sent invitation to receiver
-      const invitations = await Invitation.find({ toEmail: email });
+    const referrer = req.params.id;
+    const toEmail = req.body.toEmail;
 
-      const invitationAlreadySent = invitations.find(
+    try {
+      const user = await User.findById(referrer);
+
+      if (!user) {
+        return res.status(404).json({ msg: 'User not found', toEmail });
+      }
+
+      //find all outgoing invitations to the toEmail (array)
+      const invitations = await Invitation.find({ toEmail });
+
+      //see if an invitation was alreasdy sent from user to toEmail
+      const invitationAlreadyCreated = invitations.find(
         (invitation) => invitation.referrer.toString() === referrer,
       );
-
-      //can't send invite if already sent but CAN if the invite was rejected
-      if (invitationAlreadySent && invitation.status !== 'rejected') {
-        console.log('Invitation already sent');
+      //can't send invite if already sent
+      if (invitationAlreadyCreated) {
+        return res
+          .status(400)
+          .json({ msg: 'Invitation already created.', toEmail });
       } else {
         const newInvitation = new Invitation({
           referrer: user,
-          toEmail: email,
+          toEmail,
         });
 
         await newInvitation.save();
+        res.status(200).json({ msg: 'Invitation created!', toEmail });
       }
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
     }
-
-    res.json(emails);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
-  }
-});
+  },
+);
 
 //POST send a user invitation
-router.post('/:id/invitation/send', async (req, res) => {
-  try {
-    //locate user from parameter
-    const user = await User.findById(req.params.id);
-    console.log('user:', user);
+router.post(
+  '/:id/invitation/send',
+  [check('toEmail', 'Email required').isEmail().trim()],
+  async (req, res) => {
+    const errors = validationResult(req);
 
-    if (!user) {
-      res.status(404).send('User not found');
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    const msg = {
-      to: req.body.emailList,
-      from: 'teamcocoapuffs1@gmail.com',
-      subject: 'Chat-App: A friend has invited you to chat!',
-      text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000`,
-    };
-    console.log('msg:', msg);
+    const toEmail = req.body.toEmail;
+    console.log('toEmail:', toEmail);
 
-    sgMail.send(msg, (err, info) => {
-      if (err) {
-        return console.error('Email not sent');
+    try {
+      //locate user from parameter
+      const user = await User.findById(req.params.id);
+
+      if (!user) {
+        return res.status(404).json({ msg: 'User not found', toEmail });
       }
-      res.json({ msg: 'Email sent!' });
-    });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
-  }
-});
+
+      const msg = {
+        to: toEmail,
+        from: 'teamcocoapuffs1@gmail.com',
+        subject: 'WorldChat: A friend has invited you to chat!',
+        text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000/register`,
+      };
+
+      sgMail.send(msg, (err, info) => {
+        if (err) {
+          return res.status(400).json({ msg: 'Email error', toEmail });
+        }
+        return res.status(200).json({ msg: 'Email sent!', toEmail });
+      });
+    } catch (err) {
+      console.error(err.message);
+      return res.status(500).send('Server Error');
+    }
+  },
+);
 
 //GET user contacts PRIVATE ROUTE
 router.get('/:id/contacts', async (req, res) => {

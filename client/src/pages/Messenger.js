@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { UserContext } from '../userContext';
 import Sidebar from '../components/Sidebar';
 import Conversation from '../components/Conversation';
+import Invitation from '../components/Invitation';
 
 const useStyles = makeStyles((theme) => ({
   messengerContainer: {
@@ -21,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Messenger = (props) => {
   const user = useContext(UserContext);
-  user.dispatch({ type: 'SEND_EMAIL' });
   console.log('user:', user);
 
   const classes = useStyles();
@@ -31,6 +31,7 @@ const Messenger = (props) => {
       <Hidden smDown>
         <Conversation />
       </Hidden>
+      <Invitation />
     </Container>
   );
 };
