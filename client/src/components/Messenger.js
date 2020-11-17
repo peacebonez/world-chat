@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Container, Hidden } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
@@ -14,12 +14,17 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "flex-start",
     width: "100vw",
-    height: "100vh",
+    maxHeight: "100vh",
+    marginTop: theme.spacing(2),
     overflow: "hidden",
   },
 }));
 
 const Messenger = (props) => {
+  const user = useContext(UserContext);
+  user.dispatch({ type: "SEND_EMAIL" });
+  console.log("user:", user);
+
   const classes = useStyles();
   return (
     <Container className={classes.messengerContainer}>
