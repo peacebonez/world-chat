@@ -72,6 +72,7 @@ router.post(
 
     const salt = bcrypt.genSaltSync();
     const hashed_password = bcrypt.hashSync(req.body.password, salt);
+    console.log(req.body.email)
     // REGISTER USER!!!
     const user = await User.create({
       name: req.body.name,
@@ -80,6 +81,7 @@ router.post(
       primaryLanguage: req.body.primaryLanguage,
     });
     // success -> Get a JWT Token
+    const email = req.body.email;
     const accessToken = jwt.sign(
       /* payload */ { email },
       process.env.ACCESS_TOKEN_SECRET,
