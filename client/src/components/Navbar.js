@@ -43,6 +43,12 @@ const useStyles = makeStyles((theme) => ({
 
 const Navbar = (props) => {
   const classes = useStyles();
+
+  const handleSwitch = () => {
+    // show original language
+    return
+  };
+
   return (
     <div className={classes.navBar}>
       <div>
@@ -58,7 +64,7 @@ const Navbar = (props) => {
       </div>
       <div className={classes.flexCenter}>
         <Typography variant="subtitle2">Original Language</Typography>
-        <Switch color="primary" name="language" />
+        <Switch color="primary" name="language"  />
         <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
       </div>
     </div>

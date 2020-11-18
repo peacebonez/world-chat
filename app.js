@@ -14,7 +14,26 @@ const { json, urlencoded } = express;
 
 var app = express();
 const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(http,  {
+  handlePreflightRequest: (req, res) => {
+      const headers = {
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+          "Access-Control-Allow-Origin": req.headers.origin, //or the specific origin you want to give access to,
+          "Access-Control-Allow-Credentials": true
+      };
+      res.writeHead(200, headers);
+      res.end();
+  },
+  cors: {
+    origin: "https://example.com",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["my-custom-header"],
+    credentials: true
+  }
+});
+io.origins((origin, callback) => {
+  callback(null, true);
+});
 
 //connect mongoDB database
 const connectDB = async () => {
@@ -42,7 +61,7 @@ app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, 'public')));
 
-// app.use("/", require("./routes/index"));
+app.use('/conversation', require('./routes/conversation'))
 app.use('/user', require('./routes/user'));
 app.use('/invitation', require('./routes/invitation'));
 
@@ -65,6 +84,15 @@ app.use(function (err, req, res, next) {
 io.on('connection', (socket) => { /* socket object may be used to send specific messages to the new connected client */
   console.log('new client connected');
   socket.emit('connection', null);
+
+  // when the client emits 'new message', this listens and executes
+  socket.on('new message', (data) => {
+    // we tell the client to execute 'new message'
+    socket.broadcast.emit('new message', {
+      // username: socket.username,
+      message: data
+    });
+  });
 });
 
 http.listen(3001, () => {

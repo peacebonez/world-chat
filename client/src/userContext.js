@@ -6,6 +6,7 @@ const initialState = {
   primaryLanguage: "",
   loading: true,
   error: {},
+  showOriginalLanguage: false
 };
 
 export const UserContext = createContext(initialState);
