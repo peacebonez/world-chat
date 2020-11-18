@@ -15,7 +15,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 import Background from '../assets/background.png';
 require('dotenv').config();
-const baseURL = process.env.REACT_APP_baseURL;
+// const baseURL = process.env.REACT_APP_baseURL;
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -68,7 +68,7 @@ export default function Landing() {
   const handleSubmit = () => {
     if (isEmail(email) && password.length >= 6 && language) {
       axios
-        .post(`${baseURL}/user/signup`, {
+        .post(`/user/signup`, {
           name, // name: name (shorthand)
           email,
           password,

@@ -27,7 +27,7 @@ router.post(
   auth,
   runAsyncWrapper(async (req, res) => {
     let email = req.body.email;
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).send('No user with this email');
     } else if (!bcrypt.compareSync(req.body.password, user.password)) {
@@ -54,42 +54,68 @@ router.post(
 router.post(
   '/signup',
   [
-    check('email').isEmail(),
-    check('password').isLength({ min: 6 }),
-    check('primaryLanguage').isLength({ min: 1 }),
+    check('name', 'Name required').notEmpty(),
+    check('email', 'Email required').isEmail().trim(),
+    check('password', 'Password required').isLength({ min: 6 }),
+    check('primaryLanguage', 'Please choose a language').isLength({ min: 1 }),
   ],
-  auth,
+  // auth,
   runAsyncWrapper(async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty())
       return res.status(422).json({ errors: errors.array() });
 
-    // Email must be unique
-    const user1 = await User.findOne({ email: req.body.email });
-    if (user1) {
-      return res.status(400).send('User with this email already exists.');
-    }
+    const { name, email, password, primaryLanguage } = req.body;
 
-    const salt = bcrypt.genSaltSync();
-    const hashed_password = bcrypt.hashSync(req.body.password, salt);
-    // REGISTER USER!!!
-    const user = await User.create({
-      email: req.body.email,
-      password: hashed_password,
-      primaryLanguage: req.body.primaryLanguage,
-    });
-    // success -> Get a JWT Token
-    const accessToken = jwt.sign(
-      /* payload */ { email },
-      process.env.ACCESS_TOKEN_SECRET,
-      {
-        algorithm: 'HS256',
-        expiresIn: JWT_EXPIRY_TIME,
-      },
-    );
-    res.cookie('token', accessToken, { httpOnly: true });
-    //req.session.user = user
-    return res.status(201).send(user._id);
+    try {
+      // Email must be unique
+      let user = await User.findOne({ email });
+      if (user) {
+        return res.status(400).send('User with this email already exists.');
+      }
+
+      const salt = bcrypt.genSaltSync();
+      const hashed_password = bcrypt.hashSync(password, salt);
+
+      // REGISTER USER!!!
+      user = new User({
+        name,
+        email,
+        password: hashed_password,
+        primaryLanguage,
+      });
+
+      await user.save();
+      console.log('user:', user);
+
+      //Set up the jwt payload to user ID
+      const payload = {
+        user: {
+          id: user._id,
+          email,
+        },
+      };
+
+      // success -> Get a JWT Token
+      jwt.sign(
+        payload,
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+          algorithm: 'HS256',
+          expiresIn: JWT_EXPIRY_TIME,
+        },
+        (err, token) => {
+          if (err) throw err;
+          return res
+            .status(201)
+            .cookie('token', token, { httpOnly: true })
+            .json({ user: payload.user, msg: 'Registration success!' });
+        },
+      );
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
   }),
 );
 
@@ -242,7 +268,7 @@ router.post(
 );
 
 //GET user contacts PRIVATE ROUTE
-router.get('/:id/contacts', async (req, res) => {
+router.get('/:id/contacts', auth, async (req, res) => {
   const userId = req.params.id;
   try {
     const user = await User.findById(userId).select('-password');
