@@ -3,7 +3,7 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const auth = require('../middleware/auth');
+//const auth = require('../middleware/auth');
 require('dotenv').config({ path: '../.env' });
 
 const sgMail = require('@sendgrid/mail');
@@ -24,7 +24,6 @@ sgMail.setApiKey(process.env.EMAIL_KEY);
 // User Login
 router.post(
   '/login',
-  auth,
   runAsyncWrapper(async (req, res) => {
     let email = req.body.email;
     const user = await User.findOne({ email });
