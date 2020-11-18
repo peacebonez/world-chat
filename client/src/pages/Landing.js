@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import {
@@ -52,26 +52,55 @@ export default function Landing() {
 
   const [open, setOpen] = useState(false);
 
-  const [errorName, setErrorName] = useState(false);
-  const [errorEmail, setErrorEmail] = useState('');
-  const [errorPassword, setErrorPassword] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [primaryLanguage, setPrimaryLanguage] = useState('');
-  const [errorLanguage, setErrorLanguage] = useState('');
+
+  const [errorName, setErrorName] = useState(false);
+  const [errorEmail, setErrorEmail] = useState(false);
+  const [errorPassword, setErrorPassword] = useState(false);
+  const [errorLanguage, setErrorLanguage] = useState(false);
 
   // Npm email-validator is acting up; if anyone has a better email validation function
   // feel free to replace the function below
   const isEmail = (email) => /^\S+@\S+$/.test(email);
+  const isName = (name) => /^[A-Z]+$/i.test(name);
 
   const handleSubmit = async () => {
-    if (!name) setErrorName(true);
-    if (password.length < 6) setErrorPassword(true);
-    if (!isEmail(email)) setErrorEmail(true);
-    if (!primaryLanguage) setErrorLanguage(true);
+    if (!name) {
+      setErrorName(true);
+      let timer = setTimeout(() => {
+        setErrorName(false);
+      }, 1000);
+    }
 
-    if (isEmail(email) && password.length >= 6 && primaryLanguage && name) {
+    if (!isEmail(email)) {
+      setErrorEmail(true);
+      let timer = setTimeout(() => {
+        setErrorEmail(false);
+      }, 1000);
+    }
+    if (password.length < 6) {
+      setErrorPassword(true);
+      let timer = setTimeout(() => {
+        setErrorPassword(false);
+      }, 1000);
+    }
+
+    if (!primaryLanguage) {
+      setErrorLanguage(true);
+      let timer = setTimeout(() => {
+        setErrorLanguage(false);
+      }, 1000);
+    }
+
+    if (
+      isEmail(email) &&
+      password.length >= 6 &&
+      primaryLanguage &&
+      isName(name)
+    ) {
       // one or both or all four may happen, hence the if statement structure. Also disable errors once criteria is met.
 
       setErrorName('');
@@ -185,14 +214,16 @@ export default function Landing() {
           <Typography variant="h6" className={classes.errors}>
             {errorPassword}
           </Typography>
-          <FormControl className={classes.marginBottom20}>
+          <FormControl
+            className={classes.marginBottom20}
+            helperText={errorLanguage && 'Please select a language.'}
+          >
             <InputLabel id="language-select">Select a Language</InputLabel>
             <Select
               id="language-select"
               value={primaryLanguage}
               onChange={(event) => setPrimaryLanguage(event.target.value)}
               error={errorLanguage}
-              helperText={errorLanguage && 'Please select a language.'}
             >
               <MenuItem value={'English'}>English</MenuItem>
               <MenuItem value={'Spanish'}>Spanish</MenuItem>
