@@ -3,7 +3,7 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-//const auth = require('../middleware/auth');
+const auth = require('../middleware/auth');
 require('dotenv').config({ path: '../.env' });
 
 const sgMail = require('@sendgrid/mail');
@@ -93,21 +93,20 @@ router.post(
   }),
 );
 
-router.get(
-  '/get_by_id/:id',
-  runAsyncWrapper(async function (req, res) {
-    try {
-      const user = await User.findById(req.params.id);
-      if (!user) {
-        return res.status(404).json({ msg: 'User not found' });
-      }
-      return res.status(200).json(user);
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server Error');
+router.get('/get_by_id/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    console.log('user:', user);
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
     }
-  }),
-);
+
+    return res.status(200).json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 router.get(
   '/get_all',

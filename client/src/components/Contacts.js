@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import happyChatter from '../assets/happy-chatter.png';
 import PropTypes from 'prop-types';
 import Contact from './Contact';
 import Invitation from './Invitation';
+import { UserContext } from '../App';
 
 const testContacts = [
   { avatar: happyChatter, name: 'Doug', isOnline: true, id: 0 },
@@ -34,18 +35,26 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Contacts = (props) => {
+  const user = useContext(UserContext);
+  console.log('user:', user);
   const classes = useStyles();
 
   return (
     <div className={classes.contactsContainer}>
       <Invitation />
       <ul className={classes.contactList}>
-        {testContacts.map((contact) => {
+        {user.contacts.map((contact) => {
           const { avatar, name, isOnline, id } = contact;
           return (
             <Contact avatar={avatar} name={name} isOnline={isOnline} key={id} />
           );
         })}
+        {/* {testContacts.map((contact) => {
+          const { avatar, name, isOnline, id } = contact;
+          return (
+            <Contact avatar={avatar} name={name} isOnline={isOnline} key={id} />
+          );
+        })} */}
       </ul>
     </div>
   );
