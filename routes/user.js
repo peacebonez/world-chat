@@ -3,7 +3,7 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-//const auth = require('../middleware/auth');
+const auth = require('../middleware/auth');
 require('dotenv').config({ path: '../.env' });
 
 const sgMail = require('@sendgrid/mail');
@@ -29,7 +29,7 @@ router.post(
     try {
       const user = await User.findOne({ email });
       if (!user) {
-        return res.status(400).send('No user with this email');
+        return res.status(404).send('No user with this email');
       } else if (!bcrypt.compareSync(req.body.password, user.password)) {
         return res.status(400).send('Incorrect Password');
       }

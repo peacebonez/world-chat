@@ -54,7 +54,7 @@ export default function Landing() {
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorLanguage, setErrorLanguage] = useState(false);
-  const [backendError, setBackendError] = useState(true);
+  const [backendError, setBackendError] = useState(false);
   const [backendErrorMsg, setBackendErrorMsg] = useState('');
 
   useEffect(() => {
@@ -63,11 +63,12 @@ export default function Landing() {
     if (password) setErrorPassword(false);
     if (primaryLanguage) setErrorLanguage(false);
 
+    //clears backend error msg
     let timer;
     if (backendError) {
       timer = setTimeout(() => {
         setBackendError(false);
-      }, 1000);
+      }, 5000);
     }
     return () => clearTimeout(timer);
   });
@@ -93,8 +94,7 @@ export default function Landing() {
       if (!isName(name)) setErrorName(true);
       if (!password) setErrorPassword(true);
       if (!primaryLanguage) setErrorLanguage(true);
-      //TODOS add error snackbar
-      // setBackendError(true);
+      return;
     }
   };
 
@@ -116,12 +116,12 @@ export default function Landing() {
         },
         config,
       );
-      console.log('res:', res);
       return res;
     } catch (err) {
-      //TODOS add error snackbar
       setBackendError(true);
-      console.error(err);
+      if (err.message.includes('400'))
+        setBackendErrorMsg('User already exists.');
+      if (err.message.includes('500')) setBackendErrorMsg('Server error');
     }
   };
 
@@ -219,13 +219,14 @@ export default function Landing() {
           </Button>
         </Box>
       </Box>
+      {/* Error alerts */}
       <Snackbar
         open={backendError}
-        autoHideDuration={2000}
+        autoHideDuration={5000}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert severity="error" variant="filled">
-          Please check credentials
+          {backendErrorMsg}
         </Alert>
       </Snackbar>
     </Box>

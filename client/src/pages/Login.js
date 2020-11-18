@@ -46,6 +46,7 @@ export default function Login() {
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
   const [backendError, setBackendError] = useState(false);
+  const [backendErrorMsg, setBackendErrorMsg] = useState('');
 
   const handleClick = () => {
     if (!email) return setErrorEmail(true);
@@ -56,16 +57,17 @@ export default function Login() {
   const login = async () => {
     try {
       const res = await axios.post('/user/login', { email, password });
-      console.log('res:', res);
       if (res && (res.status === 200 || res.status === 201)) {
         history.push('/messenger');
       }
 
       return res;
     } catch (err) {
-      //TODOS add error snackbar
       setBackendError(true);
-      alert(err);
+      if (err.message.includes('400'))
+        setBackendErrorMsg('Invalid credentials');
+      if (err.message.includes('404')) setBackendErrorMsg('User not found');
+      if (err.message.includes('500')) setBackendErrorMsg('Server Error');
     }
   };
   //deactivates errors when user inputs into form
@@ -73,6 +75,7 @@ export default function Login() {
     if (email) setErrorEmail(false);
     if (password) setErrorPassword(false);
 
+    //clears the backend error alert msg
     let timer;
     if (backendError) {
       timer = setTimeout(() => {
@@ -140,13 +143,14 @@ export default function Login() {
           </Button>
         </Box>
       </Box>
+      {/* Error alerts */}
       <Snackbar
         open={backendError}
         autoHideDuration={2000}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert severity="error" variant="filled">
-          Please check credentials
+          {backendErrorMsg}
         </Alert>
       </Snackbar>
     </Box>
