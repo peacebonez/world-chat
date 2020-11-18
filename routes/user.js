@@ -96,8 +96,16 @@ router.post(
 router.get(
   '/get_by_id/:id',
   runAsyncWrapper(async function (req, res) {
-    const user = await User.findById(req.params.id);
-    return res.status(200).json(user);
+    try {
+      const user = await User.findById(req.params.id);
+      if (!user) {
+        return res.status(404).json({ msg: 'User not found' });
+      }
+      return res.status(200).json(user);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
   }),
 );
 

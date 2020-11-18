@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Contacts = (props) => {
   const classes = useStyles();
+
   return (
     <div className={classes.contactsContainer}>
       <Invitation />

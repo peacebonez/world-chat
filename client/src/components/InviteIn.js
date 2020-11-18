@@ -55,7 +55,7 @@ const InviteIn = ({ invite }) => {
         <div className={classes.sideBarImgWrapper}>
           <img src={avatar} alt="user avatar" className={classes.sideBarImg} />
         </div>
-        <Typography variant="h7">{email}</Typography>
+        <Typography variant="h6">{email}</Typography>
       </div>
       <div>
         <button className={classes.button}>

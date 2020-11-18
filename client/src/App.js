@@ -14,9 +14,9 @@ import Messenger from './pages/Messenger';
 export const UserContext = createContext({});
 
 function App() {
-  const testUserId = '5fadeb4e66d8372cd6d05d89';
+  const testUserId = '5fb54d5ba9bfea3c67ab94ad';
   const [user, setUser] = useState({});
-  useEffect(async () => {
+  useEffect(() => {
     //load user, check if JWT token active
     //test load user function
     (async function fetchUser() {
@@ -25,16 +25,16 @@ function App() {
       setUser(testUser);
     })();
   }, []);
-
+  console.log('user:', user);
   return (
     <MuiThemeProvider theme={theme}>
-      <UserContext.Provider value={user}>
-        <BrowserRouter>
+      <BrowserRouter>
+        <UserContext.Provider value={user}>
           <Route exact path="/" component={LandingPage} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/messenger" component={Messenger} />
-        </BrowserRouter>
-      </UserContext.Provider>
+        </UserContext.Provider>
+      </BrowserRouter>
     </MuiThemeProvider>
   );
 }

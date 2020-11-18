@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
@@ -29,11 +29,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sidebar = (props) => {
+  const user = useContext(UserContext);
+  console.log('user:', user);
   const [chatShown, setChatShown] = useState(false);
   const [contactsShown, setContactsShown] = useState(false);
   const [invitesShown, setInvitesShown] = useState(true);
   const classes = useStyles();
-  const user = useContext(UserContext);
 
   //TODOS
   //Fetch user
