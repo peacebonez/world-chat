@@ -51,8 +51,6 @@ export default function Landing() {
   let history = useHistory();
   const classes = useStyles();
 
-  const [open, setOpen] = useState(false);
-
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -66,6 +64,11 @@ export default function Landing() {
   const [backendErrorMsg, setBackendErrorMsg] = useState('');
 
   useEffect(() => {
+    if (name) setErrorName(false);
+    if (email) setErrorEmail(false);
+    if (password) setErrorPassword(false);
+    if (primaryLanguage) setErrorLanguage(false);
+
     let timer;
     if (backendError) {
       timer = setTimeout(() => {
@@ -79,38 +82,8 @@ export default function Landing() {
   // feel free to replace the function below
   const isEmail = (email) => /^\S+@\S+$/.test(email);
   const isName = (name) => /^[A-Z]+$/i.test(name);
-  const handleErrorTimouts = () => {
-    if (!name) {
-      setErrorName(true);
-      let timer = setTimeout(() => {
-        setErrorName(false);
-      }, 1000);
-    }
-
-    if (!isEmail(email)) {
-      setErrorEmail(true);
-      let timer = setTimeout(() => {
-        setErrorEmail(false);
-      }, 1000);
-    }
-    if (password.length < 6) {
-      setErrorPassword(true);
-      let timer = setTimeout(() => {
-        setErrorPassword(false);
-      }, 1000);
-    }
-
-    if (!primaryLanguage) {
-      setErrorLanguage(true);
-      let timer = setTimeout(() => {
-        setErrorLanguage(false);
-      }, 1000);
-    }
-  };
 
   const handleSubmit = async () => {
-    handleErrorTimouts();
-
     if (
       isEmail(email) &&
       password.length >= 6 &&
@@ -122,18 +95,22 @@ export default function Landing() {
         history.push('/messenger');
       }
     } else {
+      if (!isEmail(email)) setErrorEmail(true);
+      if (!isName(name)) setErrorName(true);
+      if (!password) setErrorPassword(true);
+      if (!primaryLanguage) setErrorLanguage(true);
       //TODOS add error snackbar
-      setBackendError(true);
+      // setBackendError(true);
     }
   };
 
-  //POST config header values
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
   const signUpUser = async () => {
+    //POST config header values
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
     try {
       let res = await axios.post(
         '/user/signup',

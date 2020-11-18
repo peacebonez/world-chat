@@ -24,9 +24,8 @@ sgMail.setApiKey(process.env.EMAIL_KEY);
 // User Login
 router.post(
   '/login',
-  auth,
   runAsyncWrapper(async (req, res) => {
-    let email = req.body.email;
+    const email = req.body.email;
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).send('No user with this email');
@@ -37,10 +36,7 @@ router.post(
     const accessToken = jwt.sign(
       /* payload */ { email },
       process.env.ACCESS_TOKEN_SECRET,
-      {
-        algorithm: 'HS256',
-        expiresIn: JWT_EXPIRY_TIME,
-      },
+      { expiresIn: JWT_EXPIRY_TIME },
     );
 
     // req.session.user = user;
