@@ -1,26 +1,30 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+// We need a middleware function that can:
+
+// read the jwt token from the browser cookies
+// decode that token and find the corresponding user
+// pass on to the route function which user is authenticated
+
 module.exports = (req, res, next) => {
-  console.log('req:', req);
-  const token = req.headers.authorization.split(' ')[1];
+  const token = req.header('cookie');
   console.log('token:', token);
 
   if (!token) {
     return res.status(401).json({ msg: 'Authorization Denied' });
   }
-  console.log('ACCESS_TOKEN_SECRET:', process.env.ACCESS_TOKEN_SECRET);
+
   try {
-    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    const userId = decodedToken.userId;
-    if (req.body.userId && req.body.userId !== userId) {
-      return res.status(401).json({ msg: 'Authorization Denied' });
-    } else {
-      next();
-    }
-  } catch {
+    //function makes it into the try block and crashes at const decoded
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    console.log('decoded:', decoded);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    console.error(err);
     res.status(401).json({
-      error: new Error('Invalid request!'),
+      msg: 'Invalid request!',
     });
   }
 };

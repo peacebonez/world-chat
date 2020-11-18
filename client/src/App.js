@@ -19,11 +19,13 @@ function App() {
   useEffect(async () => {
     //load user, check if JWT token active
     //test load user function
-    (async function fetchUser() {
-      const res = await await axios.get(`/user/get_by_id/${testUserId}`);
-      const testUser = res.data;
-      setUser(testUser);
-    })();
+    if (document.cookie) {
+      (async function fetchUser() {
+        const res = await await axios.get(`/user/get_by_id/${testUserId}`);
+        const testUser = res.data;
+        setUser(testUser);
+      })();
+    }
   }, []);
 
   return (

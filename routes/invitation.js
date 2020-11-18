@@ -36,6 +36,7 @@ router.put('/:id/approve', async (req, res) => {
       // TODO: APPROVE NEW USER INVITE
       console.log('new user approval');
     }
+
     //receive is already a member and this is a friend request
     else {
       //push receiver into sender's contacts and vice versa
@@ -56,6 +57,15 @@ router.put('/:id/approve', async (req, res) => {
         primaryLanguage: sender.primaryLanguage,
         dateJoined: sender.dateJoined,
       };
+
+      // exit if received is already in user's contacts
+      if (
+        sender.contacts.find(
+          (contact) => contact.email.toString() === receiver.email,
+        )
+      ) {
+        return res.status(400).json({ msg: 'Already in contacts' });
+      }
 
       sender.contacts.push(receiverCopy);
       receiver.contacts.push(senderCopy);

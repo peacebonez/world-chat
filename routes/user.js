@@ -59,7 +59,6 @@ router.post(
     check('password', 'Password required').isLength({ min: 6 }),
     check('primaryLanguage', 'Please choose a language').isLength({ min: 1 }),
   ],
-  // auth,
   runAsyncWrapper(async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty())
@@ -97,19 +96,20 @@ router.post(
       };
 
       // success -> Get a JWT Token
+      //the payload is the data being encrypted
       jwt.sign(
         payload,
         process.env.ACCESS_TOKEN_SECRET,
-        {
-          algorithm: 'HS256',
-          expiresIn: JWT_EXPIRY_TIME,
-        },
+        { expiresIn: JWT_EXPIRY_TIME },
         (err, token) => {
           if (err) throw err;
-          return res
-            .status(201)
-            .cookie('token', token, { httpOnly: true })
-            .json({ user: payload.user, msg: 'Registration success!' });
+          return (
+            res
+              .status(201)
+              // .cookie(token, { httpOnly: true })
+              .cookie('token', token)
+              .json({ token, msg: 'Register Success!' })
+          );
         },
       );
     } catch (err) {
@@ -135,8 +135,8 @@ router.get(
   }),
 );
 
-//GET all user outgoing invitations
-router.get('/:id/invitations/out', async (req, res) => {
+//GET all user outgoing invitations PRIVATE ROUTE
+router.get('/:id/invitations/out', auth, async (req, res) => {
   const userId = req.params.id;
   try {
     const invites = await Invitation.find({ referrer: userId });
@@ -152,8 +152,8 @@ router.get('/:id/invitations/out', async (req, res) => {
   }
 });
 
-//GET all user incoming invitations
-router.get('/:id/invitations/in', async (req, res) => {
+//GET all user incoming invitations PRIVATE ROUTE
+router.get('/:id/invitations/in', auth, async (req, res) => {
   const userId = req.params.id;
   try {
     const user = await User.findById(userId);
@@ -175,10 +175,11 @@ router.get('/:id/invitations/in', async (req, res) => {
   }
 });
 
-//POST create a user invitation
+//POST create a user invitation PRIVATE ROUTE
 router.post(
   '/:id/invitation',
   [check('toEmail', 'Email required').isEmail().trim()],
+  auth,
   async (req, res) => {
     const errors = validationResult(req);
 
@@ -225,10 +226,11 @@ router.post(
   },
 );
 
-//POST send a user invitation
+//POST send a user invitation PRIVATE ROUTE
 router.post(
   '/:id/invitation/send',
   [check('toEmail', 'Email required').isEmail().trim()],
+  auth,
   async (req, res) => {
     const errors = validationResult(req);
 
@@ -278,7 +280,7 @@ router.get('/:id/contacts', auth, async (req, res) => {
     }
 
     if (user.contacts.length < 1) {
-      return res.status(204).send('No contacts found.');
+      return res.status(204).json({ msg: 'No contacts found.' });
     }
 
     res.json(user.contacts);
