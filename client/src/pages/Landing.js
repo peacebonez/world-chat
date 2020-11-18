@@ -10,6 +10,7 @@ import {
   Select,
   MenuItem,
   Button,
+  Snackbar,
 } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
@@ -61,13 +62,24 @@ export default function Landing() {
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorLanguage, setErrorLanguage] = useState(false);
+  const [backendError, setBackendError] = useState(false);
+  const [backendErrorMsg, setBackendErrorMsg] = useState('');
+
+  useEffect(() => {
+    let timer;
+    if (backendError) {
+      timer = setTimeout(() => {
+        setBackendError(false);
+      }, 1000);
+    }
+    return () => clearTimeout(timer);
+  });
 
   // Npm email-validator is acting up; if anyone has a better email validation function
   // feel free to replace the function below
   const isEmail = (email) => /^\S+@\S+$/.test(email);
   const isName = (name) => /^[A-Z]+$/i.test(name);
-
-  const handleSubmit = async () => {
+  const handleErrorTimouts = () => {
     if (!name) {
       setErrorName(true);
       let timer = setTimeout(() => {
@@ -94,6 +106,10 @@ export default function Landing() {
         setErrorLanguage(false);
       }, 1000);
     }
+  };
+
+  const handleSubmit = async () => {
+    handleErrorTimouts();
 
     if (
       isEmail(email) &&
@@ -101,20 +117,13 @@ export default function Landing() {
       primaryLanguage &&
       isName(name)
     ) {
-      // one or both or all four may happen, hence the if statement structure. Also disable errors once criteria is met.
-
-      setErrorName('');
-      setErrorPassword('');
-      setErrorEmail('');
-      setErrorLanguage('');
-
       let res = await signUpUser();
       if (res && (res.status === 200 || res.status === 201)) {
         history.push('/messenger');
       }
     } else {
-      console.log('BAD STATUS');
-      return <Alert />;
+      //TODOS add error snackbar
+      setBackendError(true);
     }
   };
 
@@ -139,7 +148,8 @@ export default function Landing() {
 
       return res;
     } catch (err) {
-      alert('FAIL');
+      //TODOS add error snackbar
+      // setBackendError(true);
       console.error(err);
     }
   };
@@ -238,6 +248,13 @@ export default function Landing() {
           </Button>
         </Box>
       </Box>
+      <Snackbar
+        open={backendError}
+        autoHideDuration={1000}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert severity="error">Please check credentials</Alert>
+      </Snackbar>
     </Box>
   );
 }
