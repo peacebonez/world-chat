@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import {
   Box,
@@ -47,50 +47,71 @@ const useStyles = makeStyles({
 });
 
 export default function Landing() {
+  let history = useHistory();
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
 
-  const [errorName, setErrorName] = useState('');
+  const [errorName, setErrorName] = useState(false);
   const [errorEmail, setErrorEmail] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [language, setLanguage] = useState('');
-
+  const [primaryLanguage, setPrimaryLanguage] = useState('');
   const [errorLanguage, setErrorLanguage] = useState('');
 
   // Npm email-validator is acting up; if anyone has a better email validation function
   // feel free to replace the function below
   const isEmail = (email) => /^\S+@\S+$/.test(email);
 
-  const handleSubmit = () => {
-    if (isEmail(email) && password.length >= 6 && language) {
-      axios
-        .post(`/user/signup`, {
-          name, // name: name (shorthand)
+  const handleSubmit = async () => {
+    if (!name) setErrorName(true);
+    if (password.length < 6) setErrorPassword(true);
+    if (!isEmail(email)) setErrorEmail(true);
+    if (!primaryLanguage) setErrorLanguage(true);
+
+    if (isEmail(email) && password.length >= 6 && primaryLanguage && name) {
+      // one or both or all four may happen, hence the if statement structure. Also disable errors once criteria is met.
+
+      setErrorName('');
+      setErrorPassword('');
+      setErrorEmail('');
+      setErrorLanguage('');
+
+      let res = await signUpUser();
+      if (res && (res.status === 200 || res.status === 201)) {
+        history.push('/messenger');
+      }
+    } else {
+      console.log('BAD STATUS');
+      return <Alert />;
+    }
+  };
+
+  //POST config header values
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  const signUpUser = async () => {
+    try {
+      let res = await axios.post(
+        '/user/signup',
+        {
+          name,
           email,
           password,
-          primaryLanguage: language,
-        })
-        .then((response) => {
-          console.log(response.data);
-          // if (response.status === 200 || response.status === 201){
+          primaryLanguage,
+        },
+        config,
+      );
 
-          // }
-        });
-    } else {
-      // one or both or all four may happen, hence the if statement structure. Also disable errors once criteria is met.
-      if (!name) setErrorName('Name required.');
-      if (password.length < 6)
-        setErrorPassword('Password must be at least 6 characters.');
-      if (!isEmail(email)) setErrorEmail('Invalid email.');
-      if (!language) setErrorLanguage('Please select a language.');
-      if (name) setErrorName('');
-      if (password.length >= 6) setErrorPassword('');
-      if (isEmail(email)) setErrorEmail('');
-      if (language) setErrorLanguage('');
+      return res;
+    } catch (err) {
+      alert('FAIL');
+      console.error(err);
     }
   };
 
@@ -132,6 +153,9 @@ export default function Landing() {
             label="Name"
             onChange={(event) => setName(event.target.value)}
             className={classes.marginBottom5}
+            required
+            error={errorName}
+            helperText={errorName && 'Name required.'}
           />
           <Typography variant="h6" className={classes.errors}>
             {errorName}
@@ -140,6 +164,9 @@ export default function Landing() {
             label="Email"
             onChange={(event) => setEmail(event.target.value)}
             className={classes.marginBottom5}
+            required
+            error={errorEmail}
+            helperText={errorEmail && 'Invalid email.'}
           />
           <Typography variant="h6" className={classes.errors}>
             {errorEmail}
@@ -149,6 +176,11 @@ export default function Landing() {
             type="password"
             onChange={(event) => setPassword(event.target.value)}
             className={classes.marginBottom5}
+            required
+            error={errorPassword}
+            helperText={
+              errorPassword && 'Password must be at least 6 characters.'
+            }
           />
           <Typography variant="h6" className={classes.errors}>
             {errorPassword}
@@ -157,8 +189,10 @@ export default function Landing() {
             <InputLabel id="language-select">Select a Language</InputLabel>
             <Select
               id="language-select"
-              value={language}
-              onChange={(event) => setLanguage(event.target.value)}
+              value={primaryLanguage}
+              onChange={(event) => setPrimaryLanguage(event.target.value)}
+              error={errorLanguage}
+              helperText={errorLanguage && 'Please select a language.'}
             >
               <MenuItem value={'English'}>English</MenuItem>
               <MenuItem value={'Spanish'}>Spanish</MenuItem>

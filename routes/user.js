@@ -70,8 +70,9 @@ router.post(
     try {
       // Email must be unique
       let user = await User.findOne({ email });
+      //if we find a user they already have an account
       if (user) {
-        return res.status(400).send('User with this email already exists.');
+        return res.status(400).json({ msg: 'This user already exists' });
       }
 
       const salt = bcrypt.genSaltSync();
@@ -86,9 +87,8 @@ router.post(
       });
 
       await user.save();
-      console.log('user:', user);
 
-      //Set up the jwt payload to user ID
+      //Set up the jwt payload to user ID and email option
       const payload = {
         user: {
           id: user._id,
