@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
@@ -8,11 +8,11 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
@@ -23,12 +23,20 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  contacts: [{ type: Schema.Types.ObjectId, ref: "users" }],
+  //leave empty and push in new contacts OR create a new contactSchema
+  contacts: [],
   dateJoined: {
     type: Date,
     default: Date.now,
   },
 });
 
+UserSchema.methods.toJSON = function () {
+  let obj = this.toObject();
+  obj.contacts.forEach((contact) => {
+    delete contact.password;
+  });
+};
+
 //UserSchema.plugin(require('passport-local-mongoose'));
-module.exports = User = mongoose.model("user", UserSchema);
+module.exports = User = mongoose.model('user', UserSchema);
