@@ -12,16 +12,10 @@ import {
   Button,
   Snackbar,
 } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
+import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 import Background from '../assets/background.png';
 require('dotenv').config();
-// const baseURL = process.env.REACT_APP_baseURL;
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
 const useStyles = makeStyles({
   outerMargins: {
     marginTop: '2%',
@@ -60,7 +54,7 @@ export default function Landing() {
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorLanguage, setErrorLanguage] = useState(false);
-  const [backendError, setBackendError] = useState(false);
+  const [backendError, setBackendError] = useState(true);
   const [backendErrorMsg, setBackendErrorMsg] = useState('');
 
   useEffect(() => {
@@ -122,11 +116,11 @@ export default function Landing() {
         },
         config,
       );
-
+      console.log('res:', res);
       return res;
     } catch (err) {
       //TODOS add error snackbar
-      // setBackendError(true);
+      setBackendError(true);
       console.error(err);
     }
   };
@@ -227,10 +221,12 @@ export default function Landing() {
       </Box>
       <Snackbar
         open={backendError}
-        autoHideDuration={1000}
+        autoHideDuration={2000}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Alert severity="error">Please check credentials</Alert>
+        <Alert severity="error" variant="filled">
+          Please check credentials
+        </Alert>
       </Snackbar>
     </Box>
   );

@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { Box, Typography, TextField, Button } from '@material-ui/core';
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Snackbar,
+} from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Background from '../assets/background.png';
@@ -38,6 +45,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
+  const [backendError, setBackendError] = useState(false);
 
   const handleClick = () => {
     if (!email) return setErrorEmail(true);
@@ -56,13 +64,22 @@ export default function Login() {
       return res;
     } catch (err) {
       //TODOS add error snackbar
-      console.error(err);
+      setBackendError(true);
+      alert(err);
     }
   };
   //deactivates errors when user inputs into form
   useEffect(() => {
     if (email) setErrorEmail(false);
     if (password) setErrorPassword(false);
+
+    let timer;
+    if (backendError) {
+      timer = setTimeout(() => {
+        setBackendError(false);
+      }, 1000);
+    }
+    return () => clearTimeout(timer);
   });
 
   return (
@@ -123,6 +140,15 @@ export default function Login() {
           </Button>
         </Box>
       </Box>
+      <Snackbar
+        open={backendError}
+        autoHideDuration={2000}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert severity="error" variant="filled">
+          Please check credentials
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

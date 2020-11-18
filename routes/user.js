@@ -26,23 +26,38 @@ router.post(
   '/login',
   runAsyncWrapper(async (req, res) => {
     const email = req.body.email;
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).send('No user with this email');
-    } else if (!bcrypt.compareSync(req.body.password, user.password)) {
-      return res.status(400).send('Incorrect Password');
-    }
-    // success -> Get a JWT Token
-    const accessToken = jwt.sign(
-      /* payload */ { email },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: JWT_EXPIRY_TIME },
-    );
+    try {
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(400).send('No user with this email');
+      } else if (!bcrypt.compareSync(req.body.password, user.password)) {
+        return res.status(400).send('Incorrect Password');
+      }
 
-    // req.session.user = user;
-    // return res.status(201).send(user);
-    res.cookie('token', accessToken, { httpOnly: true });
-    res.status(201).send();
+      const payload = {
+        user: {
+          id: user._id,
+          email,
+        },
+      };
+
+      // success -> Get a JWT Token
+      jwt.sign(
+        payload,
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: JWT_EXPIRY_TIME },
+        (err, token) => {
+          if (err) throw err;
+          return res
+            .status(201)
+            .cookie('token', token)
+            .json({ token, msg: 'User Authenticated' });
+        },
+      );
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
   }),
 );
 
@@ -99,13 +114,10 @@ router.post(
         { expiresIn: JWT_EXPIRY_TIME },
         (err, token) => {
           if (err) throw err;
-          return (
-            res
-              .status(201)
-              // .cookie(token, { httpOnly: true })
-              .cookie('token', token)
-              .json({ token, msg: 'Register Success!' })
-          );
+          return res
+            .status(201)
+            .cookie('token', token)
+            .json({ token, msg: 'Register Success!' });
         },
       );
     } catch (err) {
