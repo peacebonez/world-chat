@@ -6,7 +6,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import ChatWindow from "./ChatWindow";
 
 import Navbar from "./Navbar";
-const BASE_URL = process.env.REACT_APP_baseURL;
+require('dotenv').config();
+
+const serverURL = process.env.serverURL;
 
 const useStyles = makeStyles((theme) => ({
   conversation: {
@@ -22,12 +24,12 @@ const Conversation = (props) => {
   const classes = useStyles();
 
   useEffect(() => {
-    let socket = io(BASE_URL.toString());
+    let socket = io(serverURL);
     socket.on('connect', () => {
       console.log(socket.id);
       console.log(socket.connected);
     })
-
+    
     // CLEAN UP THE EFFECT
     return () => socket.disconnect();
   }, []);

@@ -31,9 +31,6 @@ const io = require('socket.io')(http,  {
     credentials: true
   }
 });
-io.origins((origin, callback) => {
-  callback(null, true);
-});
 
 //connect mongoDB database
 const connectDB = async () => {
