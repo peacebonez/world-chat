@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Invitation = require('../models/Invitation');
 const User = require('../models/User');
+const auth = require('../middleware/auth');
 
-//PUT request to approve invitation
-router.put('/:id/approve', async (req, res) => {
+//PUT request to approve invitation PRIVATE ROUTE
+router.put('/:id/approve', auth, async (req, res) => {
   const invitationId = req.params.id;
   try {
     const invitation = await Invitation.findById(invitationId);
@@ -82,8 +83,8 @@ router.put('/:id/approve', async (req, res) => {
   }
 });
 
-//PUT request to reject invitation
-router.put('/:id/reject', async (req, res) => {
+//PUT request to reject invitation PRIVATE ROUTE
+router.put('/:id/reject', auth, async (req, res) => {
   try {
     const invitation = await Invitation.findById(req.params.id);
 
