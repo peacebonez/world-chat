@@ -29,31 +29,39 @@ const useStyles = makeStyles((theme) => ({
   header: {
     color: '#BEC5D3',
     '&:hover': {
-      color: '#000',
+      color: theme.palette.primary.blue,
     },
   },
   headerActive: {
-    color: '#000',
+    color: theme.palette.primary.blue,
+    fontSize: 26,
   },
 }));
 
-const SideBarSearch = ({ setChatShown, setContactsShown, setInvitesShown }) => {
+const SideBarSearch = ({
+  chatsShown,
+  invitesShown,
+  contactsShown,
+  setChatsShown,
+  setContactsShown,
+  setInvitesShown,
+}) => {
   const classes = useStyles();
 
   const showComponent = (type) => {
     switch (type) {
       case 'Chats':
-        setChatShown(true);
+        setChatsShown(true);
         setContactsShown(false);
         setInvitesShown(false);
         break;
       case 'Contacts':
-        setChatShown(false);
+        setChatsShown(false);
         setContactsShown(true);
         setInvitesShown(false);
         break;
       case 'Invites':
-        setChatShown(false);
+        setChatsShown(false);
         setContactsShown(false);
         setInvitesShown(true);
         break;
@@ -69,7 +77,13 @@ const SideBarSearch = ({ setChatShown, setContactsShown, setInvitesShown }) => {
           className={classes.noStyleBtn}
           onClick={(e) => showComponent(e.target.innerHTML)}
         >
-          <Typography display="inline" variant="h6" className={classes.header}>
+          <Typography
+            display="inline"
+            variant="h6"
+            className={`${classes.header} ${
+              chatsShown && classes.headerActive
+            }`}
+          >
             Chats
           </Typography>
         </button>
@@ -77,7 +91,13 @@ const SideBarSearch = ({ setChatShown, setContactsShown, setInvitesShown }) => {
           className={classes.noStyleBtn}
           onClick={(e) => showComponent(e.target.innerHTML)}
         >
-          <Typography display="inline" variant="h6" className={classes.header}>
+          <Typography
+            display="inline"
+            variant="h6"
+            className={`${classes.header} ${
+              contactsShown && classes.headerActive
+            }`}
+          >
             Contacts
           </Typography>
         </button>
@@ -85,7 +105,13 @@ const SideBarSearch = ({ setChatShown, setContactsShown, setInvitesShown }) => {
           className={classes.noStyleBtn}
           onClick={(e) => showComponent(e.target.innerHTML)}
         >
-          <Typography display="inline" variant="h6" className={classes.header}>
+          <Typography
+            display="inline"
+            variant="h6"
+            className={`${classes.header} ${
+              invitesShown && classes.headerActive
+            }`}
+          >
             Invites
           </Typography>
         </button>

@@ -32,11 +32,66 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const testInvitesIn = [
-  { avatar: tempAvatar, email: 'friend1@aol.com' },
-  { avatar: tempAvatar, email: 'friend2@aol.com' },
-  { avatar: tempAvatar, email: 'friend3@aol.com' },
-  { avatar: tempAvatar, email: 'friend4@aol.com' },
-  { avatar: tempAvatar, email: 'friend5@aol.com' },
+  {
+    avatar: tempAvatar,
+    email: 'friend0@aol.com',
+    name: 'friend0',
+    status: 'pending',
+  },
+  {
+    avatar: tempAvatar,
+    email: 'friend1@aol.com',
+    name: 'friend1',
+    status: 'pending',
+  },
+  {
+    avatar: tempAvatar,
+    email: 'friend2@aol.com',
+    name: 'friend2',
+    status: 'pending',
+  },
+  {
+    avatar: tempAvatar,
+    email: 'friend3@aol.com',
+    name: 'friend3',
+    status: 'pending',
+  },
+  {
+    avatar: tempAvatar,
+    email: 'friend4@aol.com',
+    name: 'friend4',
+    status: 'pending',
+  },
+  {
+    avatar: tempAvatar,
+    email: 'friend5@aol.com',
+    name: 'friend5',
+    status: 'pending',
+  },
+  {
+    avatar: tempAvatar,
+    email: 'friend6@aol.com',
+    name: 'friend6',
+    status: 'pending',
+  },
+  {
+    avatar: tempAvatar,
+    email: 'friend7@aol.com',
+    name: 'friend7',
+    status: 'pending',
+  },
+  {
+    avatar: tempAvatar,
+    email: 'friend8@aol.com',
+    name: 'friend8',
+    status: 'pending',
+  },
+  {
+    avatar: tempAvatar,
+    email: 'friend9@aol.com',
+    name: 'friend9',
+    status: 'pending',
+  },
 ];
 const testInvitesOut = [
   'friend6@aol.com',
@@ -50,6 +105,7 @@ const testInvitesOut = [
 const Invites = (props) => {
   const [showRequests, setShowRequests] = useState(true);
   const [showSent, setShowSent] = useState(false);
+  const [invitesIn, setInvitesIn] = useState(testInvitesIn);
   const classes = useStyles();
 
   const requestShow = () => {
@@ -75,8 +131,13 @@ const Invites = (props) => {
         {/* display all pending invites sent TO user */}
         {showRequests && (
           <ul className={classes.inviteUl}>
-            {testInvitesIn.map((invite) => (
-              <InviteIn key={invite.email} invite={invite} />
+            {invitesIn.map((invite) => (
+              <InviteIn
+                key={invite.email}
+                invite={invite}
+                invitesIn={invitesIn}
+                setInvitesIn={setInvitesIn}
+              />
             ))}
           </ul>
         )}

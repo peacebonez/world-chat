@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     height: '100vh',
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+    },
   },
   listContainer: {
     width: '85%',
@@ -27,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sidebar = (props) => {
-  const [chatShown, setChatShown] = useState(false);
+  const [chatsShown, setChatsShown] = useState(false);
   const [contactsShown, setContactsShown] = useState(false);
   const [invitesShown, setInvitesShown] = useState(true);
   const classes = useStyles();
@@ -42,12 +45,15 @@ const Sidebar = (props) => {
     <div className={classes.sideBar}>
       <SideBarHeader />
       <SideBarSearch
-        setChatShown={setChatShown}
+        chatsShown={chatsShown}
+        invitesShown={invitesShown}
+        contactsShown={contactsShown}
+        setChatsShown={setChatsShown}
         setContactsShown={setContactsShown}
         setInvitesShown={setInvitesShown}
       />
       <div className={classes.listContainer}>
-        {chatShown && <ChatList />}
+        {chatsShown && <ChatList />}
         {contactsShown && <Contacts />}
         {invitesShown && <Invites />}
       </div>

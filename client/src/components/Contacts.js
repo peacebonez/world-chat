@@ -43,18 +43,18 @@ const Contacts = (props) => {
     <div className={classes.contactsContainer}>
       <Invitation />
       <ul className={classes.contactList}>
-        {user.contacts.map((contact) => {
-          const { avatar, name, isOnline, id } = contact;
-          return (
-            <Contact avatar={avatar} name={name} isOnline={isOnline} key={id} />
-          );
-        })}
-        {/* {testContacts.map((contact) => {
+        {/* {user.contacts.map((contact) => {
           const { avatar, name, isOnline, id } = contact;
           return (
             <Contact avatar={avatar} name={name} isOnline={isOnline} key={id} />
           );
         })} */}
+        {testContacts.map((contact) => {
+          const { avatar, name, isOnline, id } = contact;
+          return (
+            <Contact avatar={avatar} name={name} isOnline={isOnline} key={id} />
+          );
+        })}
       </ul>
     </div>
   );

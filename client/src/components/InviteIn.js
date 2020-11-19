@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Typography } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
@@ -46,22 +46,48 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const InviteIn = ({ invite }) => {
-  const { avatar, email } = invite;
+const InviteIn = ({ invite, invitesIn, setInvitesIn }) => {
+  const { avatar, name } = invite;
   const classes = useStyles();
+
+  const handleApprove = () => {
+    //remove invite from invitesIn
+    //change status to approved
+    //add to contacts
+
+    invite.status = 'approved';
+    let invitesInCopy = [...invitesIn];
+
+    let filteredInvites = invitesInCopy.filter((request) => {
+      return request.email !== invite.email;
+    });
+    console.log('invite:', invite);
+    setInvitesIn(filteredInvites);
+  };
+  const handleReject = () => {
+    //remove invite from invitesIn
+    invite.status = 'rejected';
+    let invitesInCopy = [...invitesIn];
+
+    let filteredInvites = invitesInCopy.filter((request) => {
+      return request.email !== invite.email;
+    });
+    console.log('invite:', invite);
+    setInvitesIn(filteredInvites);
+  };
   return (
     <li className={classes.inviteItem}>
       <div>
         <div className={classes.sideBarImgWrapper}>
           <img src={avatar} alt="user avatar" className={classes.sideBarImg} />
         </div>
-        <Typography variant="h6">{email}</Typography>
+        <Typography variant="h6">{name}</Typography>
       </div>
       <div>
-        <button className={classes.button}>
+        <button className={classes.button} onClick={handleApprove}>
           <CheckIcon className={`${classes.icon} ${classes.check}`} />
         </button>
-        <button className={classes.button}>
+        <button className={classes.button} onClick={handleReject}>
           <ClearIcon className={`${classes.icon} ${classes.cross}`} />
         </button>
       </div>
