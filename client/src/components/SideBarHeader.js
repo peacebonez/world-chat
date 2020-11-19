@@ -1,10 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import happyChatter from '../assets/happy-chatter.png';
 import { Typography } from '@material-ui/core';
+
+import { UserContext } from '../contexts/userContext';
 
 const useStyles = makeStyles((theme) => ({
   sideBarHeader: {
@@ -45,7 +46,8 @@ const useStyles = makeStyles((theme) => ({
   offlineIcon: { background: 'lightgray' },
 }));
 
-const SideBarHeader = (props) => {
+const SideBarHeader = () => {
+  const { userState } = useContext(UserContext);
   const classes = useStyles();
   return (
     <div className={classes.sideBarHeader}>
@@ -56,7 +58,7 @@ const SideBarHeader = (props) => {
             className={`${classes.statusIcon} ${classes.onlineIcon}`}
           ></span>
         </div>
-        <Typography variant="h5">Steven</Typography>
+        <Typography variant="h5">{userState.user.name}</Typography>
       </div>
       <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
     </div>

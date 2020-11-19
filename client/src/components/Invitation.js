@@ -15,6 +15,8 @@ import AddIcon from '@material-ui/icons/Add';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import InviteNotification from './InviteNotification';
 
+import { UserContext } from '../contexts/userContext';
+
 const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(3),
@@ -56,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function FormDialog() {
-  const userId = '5fadeb4e66d8372cd6d05d89';
+  const { userState } = useContext(UserContext);
   const classes = useStyles();
   const inputRef = createRef();
 
@@ -66,7 +68,8 @@ export default function FormDialog() {
   const [failedEmails, setFailedEmails] = useState([]);
   const [open, setOpen] = useState(false);
   const [notifyOpen, setNotifyOpen] = useState(false);
-  //retrieve user object from DB and set ID
+
+  const userId = userState.user.id;
   const inviteUrl = 'https://www.EK-messenger.com/join/' + userId;
 
   /*generate unique id for URL */
