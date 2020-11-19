@@ -22,6 +22,9 @@ function Alert(props) {
 }
 
 const useStyles = makeStyles({
+  noUnderlineLink: {
+    textDecoration: 'none'
+  },
   outerMargins: {
     marginTop: '2%',
     paddingLeft: '10%',
@@ -32,8 +35,8 @@ const useStyles = makeStyles({
   marginBottom50: {
     marginBottom: '50%',
   },
-  marginLeft10: {
-    marginLeft: '10%',
+  loginButton: {
+    marginLeft: '10%'
   },
   marginBottom5: {
     marginBottom: '5%',
@@ -44,6 +47,9 @@ const useStyles = makeStyles({
   errors: {
     color: 'red',
   },
+  alreadyHaveAccount: {
+    color: '#9c9c9c'
+  }
 });
 
 export default function Landing() {
@@ -109,12 +115,12 @@ export default function Landing() {
       {/** The right side, the sign up */}
       <Box className={classes.outerMargins}>
         <Box display="flex" className={classes.marginBottom50}>
-          <Typography variant="h5">Already have an account? </Typography>
-          <Link to="/login">
+          <Typography variant="subtitle1" className={classes.alreadyHaveAccount}>Already have an account? </Typography>
+          <Link to="/login" className={classes.noUnderlineLink}>
             <Button
               variant="outlined"
               color="primary"
-              className={classes.marginLeft10}
+              className={classes.loginButton}
             >
               Login
             </Button>

@@ -15,6 +15,9 @@ require('dotenv').config();
 const baseURL = process.env.REACT_APP_baseURL;
 
 const useStyles = makeStyles({
+  noUnderlineLink: {
+    textDecoration: 'none'
+  },
   inline: {
     inline: 'true'
   },
@@ -28,12 +31,15 @@ const useStyles = makeStyles({
   marginBottom50: {
     marginBottom: '50%'
   },
-  marginLeft15: {
-    marginLeft: '15%'
+  createAccount: {
+    color: '#9c9c9c'
   },
   marginBottom5: {
     marginBottom: '5%'
   },
+  createAccountButton: {
+    marginLeft: '15%'
+  }
 });
 
 export default function Login() {
@@ -64,9 +70,9 @@ export default function Login() {
       {/** The right side, the sign up */}
       <Box className={classes.outerMargins} >
         <Box display="flex" className={classes.marginBottom50}>
-          <Typography variant="h5">Don't have an account? </Typography>
-          <Link to="/">
-            <Button variant="outlined" color="primary" className={classes.marginLeft15}>
+          <Typography variant="subtitle1" className={classes.createAccount}>Don't have an account? </Typography>
+          <Link to="/" className={classes.noUnderlineLink}>
+            <Button variant="outlined" color="primary" className={classes.createAccountButton}>
                 Create account
             </Button>
           </Link>
