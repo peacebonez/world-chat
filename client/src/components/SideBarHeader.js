@@ -54,7 +54,10 @@ const SideBarHeader = () => {
     <div className={classes.sideBarHeader}>
       <div>
         <div className={classes.sideBarImgWrapper}>
-          <img src={happyChatter} className={classes.sideBarImg} />
+          <img
+            src={userState.user.avatar ? userState.user.avatar : happyChatter}
+            className={classes.sideBarImg}
+          />
           <span
             className={`${classes.statusIcon} ${classes.onlineIcon}`}
           ></span>

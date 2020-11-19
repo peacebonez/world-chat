@@ -25,27 +25,39 @@ sgMail.setApiKey(process.env.EMAIL_KEY);
 router.post(
   '/login',
   runAsyncWrapper(async (req, res) => {
-    let email = req.body.email;
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).send('No user with this email');
-    } else if (!bcrypt.compareSync(req.body.password, user.password)) {
-      return res.status(400).send('Incorrect Password');
-    }
-    // success -> Get a JWT Token
-    const accessToken = jwt.sign(
-      /* payload */ { email },
-      process.env.ACCESS_TOKEN_SECRET,
-      {
-        algorithm: 'HS256',
-        expiresIn: JWT_EXPIRY_TIME,
-      },
-    );
+    const email = req.body.email;
+    try {
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(404).send('No user with this email');
+      } else if (!bcrypt.compareSync(req.body.password, user.password)) {
+        return res.status(400).send('Incorrect Password');
+      }
 
-    // req.session.user = user;
-    // return res.status(201).send(user);
-    res.cookie('token', accessToken, { httpOnly: true });
-    res.status(201).send();
+      const payload = {
+        user: {
+          id: user._id,
+          email,
+        },
+      };
+
+      // success -> Get a JWT Token
+      jwt.sign(
+        payload,
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: JWT_EXPIRY_TIME },
+        (err, token) => {
+          if (err) throw err;
+          return res
+            .status(201)
+            .cookie('token', token, { httpOnly: true })
+            .json({ token, msg: 'User Authenticated' });
+        },
+      );
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
   }),
 );
 
@@ -102,13 +114,10 @@ router.post(
         { expiresIn: JWT_EXPIRY_TIME },
         (err, token) => {
           if (err) throw err;
-          return (
-            res
-              .status(201)
-              // .cookie(token, { httpOnly: true })
-              .cookie('token', token)
-              .json({ token, msg: 'Register Success!' })
-          );
+          return res
+            .status(201)
+            .cookie('token', token, { httpOnly: true })
+            .json({ token, msg: 'Register Success!' });
         },
       );
     } catch (err) {
@@ -119,7 +128,7 @@ router.post(
 );
 
 router.get(
-  '/get_by_id/:id',
+  '/:id',
   runAsyncWrapper(async function (req, res) {
     const user = await User.findById(req.params.id);
 
@@ -150,7 +159,7 @@ router.get(
   '/get_all',
   runAsyncWrapper(async function (req, res) {
     const users = await User.find();
-    return res.status(200).jsonp(users);
+    return res.status(200).json(users);
   }),
 );
 

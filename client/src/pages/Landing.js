@@ -12,16 +12,10 @@ import {
   Button,
   Snackbar,
 } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
+import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 import Background from '../assets/background.png';
 require('dotenv').config();
-// const baseURL = process.env.REACT_APP_baseURL;
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
 const useStyles = makeStyles({
   outerMargins: {
     marginTop: '2%',
@@ -48,10 +42,8 @@ const useStyles = makeStyles({
 });
 
 export default function Landing() {
-  let history = useHistory();
+  const history = useHistory();
   const classes = useStyles();
-
-  const [open, setOpen] = useState(false);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -62,78 +54,53 @@ export default function Landing() {
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorLanguage, setErrorLanguage] = useState(false);
-  const [backendError, setBackendError] = useState(false);
+  const [errorBackend, setErrorBackend] = useState(false);
   const [backendErrorMsg, setBackendErrorMsg] = useState('');
 
   useEffect(() => {
+    if (isName(name)) setErrorName(false);
+    if (isEmail(email)) setErrorEmail(false);
+    if (password.length > 5) setErrorPassword(false);
+    if (primaryLanguage) setErrorLanguage(false);
+
+    //clears backend error msg
     let timer;
-    if (backendError) {
+    if (errorBackend) {
       timer = setTimeout(() => {
-        setBackendError(false);
-      }, 1000);
+        setErrorBackend(false);
+      }, 5000);
     }
     return () => clearTimeout(timer);
   });
 
-  // Npm email-validator is acting up; if anyone has a better email validation function
-  // feel free to replace the function below
   const isEmail = (email) => /^\S+@\S+$/.test(email);
   const isName = (name) => /^[A-Z]+$/i.test(name);
-  const handleErrorTimouts = () => {
-    if (!name) {
-      setErrorName(true);
-      let timer = setTimeout(() => {
-        setErrorName(false);
-      }, 1000);
-    }
-
-    if (!isEmail(email)) {
-      setErrorEmail(true);
-      let timer = setTimeout(() => {
-        setErrorEmail(false);
-      }, 1000);
-    }
-    if (password.length < 6) {
-      setErrorPassword(true);
-      let timer = setTimeout(() => {
-        setErrorPassword(false);
-      }, 1000);
-    }
-
-    if (!primaryLanguage) {
-      setErrorLanguage(true);
-      let timer = setTimeout(() => {
-        setErrorLanguage(false);
-      }, 1000);
-    }
+  const errors = () => {
+    return (
+      errorName || errorEmail || errorPassword || errorLanguage || errorBackend
+    );
   };
-
   const handleSubmit = async () => {
-    handleErrorTimouts();
+    if (!isEmail(email)) setErrorEmail(true);
+    if (!isName(name)) setErrorName(true);
+    if (!password) setErrorPassword(true);
+    if (!primaryLanguage) setErrorLanguage(true);
 
-    if (
-      isEmail(email) &&
-      password.length >= 6 &&
-      primaryLanguage &&
-      isName(name)
-    ) {
+    if (!errors()) {
       let res = await signUpUser();
       if (res && (res.status === 200 || res.status === 201)) {
         history.push('/messenger');
       }
-    } else {
-      //TODOS add error snackbar
-      setBackendError(true);
     }
   };
 
-  //POST config header values
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
   const signUpUser = async () => {
+    //POST config header values
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
     try {
       let res = await axios.post(
         '/user/signup',
@@ -145,12 +112,17 @@ export default function Landing() {
         },
         config,
       );
-
       return res;
     } catch (err) {
-      //TODOS add error snackbar
-      // setBackendError(true);
-      console.error(err);
+      if (err.message.includes('400')) {
+        setErrorBackend(true);
+        setBackendErrorMsg('User already exists.');
+      }
+
+      if (err.message.includes('500')) {
+        setErrorBackend(true);
+        setBackendErrorMsg('Server error');
+      }
     }
   };
 
@@ -194,7 +166,7 @@ export default function Landing() {
             className={classes.marginBottom5}
             required
             error={errorName}
-            helperText={errorName && 'Name required.'}
+            helpertext={errorName && 'Name required.'}
           />
           <Typography variant="h6" className={classes.errors}>
             {errorName}
@@ -205,7 +177,7 @@ export default function Landing() {
             className={classes.marginBottom5}
             required
             error={errorEmail}
-            helperText={errorEmail && 'Invalid email.'}
+            helpertext={errorEmail && 'Invalid email.'}
           />
           <Typography variant="h6" className={classes.errors}>
             {errorEmail}
@@ -217,7 +189,7 @@ export default function Landing() {
             className={classes.marginBottom5}
             required
             error={errorPassword}
-            helperText={
+            helpertext={
               errorPassword && 'Password must be at least 6 characters.'
             }
           />
@@ -226,7 +198,7 @@ export default function Landing() {
           </Typography>
           <FormControl
             className={classes.marginBottom20}
-            helperText={errorLanguage && 'Please select a language.'}
+            helpertext={errorLanguage && 'Please select a language.'}
           >
             <InputLabel id="language-select">Select a Language</InputLabel>
             <Select
@@ -248,12 +220,15 @@ export default function Landing() {
           </Button>
         </Box>
       </Box>
+      {/* Error alerts */}
       <Snackbar
-        open={backendError}
-        autoHideDuration={1000}
+        open={errorBackend}
+        autoHideDuration={5000}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Alert severity="error">Please check credentials</Alert>
+        <Alert severity="error" variant="filled">
+          {backendErrorMsg}
+        </Alert>
       </Snackbar>
     </Box>
   );
