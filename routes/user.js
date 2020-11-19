@@ -3,7 +3,7 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const auth = require('../middleware/auth');
+//const auth = require('../middleware/auth');
 require('dotenv').config({ path: '../.env' });
 
 const sgMail = require('@sendgrid/mail');
@@ -115,6 +115,8 @@ router.post(
       console.error(err.message);
       res.status(500).send('Server Error');
     }
+
+   
   }),
 );
 
