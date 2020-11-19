@@ -3,7 +3,7 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-//const auth = require('../middleware/auth');
+const auth = require('../middleware/auth');
 require('dotenv').config({ path: '../.env' });
 
 const sgMail = require('@sendgrid/mail');
@@ -102,26 +102,21 @@ router.post(
         { expiresIn: JWT_EXPIRY_TIME },
         (err, token) => {
           if (err) throw err;
-          return (
-            res
-              .status(201)
-              // .cookie(token, { httpOnly: true })
-              .cookie('token', token)
-              .json({ token, msg: 'Register Success!' })
-          );
+          return res
+            .status(201)
+            .cookie('token', token, { httpOnly: true })
+            .json({ token, msg: 'Register Success!' });
         },
       );
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
     }
-
-   
   }),
 );
 
 router.get(
-  '/get_by_id/:id',
+  '/:id',
   runAsyncWrapper(async function (req, res) {
     const user = await User.findById(req.params.id);
 
@@ -152,7 +147,7 @@ router.get(
   '/get_all',
   runAsyncWrapper(async function (req, res) {
     const users = await User.find();
-    return res.status(200).jsonp(users);
+    return res.status(200).json(users);
   }),
 );
 
