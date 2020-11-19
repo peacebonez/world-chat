@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.secondary.main,
     '& input': {
       background: theme.palette.secondary.main,
+      paddingLeft: theme.spacing(1),
     },
   },
   noStyleBtn: {
@@ -125,7 +126,9 @@ const SideBarSearch = ({
             autoFocus
             placeholder="Search"
             InputProps={{
-              startAdornment: <SearchOutlinedIcon />,
+              startAdornment: (
+                <SearchOutlinedIcon className={classes.noStyleBtn} />
+              ),
             }}
           />
         </form>

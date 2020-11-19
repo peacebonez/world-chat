@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 700,
     cursor: 'pointer',
   },
+  inviteSelectorActive: {
+    fontSize: 28,
+  },
   invitesWrapper: {
     width: '100%',
   },
@@ -130,10 +133,20 @@ const Invites = (props) => {
   return (
     <div className={classes.wrapper}>
       <div>
-        <button className={classes.inviteSelector} onClick={requestShow}>
+        <button
+          className={`${classes.inviteSelector} ${
+            showRequests && classes.inviteSelectorActive
+          }`}
+          onClick={requestShow}
+        >
           Requests
         </button>
-        <button className={classes.inviteSelector} onClick={sentShow}>
+        <button
+          className={`${classes.inviteSelector} ${
+            showSent && classes.inviteSelectorActive
+          }`}
+          onClick={sentShow}
+        >
           Sent
         </button>
       </div>
