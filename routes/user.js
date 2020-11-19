@@ -26,7 +26,7 @@ router.post(
   '/login',
   runAsyncWrapper(async (req, res) => {
     let email = req.body.email;
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).send('No user with this email');
     } else if (!bcrypt.compareSync(req.body.password, user.password)) {
@@ -53,59 +53,83 @@ router.post(
 router.post(
   '/signup',
   [
-    check('email').isEmail(),
-    check('password').isLength({ min: 6 }),
-    check('primaryLanguage').isLength({ min: 1 }),
+    check('name', 'Name required').notEmpty(),
+    check('email', 'Email required').isEmail().trim(),
+    check('password', 'Password required').isLength({ min: 6 }),
+    check('primaryLanguage', 'Please choose a language').isLength({ min: 1 }),
   ],
   runAsyncWrapper(async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty())
       return res.status(422).json({ errors: errors.array() });
 
-    // Email must be unique
-    const user1 = await User.findOne({ email: req.body.email });
-    if (user1) {
-      return res.status(400).send('User with this email already exists.');
-    }
+    const { name, email, password, primaryLanguage } = req.body;
 
-    const salt = bcrypt.genSaltSync();
-    const hashed_password = bcrypt.hashSync(req.body.password, salt);
-    // REGISTER USER!!!
-    const user = await User.create({
-      name: req.body.name,
-      email: req.body.email,
-      password: hashed_password,
-      primaryLanguage: req.body.primaryLanguage,
-    });
-    // success -> Get a JWT Token
-    const email = req.body.email;
-    const accessToken = jwt.sign(
-      /* payload */ { email },
-      process.env.ACCESS_TOKEN_SECRET,
-      {
-        algorithm: 'HS256',
-        expiresIn: JWT_EXPIRY_TIME,
-      },
-    );
-    res.cookie('token', accessToken, { httpOnly: true });
-    //req.session.user = user
-    return res.status(201).send(user._id);
+    try {
+      // Email must be unique
+      let user = await User.findOne({ email });
+      //if we find a user they already have an account
+      if (user) {
+        return res.status(400).json({ msg: 'This user already exists' });
+      }
+
+      const salt = bcrypt.genSaltSync();
+      const hashed_password = bcrypt.hashSync(password, salt);
+
+      // REGISTER USER!!!
+      user = new User({
+        name,
+        email,
+        password: hashed_password,
+        primaryLanguage,
+      });
+
+      await user.save();
+
+      //Set up the jwt payload to user ID and email option
+      const payload = {
+        user: {
+          id: user._id,
+          email,
+        },
+      };
+
+      // success -> Get a JWT Token
+      //the payload is the data being encrypted
+      jwt.sign(
+        payload,
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: JWT_EXPIRY_TIME },
+        (err, token) => {
+          if (err) throw err;
+          return (
+            res
+              .status(201)
+              // .cookie(token, { httpOnly: true })
+              .cookie('token', token)
+              .json({ token, msg: 'Register Success!' })
+          );
+        },
+      );
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
   }),
 );
 
-router.get('/:id', auth, async (req, res) => {
-  try {
+router.get(
+  '/get_by_id/:id',
+  runAsyncWrapper(async function (req, res) {
     const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
-    }
 
-    return res.status(200).json(user);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
-  }
-});
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' });
+    } else {
+      return res.status(200).json(user);
+    }
+  }),
+);
 
 router.get(
   '/get_current_user',
@@ -126,11 +150,11 @@ router.get(
   '/get_all',
   runAsyncWrapper(async function (req, res) {
     const users = await User.find();
-    return res.status(200).json(users);
+    return res.status(200).jsonp(users);
   }),
 );
 
-//GET all user outgoing invitations
+//GET all user outgoing invitations PRIVATE ROUTE
 router.get('/:id/invitations/out', auth, async (req, res) => {
   const userId = req.params.id;
   try {
@@ -147,7 +171,7 @@ router.get('/:id/invitations/out', auth, async (req, res) => {
   }
 });
 
-//GET all user incoming invitations
+//GET all user incoming invitations PRIVATE ROUTE
 router.get('/:id/invitations/in', auth, async (req, res) => {
   const userId = req.params.id;
   try {
@@ -170,57 +194,11 @@ router.get('/:id/invitations/in', auth, async (req, res) => {
   }
 });
 
-//GET all user incoming PENDING invitations
-router.get('/:id/invitations/pending', auth, async (req, res) => {
-  const userId = req.params.id;
-  try {
-    const user = await User.findById(userId);
-
-    if (!user) {
-      res.status(404).send('User not found');
-    }
-
-    const pendingInvitesIn = await Invitation.find({
-      toEmail: user.email,
-      status: 'pending',
-    });
-
-    // console.log('pendingInvitesIn:', pendingInvitesIn);
-
-    //need to find each user by ID and then retrieve their email
-    for (let invite of pendingInvitesIn) {
-      const user = await User.findById(invite.referrer);
-      // console.log('user:', user);
-      console.log('invite:', invite);
-      invite.referrerEmail = user.email;
-    }
-
-    const pendingInvitesOut = await Invitation.find({
-      referrer: userId,
-      status: 'pending',
-    });
-
-    const invites = {
-      pendingInvitesIn,
-      pendingInvitesOut,
-    };
-
-    if (invites.pendingInvitesIn.length < 1 && invites.pendingInvitesOut < 1) {
-      return res.status(204).json({ invites, msg: 'No invites' });
-    }
-
-    res.json(invites);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
-  }
-});
-
-//POST create a user invitation
+//POST create a user invitation PRIVATE ROUTE
 router.post(
   '/:id/invitation',
-  auth,
   [check('toEmail', 'Email required').isEmail().trim()],
+  auth,
   async (req, res) => {
     const errors = validationResult(req);
 
@@ -267,11 +245,11 @@ router.post(
   },
 );
 
-//POST send a user invitation
+//POST send a user invitation PRIVATE ROUTE
 router.post(
   '/:id/invitation/send',
-  auth,
   [check('toEmail', 'Email required').isEmail().trim()],
+  auth,
   async (req, res) => {
     const errors = validationResult(req);
 
@@ -294,7 +272,7 @@ router.post(
         to: toEmail,
         from: 'teamcocoapuffs1@gmail.com',
         subject: 'WorldChat: A friend has invited you to chat!',
-        text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000/register`,
+        text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000/register`,
       };
 
       sgMail.send(msg, (err, info) => {
@@ -321,7 +299,7 @@ router.get('/:id/contacts', auth, async (req, res) => {
     }
 
     if (user.contacts.length < 1) {
-      return res.status(204).send('No contacts found.');
+      return res.status(204).json({ msg: 'No contacts found.' });
     }
 
     res.json(user.contacts);
