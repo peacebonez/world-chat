@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 import tempAvatar from '../assets/temp-avatar.jpg';
 
@@ -101,7 +102,7 @@ const testInvitesOut = [
   'friend10@aol.com',
   'friend11@aol.com',
 ];
-
+const testUserId = '5fb54d5ba9bfea3c67ab94ad';
 const Invites = (props) => {
   const [showRequests, setShowRequests] = useState(true);
   const [showSent, setShowSent] = useState(false);
@@ -116,6 +117,15 @@ const Invites = (props) => {
     setShowSent(true);
     setShowRequests(false);
   };
+
+  useEffect(() => {
+    //axios fetch all the PENDING invites user has RECEIVED
+    (async function fetchPendingInvites() {
+      const res = await axios.get(`user/${testUserId}/invitations/in/pending`);
+      const pendingInvites = res.data;
+      setInvitesIn(pendingInvites);
+    })();
+  }, []);
 
   return (
     <div className={classes.wrapper}>

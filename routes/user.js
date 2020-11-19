@@ -156,6 +156,32 @@ router.get('/:id/invitations/in', async (req, res) => {
   }
 });
 
+//GET all user incoming PENDING invitations
+router.get('/:id/invitations/in/pending', async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      res.status(404).send('User not found');
+    }
+
+    const pendingInvites = await Invitation.find({
+      toEmail: user.email,
+      status: 'pending',
+    });
+
+    if (pendingInvites.length < 1) {
+      return res.status(204).send('No pending invitations found.');
+    }
+
+    res.json(pendingInvites);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 //POST create a user invitation
 router.post(
   '/:id/invitation',
