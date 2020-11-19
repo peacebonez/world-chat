@@ -10,13 +10,13 @@ import { UserProvider } from './contexts/userContext';
 function App() {
   return (
     <MuiThemeProvider theme={theme}>
-      <UserProvider>
-        <BrowserRouter>
+      <BrowserRouter>
+        <UserProvider>
           <Route exact path="/" component={LandingPage} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/messenger" component={Messenger} />
-        </BrowserRouter>
-      </UserProvider>
+        </UserProvider>
+      </BrowserRouter>
     </MuiThemeProvider>
   );
 }

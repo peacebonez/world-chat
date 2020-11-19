@@ -24,7 +24,6 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
-    //leave empty and push in new contacts OR create a new contactSchema
     contacts: [],
     dateJoined: {
       type: Date,
@@ -48,13 +47,6 @@ const UserSchema = new Schema(
     },
   },
 );
-
-// UserSchema.methods.toJSON = function () {
-//   let obj = this.toObject();
-//   obj.contacts.forEach((contact) => {
-//     delete contact.password;
-//   });
-// };
 
 //UserSchema.plugin(require('passport-local-mongoose'));
 module.exports = User = mongoose.model('user', UserSchema);

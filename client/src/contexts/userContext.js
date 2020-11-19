@@ -1,6 +1,9 @@
 import React, { createContext, useReducer, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { userReducer } from '../reducers/userReducer';
 import axios from 'axios';
+
+import { UPDATE_USER, USER_ERROR } from '../reducers/userReducer';
 
 const UserContext = createContext();
 
@@ -9,19 +12,30 @@ const initialState = {
 };
 
 const UserProvider = (props) => {
+  let history = useHistory();
   const [userState, dispatch] = useReducer(userReducer, initialState);
 
   const actions = {
     fetchUser: async () => {
-      const res = await axios.get(`/user/get_current_user`);
+      try {
+        const res = await axios.get('/user/get_current_user');
 
-      if (res.status === 200) {
-        const data = await res.data;
+        if (res.status === 200) {
+          const data = await res.data;
+          console.log('res:', res);
+          dispatch({ type: UPDATE_USER, payload: data });
+        } else {
+          // if error then redirect to login
+          console.log('ERROR USER NOT FOUND');
 
-        dispatch({ type: 'UPDATE_USER', payload: data });
-      } else if (res.status === 400) {
-        // if error then redirect to login
+          dispatch({ type: USER_ERROR });
+          history.push('/login');
+        }
+      } catch (err) {
         console.log('ERROR USER NOT FOUND');
+
+        dispatch({ type: USER_ERROR });
+        history.push('/login');
       }
     },
   };
@@ -40,7 +54,7 @@ const UserProvider = (props) => {
   return (
     <UserContext.Provider
       value={{
-        userState: userState,
+        userState,
         userActions: actions,
       }}
     >
