@@ -22,7 +22,7 @@ const InviteOut = ({ invite }) => {
   const classes = useStyles();
   return (
     <li className={classes.inviteItem}>
-      <Typography variant={'h7'}>{invite}</Typography>
+      <Typography variant={'h6'}>{invite.toEmail}</Typography>
     </li>
   );
 };

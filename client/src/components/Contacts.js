@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Contacts = (props) => {
   const user = useContext(UserContext);
-  console.log('user:', user);
+
   const classes = useStyles();
 
   return (

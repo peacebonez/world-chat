@@ -20,11 +20,11 @@ function App() {
     (async function fetchUser() {
       const res = await axios.get(`/user/get_by_id/${testUserId}`);
       const testUser = res.data;
-      console.log('testUser:', testUser);
+
       setUser(testUser);
     })();
   }, []);
-  console.log('user:', user);
+
   return (
     <MuiThemeProvider theme={theme}>
       <UserContext.Provider value={user}>

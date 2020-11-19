@@ -93,10 +93,9 @@ router.post(
   }),
 );
 
-router.get('/get_by_id/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    console.log('user:', user);
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
@@ -157,7 +156,7 @@ router.get('/:id/invitations/in', async (req, res) => {
 });
 
 //GET all user incoming PENDING invitations
-router.get('/:id/invitations/in/pending', async (req, res) => {
+router.get('/:id/invitations/pending', async (req, res) => {
   const userId = req.params.id;
   try {
     const user = await User.findById(userId);
@@ -166,16 +165,36 @@ router.get('/:id/invitations/in/pending', async (req, res) => {
       res.status(404).send('User not found');
     }
 
-    const pendingInvites = await Invitation.find({
+    const pendingInvitesIn = await Invitation.find({
       toEmail: user.email,
       status: 'pending',
     });
 
-    if (pendingInvites.length < 1) {
-      return res.status(204).send('No pending invitations found.');
+    // console.log('pendingInvitesIn:', pendingInvitesIn);
+
+    //need to find each user by ID and then retrieve their email
+    for (let invite of pendingInvitesIn) {
+      const user = await User.findById(invite.referrer);
+      // console.log('user:', user);
+      console.log('invite:', invite);
+      invite.referrerEmail = user.email;
     }
 
-    res.json(pendingInvites);
+    const pendingInvitesOut = await Invitation.find({
+      referrer: userId,
+      status: 'pending',
+    });
+
+    const invites = {
+      pendingInvitesIn,
+      pendingInvitesOut,
+    };
+
+    if (invites.pendingInvitesIn.length < 1 && invites.pendingInvitesOut < 1) {
+      return res.status(204).json({ invites, msg: 'No invites' });
+    }
+
+    res.json(invites);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

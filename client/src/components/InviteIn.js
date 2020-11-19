@@ -5,6 +5,8 @@ import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
 import { makeStyles } from '@material-ui/core/styles';
 
+import tempAvatar from '../assets/temp-avatar.jpg';
+
 const useStyles = makeStyles((theme) => ({
   inviteItem: {
     height: 100,
@@ -46,48 +48,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const InviteIn = ({ invite, invitesIn, setInvitesIn }) => {
-  const { avatar, name } = invite;
+const InviteIn = ({ invite, handleApproveRequest, handleRejectRequest }) => {
+  const { referrer } = invite;
   const classes = useStyles();
 
-  const handleApprove = () => {
-    //remove invite from invitesIn
-    //change status to approved
-    //add to contacts
-
-    invite.status = 'approved';
-    let invitesInCopy = [...invitesIn];
-
-    let filteredInvites = invitesInCopy.filter((request) => {
-      return request.email !== invite.email;
-    });
-    console.log('invite:', invite);
-    setInvitesIn(filteredInvites);
-  };
-  const handleReject = () => {
-    //remove invite from invitesIn
-    invite.status = 'rejected';
-    let invitesInCopy = [...invitesIn];
-
-    let filteredInvites = invitesInCopy.filter((request) => {
-      return request.email !== invite.email;
-    });
-    console.log('invite:', invite);
-    setInvitesIn(filteredInvites);
-  };
   return (
     <li className={classes.inviteItem}>
       <div>
         <div className={classes.sideBarImgWrapper}>
-          <img src={avatar} alt="user avatar" className={classes.sideBarImg} />
+          <img
+            src={tempAvatar}
+            alt="user avatar"
+            className={classes.sideBarImg}
+          />
         </div>
-        <Typography variant="h6">{name}</Typography>
+        <Typography variant="h6">{referrer.substr(0, 18) + '...'}</Typography>
       </div>
       <div>
-        <button className={classes.button} onClick={handleApprove}>
+        <button
+          className={classes.button}
+          onClick={() => handleApproveRequest(invite)}
+        >
           <CheckIcon className={`${classes.icon} ${classes.check}`} />
         </button>
-        <button className={classes.button} onClick={handleReject}>
+        <button
+          className={classes.button}
+          onClick={() => handleRejectRequest(invite)}
+        >
           <ClearIcon className={`${classes.icon} ${classes.cross}`} />
         </button>
       </div>
@@ -95,6 +82,10 @@ const InviteIn = ({ invite, invitesIn, setInvitesIn }) => {
   );
 };
 
-InviteIn.propTypes = {};
+InviteIn.propTypes = {
+  invite: PropTypes.object.isRequired,
+  handleApproveRequest: PropTypes.func.isRequired,
+  handleRejectRequest: PropTypes.func.isRequired,
+};
 
 export default InviteIn;
