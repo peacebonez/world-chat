@@ -59,15 +59,6 @@ router.put('/:id/approve', auth, async (req, res) => {
         dateJoined: sender.dateJoined,
       };
 
-      // exit if received is already in user's contacts
-      if (
-        sender.contacts.find(
-          (contact) => contact.email.toString() === receiver.email,
-        )
-      ) {
-        return res.status(400).json({ msg: 'Already in contacts' });
-      }
-
       sender.contacts.push(receiverCopy);
       receiver.contacts.push(senderCopy);
     }
