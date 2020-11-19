@@ -54,37 +54,35 @@ export default function Landing() {
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorLanguage, setErrorLanguage] = useState(false);
-  const [backendError, setBackendError] = useState(false);
+  const [errorBackend, setErrorBackend] = useState(false);
   const [backendErrorMsg, setBackendErrorMsg] = useState('');
 
   useEffect(() => {
-    if (name) setErrorName(false);
-    if (email) setErrorEmail(false);
-    if (password) setErrorPassword(false);
+    if (isName(name)) setErrorName(false);
+    if (isEmail(email)) setErrorEmail(false);
+    if (password.length > 5) setErrorPassword(false);
     if (primaryLanguage) setErrorLanguage(false);
 
     //clears backend error msg
     let timer;
-    if (backendError) {
+    if (errorBackend) {
       timer = setTimeout(() => {
-        setBackendError(false);
+        setErrorBackend(false);
       }, 5000);
     }
     return () => clearTimeout(timer);
   });
 
-  // Npm email-validator is acting up; if anyone has a better email validation function
-  // feel free to replace the function below
   const isEmail = (email) => /^\S+@\S+$/.test(email);
   const isName = (name) => /^[A-Z]+$/i.test(name);
-
+  const errors = () => {
+    return (
+      errorName || errorEmail || errorPassword || errorLanguage || errorBackend
+    );
+  };
+  console.log('errors:', errors());
   const handleSubmit = async () => {
-    if (
-      isEmail(email) &&
-      password.length >= 6 &&
-      primaryLanguage &&
-      isName(name)
-    ) {
+    if (!errors()) {
       let res = await signUpUser();
       if (res && (res.status === 200 || res.status === 201)) {
         history.push('/messenger');
@@ -118,7 +116,7 @@ export default function Landing() {
       );
       return res;
     } catch (err) {
-      setBackendError(true);
+      setErrorBackend(true);
       if (err.message.includes('400'))
         setBackendErrorMsg('User already exists.');
       if (err.message.includes('500')) setBackendErrorMsg('Server error');
@@ -165,7 +163,7 @@ export default function Landing() {
             className={classes.marginBottom5}
             required
             error={errorName}
-            helperText={errorName && 'Name required.'}
+            helpertext={errorName && 'Name required.'}
           />
           <Typography variant="h6" className={classes.errors}>
             {errorName}
@@ -176,7 +174,7 @@ export default function Landing() {
             className={classes.marginBottom5}
             required
             error={errorEmail}
-            helperText={errorEmail && 'Invalid email.'}
+            helpertext={errorEmail && 'Invalid email.'}
           />
           <Typography variant="h6" className={classes.errors}>
             {errorEmail}
@@ -188,7 +186,7 @@ export default function Landing() {
             className={classes.marginBottom5}
             required
             error={errorPassword}
-            helperText={
+            helpertext={
               errorPassword && 'Password must be at least 6 characters.'
             }
           />
@@ -197,7 +195,7 @@ export default function Landing() {
           </Typography>
           <FormControl
             className={classes.marginBottom20}
-            helperText={errorLanguage && 'Please select a language.'}
+            helpertext={errorLanguage && 'Please select a language.'}
           >
             <InputLabel id="language-select">Select a Language</InputLabel>
             <Select
@@ -221,7 +219,7 @@ export default function Landing() {
       </Box>
       {/* Error alerts */}
       <Snackbar
-        open={backendError}
+        open={errorBackend}
         autoHideDuration={5000}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
