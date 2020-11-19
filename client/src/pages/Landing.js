@@ -48,7 +48,7 @@ const useStyles = makeStyles({
 });
 
 export default function Landing() {
-  let history = useHistory();
+  const history = useHistory();
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);

@@ -26,7 +26,7 @@ const UserProvider = (props) => {
           const data = await res.data;
           console.log('res:', res);
           dispatch({ type: UPDATE_USER, payload: data });
-        } else if (!res || res.status === 400 || res.status === 500) {
+        } else {
           // if error then redirect to login
           console.log('ERROR USER NOT FOUND');
 
