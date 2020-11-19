@@ -57,10 +57,12 @@ const Invites = (props) => {
   const handleApproveRequest = (invite) => {
     //change status of invite and save it
     invite.status = 'approved';
+    invites.splice(invite.index, 1);
   };
   const handleRejectRequest = (invite) => {
     //change status of invite and save it
     invite.status = 'rejected';
+    invites.splice(invite.index, 1);
   };
 
   useEffect(() => {
@@ -116,15 +118,18 @@ const Invites = (props) => {
         {showRequests && (
           <ul className={classes.inviteUl}>
             {invites &&
-              invites.pendingInvitesIn.map((invite) => (
-                <InviteIn
-                  key={invite.referrer}
-                  invite={invite}
-                  invitesIn={invites.pendingInvitesIn}
-                  handleApproveRequest={handleApproveRequest}
-                  handleRejectRequest={handleRejectRequest}
-                />
-              ))}
+              invites.pendingInvitesIn.map((invite, index) => {
+                invite.index = index;
+                return (
+                  <InviteIn
+                    key={invite.referrer}
+                    invite={invite}
+                    invitesIn={invites.pendingInvitesIn}
+                    handleApproveRequest={handleApproveRequest}
+                    handleRejectRequest={handleRejectRequest}
+                  />
+                );
+              })}
           </ul>
         )}
         {/* display all pending invites sent BY user */}
