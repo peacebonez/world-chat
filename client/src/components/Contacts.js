@@ -4,7 +4,7 @@ import happyChatter from '../assets/happy-chatter.png';
 import PropTypes from 'prop-types';
 import Contact from './Contact';
 import Invitation from './Invitation';
-import { UserContext } from '../App';
+import { UserContext } from '../contexts/userContext';
 
 const testContacts = [
   { avatar: happyChatter, name: 'Doug', isOnline: true, id: 0 },

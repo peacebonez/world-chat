@@ -93,7 +93,7 @@ router.post(
   }),
 );
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
@@ -108,6 +108,21 @@ router.get('/:id', async (req, res) => {
 });
 
 router.get(
+  '/get_current_user',
+  auth,
+  runAsyncWrapper(async function (req, res) {
+    const userEmail = req.user.email;
+    const user = await User.findOne({ email: userEmail });
+
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' });
+    } else {
+      return res.status(200).json(user);
+    }
+  }),
+);
+
+router.get(
   '/get_all',
   runAsyncWrapper(async function (req, res) {
     const users = await User.find();
@@ -116,7 +131,7 @@ router.get(
 );
 
 //GET all user outgoing invitations
-router.get('/:id/invitations/out', async (req, res) => {
+router.get('/:id/invitations/out', auth, async (req, res) => {
   const userId = req.params.id;
   try {
     const invites = await Invitation.find({ referrer: userId });
@@ -133,7 +148,7 @@ router.get('/:id/invitations/out', async (req, res) => {
 });
 
 //GET all user incoming invitations
-router.get('/:id/invitations/in', async (req, res) => {
+router.get('/:id/invitations/in', auth, async (req, res) => {
   const userId = req.params.id;
   try {
     const user = await User.findById(userId);
@@ -156,7 +171,7 @@ router.get('/:id/invitations/in', async (req, res) => {
 });
 
 //GET all user incoming PENDING invitations
-router.get('/:id/invitations/pending', async (req, res) => {
+router.get('/:id/invitations/pending', auth, async (req, res) => {
   const userId = req.params.id;
   try {
     const user = await User.findById(userId);
@@ -204,6 +219,7 @@ router.get('/:id/invitations/pending', async (req, res) => {
 //POST create a user invitation
 router.post(
   '/:id/invitation',
+  auth,
   [check('toEmail', 'Email required').isEmail().trim()],
   async (req, res) => {
     const errors = validationResult(req);
@@ -254,6 +270,7 @@ router.post(
 //POST send a user invitation
 router.post(
   '/:id/invitation/send',
+  auth,
   [check('toEmail', 'Email required').isEmail().trim()],
   async (req, res) => {
     const errors = validationResult(req);
@@ -294,7 +311,7 @@ router.post(
 );
 
 //GET user contacts PRIVATE ROUTE
-router.get('/:id/contacts', async (req, res) => {
+router.get('/:id/contacts', auth, async (req, res) => {
   const userId = req.params.id;
   try {
     const user = await User.findById(userId).select('-password');

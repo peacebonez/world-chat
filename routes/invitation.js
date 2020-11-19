@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Invitation = require('../models/Invitation');
 const User = require('../models/User');
+const auth = require('../middleware/auth');
 
-//PUT request to approve invitation
-router.put('/:id/approve', async (req, res) => {
+//PUT request to approve invitation PRIVATE ROUTE
+router.put('/:id/approve', auth, async (req, res) => {
   const invitationId = req.params.id;
   try {
     const invitation = await Invitation.findById(invitationId);
@@ -36,6 +37,7 @@ router.put('/:id/approve', async (req, res) => {
       // TODO: APPROVE NEW USER INVITE
       console.log('new user approval');
     }
+
     //receive is already a member and this is a friend request
     else {
       //push receiver into sender's contacts and vice versa
@@ -57,6 +59,15 @@ router.put('/:id/approve', async (req, res) => {
         dateJoined: sender.dateJoined,
       };
 
+      // exit if received is already in user's contacts
+      if (
+        sender.contacts.find(
+          (contact) => contact.email.toString() === receiver.email,
+        )
+      ) {
+        return res.status(400).json({ msg: 'Already in contacts' });
+      }
+
       sender.contacts.push(receiverCopy);
       receiver.contacts.push(senderCopy);
     }
@@ -72,8 +83,8 @@ router.put('/:id/approve', async (req, res) => {
   }
 });
 
-//PUT request to reject invitation
-router.put('/:id/reject', async (req, res) => {
+//PUT request to reject invitation PRIVATE ROUTE
+router.put('/:id/reject', auth, async (req, res) => {
   try {
     const invitation = await Invitation.findById(req.params.id);
 
