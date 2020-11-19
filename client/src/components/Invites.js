@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import { UserContext } from '../contexts/userContext';
 import axios from 'axios';
 
 import InviteIn from './InviteIn';
@@ -35,10 +36,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const testUserId = '5fb5c6e773356717c6adae33';
 const Invites = (props) => {
   let history = useHistory();
   const classes = useStyles();
+  const { userState } = useContext(UserContext);
+  console.log('userState:', userState);
 
   const [showRequests, setShowRequests] = useState(true);
   const [showSent, setShowSent] = useState(false);
@@ -57,12 +59,12 @@ const Invites = (props) => {
   const handleApproveRequest = (invite) => {
     //change status of invite and save it
     invite.status = 'approved';
-    invites.splice(invite.index, 1);
+    invites.pendingInvitesIn.splice(invite.index, 1);
   };
   const handleRejectRequest = (invite) => {
     //change status of invite and save it
     invite.status = 'rejected';
-    invites.splice(invite.index, 1);
+    invites.pendingInvitesIn.splice(invite.index, 1);
   };
 
   useEffect(() => {
@@ -70,7 +72,9 @@ const Invites = (props) => {
     //is called whenever a change in invitations takes place
     (async function fetchPendingInvites() {
       try {
-        const res = await axios.get(`user/${testUserId}/invitations/pending`);
+        const res = await axios.get(
+          `user/${userState.user.id}/invitations/pending`,
+        );
 
         //if response is ok or user has no invites
         if (res.status === 200 || res.status === 204) {
@@ -88,7 +92,7 @@ const Invites = (props) => {
         console.log(err.message);
         //server error
         //dispatch user error
-        history.push('/');
+        // history.push('/');
       }
     })();
   }, []);

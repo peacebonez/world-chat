@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import SideBarHeader from './SideBarHeader';
@@ -33,12 +33,6 @@ const Sidebar = (props) => {
   const [contactsShown, setContactsShown] = useState(false);
   const [invitesShown, setInvitesShown] = useState(true);
   const classes = useStyles();
-
-  //TODOS
-  //Fetch user
-  //get contacts from user
-  //get converstations from user
-  //map out both to their respective components
 
   return (
     <div className={classes.sideBar}>

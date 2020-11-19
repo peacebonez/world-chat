@@ -28,7 +28,6 @@ const Messenger = (props) => {
     // Every time the user changes, because this component is one of the main components
     // you'll be able to track it here for now
     // You don't need to include it here if you don't need it in the future
-    console.log(userState.user);
   }, [userState.user]);
 
   return (
