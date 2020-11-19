@@ -11,8 +11,6 @@ const initialState = {
   user: { name: '' },
 };
 
-const testUserId = '5fb54d5ba9bfea3c67ab94ad';
-
 const UserProvider = (props) => {
   let history = useHistory();
   const [userState, dispatch] = useReducer(userReducer, initialState);
@@ -20,7 +18,7 @@ const UserProvider = (props) => {
   const actions = {
     fetchUser: async () => {
       try {
-        const res = await axios.get(`/user/get_by_id/${testUserId}`);
+        const res = await axios.get('/user/get_current_user');
 
         if (res.status === 200) {
           const data = await res.data;
