@@ -80,7 +80,6 @@ export default function Landing() {
       errorName || errorEmail || errorPassword || errorLanguage || errorBackend
     );
   };
-  console.log('errors:', errors());
   const handleSubmit = async () => {
     if (!isEmail(email)) setErrorEmail(true);
     if (!isName(name)) setErrorName(true);
