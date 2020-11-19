@@ -169,6 +169,7 @@ router.post(
       if (!user) {
         return res.status(404).json({ msg: 'User not found', toEmail });
       }
+      //TODO: SETUP UP CONDITION THAT YOU CANNOT INVITE YOURSELF
 
       //find all outgoing invitations to the toEmail (array)
       const invitations = await Invitation.find({ toEmail });
@@ -239,5 +240,26 @@ router.post(
     }
   },
 );
+
+//GET user contacts PRIVATE ROUTE
+router.get('/:id/contacts', async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.findById(userId).select('-password');
+
+    if (!user) {
+      res.status(404).send('User not found');
+    }
+
+    if (user.contacts.length < 1) {
+      return res.status(204).send('No contacts found.');
+    }
+
+    res.json(user.contacts);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 module.exports = router;
