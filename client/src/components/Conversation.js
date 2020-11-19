@@ -24,7 +24,7 @@ const Conversation = (props) => {
   const classes = useStyles();
 
   useEffect(() => {
-    let socket = io(serverURL);
+    const socket = io(serverURL);
     socket.on('connect', () => {
       console.log(socket.id);
       console.log(socket.connected);

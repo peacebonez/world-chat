@@ -44,11 +44,6 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = (props) => {
   const classes = useStyles();
 
-  const handleSwitch = () => {
-    // show original language
-    return
-  };
-
   return (
     <div className={classes.navBar}>
       <div>
