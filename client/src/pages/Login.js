@@ -7,6 +7,7 @@ import {
   TextField,
   Button,
   Snackbar,
+  Hidden,
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
@@ -88,13 +89,15 @@ export default function Login() {
   return (
     <Box display="flex">
       {/** The left side: Image saying "Converse with anyone with any language" */}
-      <Box>
-        <img
-          src={Background}
-          className={classes.image}
-          alt="People talking and texting, with purpose of the web app."
-        />
-      </Box>
+      <Hidden smDown>
+        <Box>
+          <img
+            src={Background}
+            className={classes.image}
+            alt="People talking and texting, with purpose of the web app."
+          />
+        </Box>
+      </Hidden>
 
       {/** The right side, the sign up */}
       <Box className={classes.outerMargins}>
