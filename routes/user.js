@@ -79,7 +79,7 @@ router.post(
 
     try {
       // Email must be unique
-      const user = await User.findOne({ email });
+      let user = await User.findOne({ email });
       //if we find a user they already have an account
       if (user) {
         return res.status(400).json({ msg: 'This user already exists' });
