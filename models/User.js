@@ -5,31 +5,48 @@ const Schema = mongoose.Schema;
 //TODO's
 //create key for user avatar
 
-const UserSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
+const UserSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    primaryLanguage: {
+      type: String,
+      required: true,
+    },
+    contacts: [],
+    dateJoined: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  password: {
-    type: String,
-    required: true,
+  {
+    toJSON: {
+      transform: function (doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.password;
+      },
+    },
+    toObject: {
+      transform: function (doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.password;
+      },
+    },
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  primaryLanguage: {
-    type: String,
-    required: true,
-  },
-  //leave empty and push in new contacts OR create a new contactSchema
-  contacts: [],
-  dateJoined: {
-    type: Date,
-    default: Date.now,
-  },
-});
+);
 
 //UserSchema.plugin(require('passport-local-mongoose'));
 module.exports = User = mongoose.model('user', UserSchema);

@@ -1,45 +1,14 @@
-import axios from "axios";
+export const UPDATE_USER = 'UPDATE_USER';
+export const USER_ERROR = 'USER_ERROR';
 
-const config = {
-  headers: {
-    "Content-Type": "application/json",
-  },
-};
-
-const initialState = {
-  email: "",
-  contacts: [],
-  primaryLanguage: "",
-  loading: true,
-  error: {},
-};
-
-export default function reducer(state = initialState, action) {
+export const userReducer = (state, action) => {
   const { type, payload } = action;
-
   switch (type) {
-    case "SEND_INVITE":
-      console.log("SENDING INVITE!");
-      return state;
+    case UPDATE_USER:
+      return { ...state, user: payload };
+    case USER_ERROR:
+      return { ...state, user: { name: '' } };
     default:
       return state;
-  }
-}
-
-export const sendInvite = (userId, emailList) => async (dispatch) => {
-  try {
-    await axios.post(`/user/${userId}/invitation/send`, { emailList }, config);
-    dispatch({ type: "SEND_INVITE" });
-  } catch (err) {
-    console.error(err);
-  }
-};
-export const createInvite = (userId, emailList) => async (dispatch) => {
-  try {
-    await axios.post(`/user/${userId}/invitation`, { emailList }, config);
-
-    dispatch({ type: "CREATE_INVITE" });
-  } catch (err) {
-    console.error(err);
   }
 };

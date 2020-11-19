@@ -1,9 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Container, Hidden } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
 
-import { UserContext } from '../userContext';
+import { UserContext } from '../contexts/userContext';
 import Sidebar from '../components/Sidebar';
 import Conversation from '../components/Conversation';
 import Invitation from '../components/Invitation';
@@ -21,10 +20,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Messenger = (props) => {
-  const user = useContext(UserContext);
-  console.log('user:', user);
+  const { userState } = useContext(UserContext);
 
   const classes = useStyles();
+
+  useEffect(() => {
+    // Every time the user changes, because this component is one of the main components
+    // you'll be able to track it here for now
+    // You don't need to include it here if you don't need it in the future
+    console.log(userState.user);
+  }, [userState.user]);
+
   return (
     <Container className={classes.messengerContainer}>
       <Sidebar />
