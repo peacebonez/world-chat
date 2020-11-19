@@ -12,16 +12,10 @@ import {
   Button,
   Snackbar,
 } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
+import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 import Background from '../assets/background.png';
 require('dotenv').config();
-// const baseURL = process.env.REACT_APP_baseURL;
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
 const useStyles = makeStyles({
   outerMargins: {
     marginTop: '2%',
@@ -51,8 +45,6 @@ export default function Landing() {
   const history = useHistory();
   const classes = useStyles();
 
-  const [open, setOpen] = useState(false);
-
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -66,11 +58,17 @@ export default function Landing() {
   const [backendErrorMsg, setBackendErrorMsg] = useState('');
 
   useEffect(() => {
+    if (name) setErrorName(false);
+    if (email) setErrorEmail(false);
+    if (password) setErrorPassword(false);
+    if (primaryLanguage) setErrorLanguage(false);
+
+    //clears backend error msg
     let timer;
     if (backendError) {
       timer = setTimeout(() => {
         setBackendError(false);
-      }, 1000);
+      }, 5000);
     }
     return () => clearTimeout(timer);
   });
@@ -79,38 +77,8 @@ export default function Landing() {
   // feel free to replace the function below
   const isEmail = (email) => /^\S+@\S+$/.test(email);
   const isName = (name) => /^[A-Z]+$/i.test(name);
-  const handleErrorTimouts = () => {
-    if (!name) {
-      setErrorName(true);
-      let timer = setTimeout(() => {
-        setErrorName(false);
-      }, 1000);
-    }
-
-    if (!isEmail(email)) {
-      setErrorEmail(true);
-      let timer = setTimeout(() => {
-        setErrorEmail(false);
-      }, 1000);
-    }
-    if (password.length < 6) {
-      setErrorPassword(true);
-      let timer = setTimeout(() => {
-        setErrorPassword(false);
-      }, 1000);
-    }
-
-    if (!primaryLanguage) {
-      setErrorLanguage(true);
-      let timer = setTimeout(() => {
-        setErrorLanguage(false);
-      }, 1000);
-    }
-  };
 
   const handleSubmit = async () => {
-    handleErrorTimouts();
-
     if (
       isEmail(email) &&
       password.length >= 6 &&
@@ -122,18 +90,21 @@ export default function Landing() {
         history.push('/messenger');
       }
     } else {
-      //TODOS add error snackbar
-      setBackendError(true);
+      if (!isEmail(email)) setErrorEmail(true);
+      if (!isName(name)) setErrorName(true);
+      if (!password) setErrorPassword(true);
+      if (!primaryLanguage) setErrorLanguage(true);
+      return;
     }
   };
 
-  //POST config header values
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
   const signUpUser = async () => {
+    //POST config header values
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
     try {
       let res = await axios.post(
         '/user/signup',
@@ -145,12 +116,12 @@ export default function Landing() {
         },
         config,
       );
-
       return res;
     } catch (err) {
-      //TODOS add error snackbar
-      // setBackendError(true);
-      console.error(err);
+      setBackendError(true);
+      if (err.message.includes('400'))
+        setBackendErrorMsg('User already exists.');
+      if (err.message.includes('500')) setBackendErrorMsg('Server error');
     }
   };
 
@@ -248,12 +219,15 @@ export default function Landing() {
           </Button>
         </Box>
       </Box>
+      {/* Error alerts */}
       <Snackbar
         open={backendError}
-        autoHideDuration={1000}
+        autoHideDuration={5000}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Alert severity="error">Please check credentials</Alert>
+        <Alert severity="error" variant="filled">
+          {backendErrorMsg}
+        </Alert>
       </Snackbar>
     </Box>
   );

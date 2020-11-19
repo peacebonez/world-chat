@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-
 module.exports = (req, res, next) => {
   const cookies = req.cookies;
   const token = cookies.token;
@@ -21,4 +20,3 @@ module.exports = (req, res, next) => {
     });
   }
 };
-
