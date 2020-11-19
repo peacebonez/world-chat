@@ -82,17 +82,16 @@ export default function Landing() {
   };
   console.log('errors:', errors());
   const handleSubmit = async () => {
+    if (!isEmail(email)) setErrorEmail(true);
+    if (!isName(name)) setErrorName(true);
+    if (!password) setErrorPassword(true);
+    if (!primaryLanguage) setErrorLanguage(true);
+
     if (!errors()) {
       let res = await signUpUser();
       if (res && (res.status === 200 || res.status === 201)) {
         history.push('/messenger');
       }
-    } else {
-      if (!isEmail(email)) setErrorEmail(true);
-      if (!isName(name)) setErrorName(true);
-      if (!password) setErrorPassword(true);
-      if (!primaryLanguage) setErrorLanguage(true);
-      return;
     }
   };
 
@@ -116,10 +115,15 @@ export default function Landing() {
       );
       return res;
     } catch (err) {
-      setErrorBackend(true);
-      if (err.message.includes('400'))
+      if (err.message.includes('400')) {
+        setErrorBackend(true);
         setBackendErrorMsg('User already exists.');
-      if (err.message.includes('500')) setBackendErrorMsg('Server error');
+      }
+
+      if (err.message.includes('500')) {
+        setErrorBackend(true);
+        setBackendErrorMsg('Server error');
+      }
     }
   };
 

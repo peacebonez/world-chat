@@ -50,7 +50,7 @@ router.post(
           if (err) throw err;
           return res
             .status(201)
-            .cookie('token', token)
+            .cookie('token', token, { httpOnly: true })
             .json({ token, msg: 'User Authenticated' });
         },
       );
@@ -79,7 +79,7 @@ router.post(
 
     try {
       // Email must be unique
-      let user = await User.findOne({ email });
+      const user = await User.findOne({ email });
       //if we find a user they already have an account
       if (user) {
         return res.status(400).json({ msg: 'This user already exists' });
