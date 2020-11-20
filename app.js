@@ -70,7 +70,7 @@ io.on('connection', (socket) => { /* socket object may be used to send specific 
   socket.on('new message', (data) => {
     // we tell the client to execute 'new message'
     socket.broadcast.emit('new message', {
-      // username: socket.username,
+      name: req.session.user._id,
       message: data
     });
   });

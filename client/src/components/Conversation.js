@@ -1,14 +1,12 @@
 import React, {useEffect} from "react";
-import io from 'socket.io-client';
+
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 
 import ChatWindow from "./ChatWindow";
 
 import Navbar from "./Navbar";
-require('dotenv').config();
 
-const serverURL = process.env.serverURL;
 
 const useStyles = makeStyles((theme) => ({
   conversation: {
@@ -22,17 +20,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Conversation = (props) => {
   const classes = useStyles();
-
-  useEffect(() => {
-    const socket = io(serverURL);
-    socket.on('connect', () => {
-      console.log(socket.id);
-      console.log(socket.connected);
-    })
-    
-    // CLEAN UP THE EFFECT
-    return () => socket.disconnect();
-  }, []);
   return (
     <div className={classes.conversation}>
       <Navbar />
