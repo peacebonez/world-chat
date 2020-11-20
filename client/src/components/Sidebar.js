@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     height: '100vh',
+    [theme.breakpoints.between('xs', 'sm')]: {
+      width: '100%',
+    },
   },
   listContainer: {
     width: '85%',
