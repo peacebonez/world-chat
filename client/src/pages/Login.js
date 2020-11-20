@@ -55,6 +55,8 @@ export default function Login() {
     login();
   };
 
+  const isEmail = (email) => /^\S+@\S+$/.test(email);
+
   const login = async () => {
     try {
       const res = await axios.post('/user/login', { email, password });
@@ -73,8 +75,8 @@ export default function Login() {
   };
   //deactivates errors when user inputs into form
   useEffect(() => {
-    if (email) setErrorEmail(false);
-    if (password) setErrorPassword(false);
+    if (isEmail(email)) setErrorEmail(false);
+    if (password.length > 5) setErrorPassword(false);
 
     //clears the backend error alert msg
     let timer;
