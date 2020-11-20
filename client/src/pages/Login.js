@@ -26,7 +26,7 @@ const useStyles = makeStyles({
   marginBottom50: {
     marginBottom: '50%',
   },
-  createAccount: {
+  grayText: {
     color: '#9c9c9c'
   },
   marginBottom5: {
@@ -70,7 +70,7 @@ export default function Login() {
       {/** The right side, the sign up */}
       <Box className={classes.outerMargins}>
         <Box display="flex" className={classes.marginBottom50}>
-          <Typography variant="subtitle1" className={classes.createAccount}>Don't have an account? </Typography>
+          <Typography variant="subtitle1" className={classes.grayText}>Don't have an account? </Typography>
           <Link to="/" className={classes.noUnderlineLink}>
             <Button variant="outlined" color="primary" className={classes.createAccountButton}>
                 Create account

@@ -48,7 +48,7 @@ const useStyles = makeStyles({
   errors: {
     color: 'red',
   },
-  alreadyHaveAccount: {
+  grayText: {
     color: '#9c9c9c'
   }
 });
@@ -174,7 +174,7 @@ export default function Landing() {
       {/** The right side, the sign up */}
       <Box className={classes.outerMargins}>
         <Box display="flex" className={classes.marginBottom50}>
-          <Typography variant="subtitle1" className={classes.alreadyHaveAccount}>Already have an account? </Typography>
+          <Typography variant="subtitle1" className={classes.grayText}>Already have an account? </Typography>
           <Link to="/login" className={classes.noUnderlineLink}>
             <Button
               variant="outlined"
