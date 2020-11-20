@@ -40,14 +40,17 @@ const useStyles = makeStyles((theme) => ({
   offlineIcon: { background: 'lightgray' },
 }));
 
-const Contact = ({ avatar, name, isOnline }) => {
+const Contact = ({ contact }) => {
+  //test hard code
+  let isOnline = 'true';
+  console.log('contact:', contact);
   const classes = useStyles();
   return (
     <li className={classes.sideBarHeader}>
       <div>
         <div className={classes.sideBarImgWrapper}>
           <img
-            src={avatar ? avatar : tempAvatar}
+            src={contact.avatar ? contact.avatar : tempAvatar}
             alt="user avatar"
             className={classes.sideBarImg}
           />
@@ -57,7 +60,7 @@ const Contact = ({ avatar, name, isOnline }) => {
             }`}
           ></span>
         </div>
-        <Typography variant="h5">{name}</Typography>
+        <Typography variant="h5">{contact.name}</Typography>
       </div>
     </li>
   );

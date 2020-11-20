@@ -18,6 +18,10 @@ router.put('/:id/approve', auth, async (req, res) => {
     //change status to approved if pending
     if (invitation.status === 'pending') {
       invitation.status = 'approved';
+
+      //check if sender has an invitatio from receiver
+
+      //if so, conver their invitation to approved too.
     } else {
       return res
         .status(400)
@@ -59,8 +63,25 @@ router.put('/:id/approve', auth, async (req, res) => {
         dateJoined: sender.dateJoined,
       };
 
-      sender.contacts.push(receiverCopy);
-      receiver.contacts.push(senderCopy);
+      console.log('receiverCopy:', receiverCopy);
+      console.log('senderCopy:', senderCopy);
+
+      //if sender or receiver are already friends
+      const alreadyFriends1 = sender.contacts.find(
+        (friend) => friend.email.toString() === receiver.email,
+      );
+      const alreadyFriends2 = receiver.contacts.find(
+        (friend) => friend.email.toString() === sender.email,
+      );
+
+      console.log('alreadyFriends1:', alreadyFriends1);
+      console.log('alreadyFriends2:', alreadyFriends2);
+      if (!alreadyFriends1 && !alreadyFriends2) {
+        sender.contacts.push(receiverCopy);
+        receiver.contacts.push(senderCopy);
+      } else {
+        return res.status(400).json({ msg: 'Users already connected' });
+      }
     }
 
     await sender.save();

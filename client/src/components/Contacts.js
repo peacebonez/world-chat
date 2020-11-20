@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Contacts = (props) => {
-  const user = useContext(UserContext);
+  const { userState } = useContext(UserContext);
 
   const classes = useStyles();
 
@@ -43,17 +43,8 @@ const Contacts = (props) => {
     <div className={classes.contactsContainer}>
       <Invitation />
       <ul className={classes.contactList}>
-        {/* {user.contacts.map((contact) => {
-          const { avatar, name, isOnline, id } = contact;
-          return (
-            <Contact avatar={avatar} name={name} isOnline={isOnline} key={id} />
-          );
-        })} */}
-        {testContacts.map((contact) => {
-          const { avatar, name, isOnline, id } = contact;
-          return (
-            <Contact avatar={avatar} name={name} isOnline={isOnline} key={id} />
-          );
+        {userState.user.contacts.map((contact) => {
+          return <Contact contact={contact} key={contact.email} />;
         })}
       </ul>
     </div>
