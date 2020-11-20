@@ -267,7 +267,12 @@ router.post(
       if (!user) {
         return res.status(404).json({ msg: 'User not found', toEmail });
       }
-      //TODO: SETUP UP CONDITION THAT YOU CANNOT INVITE YOURSELF
+
+      //Cannot invite yourself
+      if (user.email === toEmail)
+        return res
+          .status(400)
+          .json({ msg: 'Sorry but you cannot invite yourself', toEmail });
 
       //find all outgoing invitations to the toEmail (array)
       const invitations = await Invitation.find({ toEmail });
@@ -329,6 +334,12 @@ router.post(
       if (!user) {
         return res.status(404).json({ msg: 'User not found', toEmail });
       }
+
+      //Cannot invite yourself
+      if (user.email === toEmail)
+        return res
+          .status(400)
+          .json({ msg: 'Sorry but you cannot invite yourself', toEmail });
 
       //If toEmail is already in current user's contacts
       const alreadyFriends = user.contacts.find(
