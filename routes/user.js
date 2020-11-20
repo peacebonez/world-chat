@@ -281,6 +281,17 @@ router.post(
         return res
           .status(400)
           .json({ msg: 'Invitation already created.', toEmail });
+      }
+
+      //If toEmail is already in current user's contacts
+      const alreadyFriends = user.contacts.find(
+        (contact) => contact.email.toString() === toEmail,
+      );
+
+      if (alreadyFriends) {
+        return res
+          .status(400)
+          .json({ msg: 'Email already in user contacts.', toEmail });
       } else {
         const newInvitation = new Invitation({
           referrer: user,
@@ -310,7 +321,6 @@ router.post(
     }
 
     const toEmail = req.body.toEmail;
-    console.log('toEmail:', toEmail);
 
     try {
       //locate user from parameter
@@ -320,6 +330,16 @@ router.post(
         return res.status(404).json({ msg: 'User not found', toEmail });
       }
 
+      //If toEmail is already in current user's contacts
+      const alreadyFriends = user.contacts.find(
+        (contact) => contact.email.toString() === toEmail,
+      );
+
+      if (alreadyFriends) {
+        return res
+          .status(400)
+          .json({ msg: 'Email already in user contacts.', toEmail });
+      }
       const msg = {
         to: toEmail,
         from: 'teamcocoapuffs1@gmail.com',
