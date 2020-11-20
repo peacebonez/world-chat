@@ -29,9 +29,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sidebar = (props) => {
-  const [chatsShown, setChatsShown] = useState(false);
+  const [chatsShown, setChatsShown] = useState(true);
   const [contactsShown, setContactsShown] = useState(false);
-  const [invitesShown, setInvitesShown] = useState(true);
+  const [invitesShown, setInvitesShown] = useState(false);
   const classes = useStyles();
 
   return (

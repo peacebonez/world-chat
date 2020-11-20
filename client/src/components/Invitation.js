@@ -70,7 +70,7 @@ export default function FormDialog() {
   const [notifyOpen, setNotifyOpen] = useState(false);
 
   const userId = userState.user.id;
-  const inviteUrl = 'https://www.EK-messenger.com/join/' + userId;
+  const inviteUrl = 'https://www.worldchat.com/join/' + userState.user.email;
 
   /*generate unique id for URL */
 
@@ -179,7 +179,7 @@ export default function FormDialog() {
         fullWidth={true}
       >
         <Typography className={classes.invitationDialogueTitle}>
-          Invite Friends to Join Us on EK-Messenger
+          Invite Friends to Join Us on WorldChat
         </Typography>
         <DialogContent>
           <Typography className={classes.invitationDialogueP}>
