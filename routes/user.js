@@ -355,7 +355,7 @@ router.post(
         to: toEmail,
         from: 'teamcocoapuffs1@gmail.com',
         subject: 'WorldChat: A friend has invited you to chat!',
-        text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000/register`,
+        text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000/register/${user.email}`,
       };
 
       sgMail.send(msg, (err, info) => {

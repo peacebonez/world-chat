@@ -19,8 +19,6 @@ router.put('/:id/approve', auth, async (req, res) => {
     if (invitation.status === 'pending') {
       invitation.status = 'approved';
 
-      //check if sender has an invitatio from receiver
-
       //if so, conver their invitation to approved too.
     } else {
       return res
@@ -44,28 +42,6 @@ router.put('/:id/approve', auth, async (req, res) => {
 
     //receive is already a member and this is a friend request
     else {
-      //push receiver into sender's contacts and vice versa
-
-      //copies omit password
-      let receiverCopy = {
-        _id: receiver._id,
-        email: receiver.email,
-        name: receiver.name,
-        primaryLanguage: receiver.primaryLanguage,
-        dateJoined: receiver.dateJoined,
-      };
-
-      let senderCopy = {
-        _id: sender._id,
-        email: sender.email,
-        name: sender.name,
-        primaryLanguage: sender.primaryLanguage,
-        dateJoined: sender.dateJoined,
-      };
-
-      console.log('receiverCopy:', receiverCopy);
-      console.log('senderCopy:', senderCopy);
-
       //if sender or receiver are already friends
       const alreadyFriends1 = sender.contacts.find(
         (friend) => friend.email.toString() === receiver.email,
@@ -74,19 +50,39 @@ router.put('/:id/approve', auth, async (req, res) => {
         (friend) => friend.email.toString() === sender.email,
       );
 
-      console.log('alreadyFriends1:', alreadyFriends1);
-      console.log('alreadyFriends2:', alreadyFriends2);
       if (!alreadyFriends1 && !alreadyFriends2) {
-        sender.contacts.push(receiverCopy);
-        receiver.contacts.push(senderCopy);
+        console.log('sender.contacts:', sender.contacts);
+        console.log('receiver.contacts:', receiver.contacts);
+        // sender.contacts.push(receiver);
+        // receiver.contacts.push(sender);
+        // sender.contacts = [...sender.contacts, receiver];
+        // receiver.contacts = [...receiver.contacts, sender];
+        const newSenderContacts = [...sender.contacts, receiver.toObject()];
+        const newReceiverContacts = [...receiver.contacts, sender.toObject()];
+        console.log('newSenderContacts:', newSenderContacts);
+        console.log('newReceiverContacts:', newReceiverContacts);
+
+        sender.contacts = newSenderContacts;
+        receiver.contacts = newReceiverContacts;
       } else {
         return res.status(400).json({ msg: 'Users already connected' });
       }
     }
 
-    await sender.save();
-    await receiver.save();
+    //check if sender has an invitation from the receiver and set it to approved
+    const receiverInvitationToUser = await Invitation.findOne({
+      toEmail: sender.email,
+      referrer: receiver.id,
+    });
+    if (receiverInvitationToUser) receiverInvitationToUser.status = 'approved';
+
     await invitation.save();
+
+    await receiverInvitationToUser.save();
+
+    await sender.save();
+
+    await receiver.save();
 
     res.status(200).json({ invitation, sender, receiver });
   } catch (err) {
