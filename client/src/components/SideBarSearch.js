@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Typography, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
+import {DebounceInput} from 'react-debounce-input';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -92,16 +93,19 @@ const SideBarSearch = ({ setChatShown, setContactsShown, setInvitesShown }) => {
       </div>
       <div>
         <form noValidate autoComplete="off">
-          <TextField
-            className={classes.searchInput}
-            variant="outlined"
-            fullWidth
-            autoFocus
-            placeholder="Search"
-            InputProps={{
-              startAdornment: <SearchOutlinedIcon />,
-            }}
+          <DebounceInput 
+          element={TextField}
+          debounceTimeout={300}
+          className={classes.searchInput}
+          variant="outlined"
+          fullWidth
+          autoFocus
+          placeholder="Search"
+          InputProps={{
+            startAdornment: <SearchOutlinedIcon />,
+          }}
           />
+          
         </form>
       </div>
     </div>
