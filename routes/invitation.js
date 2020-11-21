@@ -40,7 +40,7 @@ router.put('/:id/approve', auth, async (req, res) => {
       console.log('new user approval');
     }
 
-    //receive is already a member and this is a friend request
+    //receiver is already a member and this is a friend request
     else {
       //if sender or receiver are already friends
       const alreadyFriends1 = sender.contacts.find(
@@ -51,16 +51,8 @@ router.put('/:id/approve', auth, async (req, res) => {
       );
 
       if (!alreadyFriends1 && !alreadyFriends2) {
-        console.log('sender.contacts:', sender.contacts);
-        console.log('receiver.contacts:', receiver.contacts);
-        // sender.contacts.push(receiver);
-        // receiver.contacts.push(sender);
-        // sender.contacts = [...sender.contacts, receiver];
-        // receiver.contacts = [...receiver.contacts, sender];
         const newSenderContacts = [...sender.contacts, receiver.toObject()];
         const newReceiverContacts = [...receiver.contacts, sender.toObject()];
-        console.log('newSenderContacts:', newSenderContacts);
-        console.log('newReceiverContacts:', newReceiverContacts);
 
         sender.contacts = newSenderContacts;
         receiver.contacts = newReceiverContacts;
@@ -69,7 +61,7 @@ router.put('/:id/approve', auth, async (req, res) => {
       }
     }
 
-    //check if sender has an invitation from the receiver and set it to approved
+    //check if sender has an invitation from the receiver and also set it to approved
     const receiverInvitationToUser = await Invitation.findOne({
       toEmail: sender.email,
       referrer: receiver.id,

@@ -351,11 +351,13 @@ router.post(
           .status(400)
           .json({ msg: 'Email already in user contacts.', toEmail });
       }
+
+      //from email must match sendGrid account email
       const msg = {
         to: toEmail,
         from: 'teamcocoapuffs1@gmail.com',
         subject: 'WorldChat: A friend has invited you to chat!',
-        text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000/register/${user.email}`,
+        text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000/register?referral=${user.email}`,
       };
 
       sgMail.send(msg, (err, info) => {
