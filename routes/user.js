@@ -274,10 +274,19 @@ router.post(
           .status(400)
           .json({ msg: 'Sorry but you cannot invite yourself', toEmail });
 
-      //find all outgoing invitations to the toEmail (array)
+      //check if receiver is already on the platform
+      const isReceiverAlreadyMember = await User.findOne({ email: toEmail });
+
+      if (isReceiverAlreadyMember) {
+        return res
+          .status(400)
+          .json({ msg: 'User already on platform', toEmail });
+      }
+
+      //Find all invitations sent to the receiver
       const invitations = await Invitation.find({ toEmail });
 
-      //see if an invitation was alreasdy sent from user to toEmail
+      //see if an invitation was already sent from user to receiver
       const invitationAlreadyCreated = invitations.find(
         (invitation) => invitation.referrer.toString() === referrer,
       );
@@ -288,24 +297,14 @@ router.post(
           .json({ msg: 'Invitation already created.', toEmail });
       }
 
-      //If toEmail is already in current user's contacts
-      const alreadyFriends = user.contacts.find(
-        (contact) => contact.email.toString() === toEmail,
-      );
+      const newInvitation = new Invitation({
+        referrer: user,
+        toEmail,
+      });
 
-      if (alreadyFriends) {
-        return res
-          .status(400)
-          .json({ msg: 'Email already in user contacts.', toEmail });
-      } else {
-        const newInvitation = new Invitation({
-          referrer: user,
-          toEmail,
-        });
+      await newInvitation.save();
 
-        await newInvitation.save();
-        res.status(200).json({ msg: 'Invitation created!', toEmail });
-      }
+      res.status(200).json({ msg: 'Invitation created!', toEmail });
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
