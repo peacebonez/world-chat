@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Cookies from 'js-cookie';
+import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import happyChatter from '../assets/happy-chatter.png';
@@ -68,7 +68,14 @@ const SideBarHeader = () => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {};
+  const handleLogout = async () => {
+    history.push('/');
+    await axios.get('/user/logout');
+    try {
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
 
   return (
     <div className={classes.sideBarHeader}>
