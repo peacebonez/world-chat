@@ -1,5 +1,4 @@
 import React, {useEffect} from "react";
-import io from 'socket.io-client';
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -23,16 +22,7 @@ const useStyles = makeStyles((theme) => ({
 const Conversation = (props) => {
   const classes = useStyles();
 
-  useEffect(() => {
-    let socket = io(serverURL);
-    socket.on('connect', () => {
-      console.log(socket.id);
-      console.log(socket.connected);
-    })
-    
-    // CLEAN UP THE EFFECT
-    return () => socket.disconnect();
-  }, []);
+  
   return (
     <div className={classes.conversation}>
       <Navbar />

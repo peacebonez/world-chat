@@ -40,7 +40,13 @@ const useStyles = makeStyles({
     marginBottom: '5%',
   },
   createAccountButton: {
-    marginLeft: '15%'
+    marginLeft: '15%',
+    outline: 'none'
+  },
+  loginButton: {
+    marginTop: '15%',
+    width: '60%',
+    margin: 'auto'
   }
 });
 
@@ -110,7 +116,7 @@ export default function Login() {
         <Box display="flex" className={classes.marginBottom50}>
           <Typography variant="subtitle1" className={classes.grayText}>Don't have an account? </Typography>
           <Link to="/" className={classes.noUnderlineLink}>
-            <Button variant="outlined" color="primary" className={classes.createAccountButton}>
+            <Button size="large" variant="outlined" color="primary" className={classes.createAccountButton}>
                 Create account
             </Button>
           </Link>
@@ -143,7 +149,13 @@ export default function Login() {
               errorPassword && 'Password must be at least 6 characters.'
             }
           />
-          <Button variant="contained" color="primary" onClick={handleClick}>
+          <Button 
+            variant="contained"
+            size="large" 
+            color="primary" 
+            onClick={handleClick}
+            className={classes.loginButton}
+          >
             Login
           </Button>
         </Box>

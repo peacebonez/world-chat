@@ -45,6 +45,10 @@ const useStyles = makeStyles({
   },
   grayText: {
     color: '#9c9c9c'
+  }, 
+  createButton: {
+    width: '60%',
+    margin: 'auto'
   }
 });
 
@@ -152,6 +156,7 @@ export default function Landing() {
           <Typography variant="subtitle1" className={classes.grayText}>Already have an account? </Typography>
           <Link to="/login" className={classes.noUnderlineLink}>
             <Button
+              size="large"
               variant="outlined"
               color="primary"
               className={classes.loginButton}
@@ -224,7 +229,13 @@ export default function Landing() {
           <Typography variant="h6" className={classes.errors}>
             {errorLanguage}
           </Typography>
-          <Button variant="contained" color="primary" onClick={handleSubmit}>
+          <Button 
+            className={classes.createButton}
+            variant="contained" 
+            size="large"
+            color="primary" 
+            onClick={handleSubmit}
+          >
             Create
           </Button>
         </Box>
