@@ -33,7 +33,7 @@ const ChatInput = (props) => {
       message: message,
       room: 123,
     };
-
+    console.log(data.message)
     socket.emit('message', data);
     setMessage('');
   };
@@ -54,7 +54,11 @@ const ChatInput = (props) => {
           }
           onChange={(e) => setMessage(e.target.value)}
         />
-        <Button variant="outlined" color="primary">
+        <Button 
+          variant="outlined" 
+          color="primary"
+          onClick={sendMessage}
+        >
           <ChevronRightIcon />
         </Button>
       </form>

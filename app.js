@@ -81,31 +81,26 @@ io.on('connection', (socket) => {
   });
 
   // when the client emits 'new message', this listens and executes
-  socket.on('new message', (data) => {
+  socket.on('newMessage', (data) => {
     console.log('new message', data);
-    // we tell the client to execute 'new message'
-    socket.to(data.id).broadcast.emit('message', {
-      name: req.session.user.name,
-      message: data.msg
-    });
   });
 
   socket.on('message', async (data) => {
     // TODO: you might want to pass in more useful info such as name and avatar pic
-    const { room, email, message} = data;
+    const { room, email, message, chatRoomName} = data;
     const createdOn = new Date();
 
     // TODO: Save the message
     
-    const conversations = await Conversation.findAll({
-      where: { name: chatRoomName },
-    });
-    const chatRoomId = conversations[0].id;
-    const chatMessage = await models.ChatMessage.create({
-      chatRoomId,
-      author,
-      message: message,
-    });
+    // const conversations = await Conversation.findAll({
+    //   where: { name: chatRoomName },
+    // });
+    // const chatRoomId = conversations[0].id;
+    // const chatMessage = await models.ChatMessage.create({
+    //   chatRoomId,
+    //   author,
+    //   message: message,
+    // });
     socket.emit('newMessage', { ...data, createdOn });
   });
 });
