@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
   },
   invitationLink: {
-    width: 400,
+    marginTop: theme.spacing(2),
   },
   invitationDialogueP: {
     fontWeight: 'bold',
@@ -70,7 +70,7 @@ export default function FormDialog() {
   const [notifyOpen, setNotifyOpen] = useState(false);
 
   const userId = userState.user.id;
-  const inviteUrl = 'https://www.worldchat.com/join/' + userState.user.email;
+  const inviteUrl = `https://www.worldchat.com/signup?referral=${userState.user.email}`;
 
   /*generate unique id for URL */
 

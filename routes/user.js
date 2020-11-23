@@ -287,7 +287,7 @@ router.post(
       //check if receiver is already on the platform
       const isReceiverAlreadyMember = await User.findOne({ email: toEmail });
 
-      if (!isReceiverAlreadyMember) {
+      if (isReceiverAlreadyMember) {
         return res.status(400).json({ msg: 'User not on platform', toEmail });
       }
 
@@ -298,12 +298,13 @@ router.post(
       const invitationAlreadyCreated = invitations.find(
         (invitation) => invitation.referrer.toString() === referrer,
       );
-      //can't send invite if already sent
-      // if (invitationAlreadyCreated) {
-      //   return res
-      //     .status(400)
-      //     .json({ msg: 'Invitation already created.', toEmail });
-      // }
+
+      // can't send invite if already sent
+      if (invitationAlreadyCreated) {
+        return res
+          .status(400)
+          .json({ msg: 'Invitation already created.', toEmail });
+      }
 
       const newInvitation = new Invitation({
         referrer: user,
@@ -364,7 +365,7 @@ router.post(
         to: toEmail,
         from: 'teamcocoapuffs1@gmail.com',
         subject: 'WorldChat: A friend has invited you to chat!',
-        text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000/register?referral=${user.email}`,
+        text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000/signup?referral=${user.email}`,
       };
 
       sgMail.send(msg, (err, info) => {
