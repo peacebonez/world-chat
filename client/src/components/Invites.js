@@ -106,7 +106,7 @@ const Invites = (props) => {
         // history.push('/');
       }
     })();
-  }, []);
+  }, [invites]);
 
   return (
     <div className={classes.wrapper}>
