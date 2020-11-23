@@ -47,8 +47,6 @@ router.post('/login', async (req, res) => {
         expiresIn: JWT_EXPIRY_TIME,
       },
       (err, token) => {
-        console.log('token before sending:', token);
-
         if (err) throw err;
         return res
           .status(201)
@@ -217,22 +215,15 @@ router.get('/:id/invitations/pending', async (req, res) => {
       status: 'pending',
     });
 
-    //ATTEMPTING TO DISPLAY THE INVITER BY EMAIL
     //need to find each user by ID and then retrieve their email
-    // for (let invite of pendingInvitesIn) {
-    //   const user = await User.findById(invite.referrer);
+    for (let invite of pendingInvitesIn) {
+      const user = await User.findById(invite.referrer);
+      invite.referrerEmail = user.email;
+      console.log('invite:', invite);
+      await invite.save();
+    }
 
-    //   let newInvite = {
-    //     status: invite.status,
-    //     _id: invite._id,
-    //     referrer: invite.referrer,
-    //     createdAt: invite.createdAt,
-    //     referrerEmail: user.email,
-    //   };
-
-    //   pendingInvitesIn.splice(pendingInvitesIn.indexOf(invite, 1, newInvite));
-    //   console.log('pendingInvitesIn:', pendingInvitesIn);
-    // }
+    console.log('pendingInvitesIn:', pendingInvitesIn);
 
     const pendingInvitesOut = await Invitation.find({
       referrer: userId,
@@ -283,7 +274,7 @@ router.post(
           .status(400)
           .json({ msg: 'Sorry but you cannot invite yourself', toEmail });
 
-      //check if receiver is already on the platform
+      // check if receiver is already on the platform
       const isReceiverAlreadyMember = await User.findOne({ email: toEmail });
 
       if (isReceiverAlreadyMember) {

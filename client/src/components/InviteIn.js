@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const InviteIn = ({ invite, handleApproveRequest, handleRejectRequest }) => {
-  const { referrer } = invite;
+  const { referrer, referrerEmail } = invite;
   const classes = useStyles();
 
   return (
@@ -63,7 +63,8 @@ const InviteIn = ({ invite, handleApproveRequest, handleRejectRequest }) => {
           />
         </div>
         <Typography variant="body1">
-          {referrer.substr(0, 18) + '...'}
+          {/* {referrer.substr(0, 18) + '...'} */}
+          {referrerEmail}
         </Typography>
       </div>
       <div>

@@ -46,7 +46,6 @@ const Invites = () => {
   const [invites, setInvites] = useState(null);
   const [invitesError, setInvitesError] = useState(false);
   const [invitesErrorMsg, setInvitesErrorMsg] = useState('');
-  console.log('invites:', invites);
 
   const requestsShow = () => {
     setShowRequests(true);
@@ -60,16 +59,14 @@ const Invites = () => {
   //both of these will need to make API calls to save modified state
   const handleApproveRequest = async (invite) => {
     try {
-      const res = await axios.put(`/invitation/${invite._id}/approve`);
-      return res;
+      await axios.put(`/invitation/${invite._id}/approve`);
     } catch (err) {
       console.log(err.message);
     }
   };
   const handleRejectRequest = async (invite) => {
     try {
-      const res = await axios.put(`/invitation/${invite._id}/reject`);
-      return res;
+      await axios.put(`/invitation/${invite._id}/reject`);
     } catch (err) {
       console.log(err.message);
     }
@@ -103,7 +100,7 @@ const Invites = () => {
         //dispatch user error
       }
     })();
-  }, [invites, userState.user.id]);
+  }, [invites]);
 
   //clears the backend error alert msg
   useEffect(() => {

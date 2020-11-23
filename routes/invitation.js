@@ -61,17 +61,16 @@ router.put('/:id/approve', auth, async (req, res) => {
       }
     }
 
-    //I DONT KNOW IF THIS NEEDS TO BE DONE
     //check if sender also has an invitation from the receiver and also set it to approved
-    // const receiverInvitationToUser = await Invitation.findOne({
-    //   toEmail: sender.email,
-    //   referrer: receiver.id,
-    // });
-    // if (receiverInvitationToUser) receiverInvitationToUser.status = 'approved';
+    const receiverInvitationToUser = await Invitation.findOne({
+      toEmail: sender.email,
+      referrer: receiver.id,
+    });
+    if (receiverInvitationToUser) receiverInvitationToUser.status = 'approved';
 
     await invitation.save();
 
-    // await receiverInvitationToUser.save();
+    await receiverInvitationToUser.save();
 
     await sender.save();
 
