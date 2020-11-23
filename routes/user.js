@@ -131,8 +131,7 @@ router.get(
   '/get_current_user',
   auth,
   runAsyncWrapper(async function (req, res) {
-    const userEmail = req.user.email;
-    const user = await User.findOne({ email: userEmail });
+    const user = await User.findById(req.params.id);
 
     if (!user) {
       return res.status(400).json({ error: 'User not found' });
