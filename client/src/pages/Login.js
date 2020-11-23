@@ -103,7 +103,7 @@ export default function Login() {
       <Box className={classes.outerMargins}>
         <Box display="flex" className={classes.marginBottom50}>
           <Typography variant="h5">Don't have an account? </Typography>
-          <Link to="/">
+          <Link to="/signup">
             <Button
               variant="outlined"
               color="primary"
