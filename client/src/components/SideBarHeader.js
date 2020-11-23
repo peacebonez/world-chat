@@ -1,7 +1,5 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Cookies from 'js-cookie';
-import { useHistory } from 'react-router-dom';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import happyChatter from '../assets/happy-chatter.png';
 import { Typography, Menu, MenuItem, Button } from '@material-ui/core';
@@ -40,7 +38,6 @@ const useStyles = makeStyles((theme) => ({
   noStyleBtn: {
     border: 'none',
     background: 'none',
-    // outline: 'none',
     cursor: 'pointer',
   },
   statusIcon: {
@@ -54,7 +51,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SideBarHeader = () => {
-  const history = useHistory();
   const { userState } = useContext(UserContext);
   const classes = useStyles();
 
@@ -68,7 +64,9 @@ const SideBarHeader = () => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {};
+  const handleLogout = () => {
+    //Todo- implement in different branch
+  };
 
   return (
     <div className={classes.sideBarHeader}>
@@ -98,7 +96,5 @@ const SideBarHeader = () => {
     </div>
   );
 };
-
-SideBarHeader.propTypes = {};
 
 export default SideBarHeader;

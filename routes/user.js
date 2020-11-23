@@ -142,7 +142,7 @@ router.get(
 );
 
 router.get(
-  '/get_by_id/:id',
+  '/:id',
   runAsyncWrapper(async function (req, res) {
     const user = await User.findById(req.params.id);
 
@@ -217,6 +217,7 @@ router.get('/:id/invitations/pending', async (req, res) => {
       status: 'pending',
     });
 
+    //ATTEMPTING TO DISPLAY THE INVITER BY EMAIL
     //need to find each user by ID and then retrieve their email
     // for (let invite of pendingInvitesIn) {
     //   const user = await User.findById(invite.referrer);
@@ -232,8 +233,6 @@ router.get('/:id/invitations/pending', async (req, res) => {
     //   pendingInvitesIn.splice(pendingInvitesIn.indexOf(invite, 1, newInvite));
     //   console.log('pendingInvitesIn:', pendingInvitesIn);
     // }
-
-    console.log('pendingInvitesIn:', pendingInvitesIn);
 
     const pendingInvitesOut = await Invitation.find({
       referrer: userId,
