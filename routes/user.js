@@ -210,20 +210,22 @@ router.get('/:id/invitations/pending', async (req, res) => {
     });
 
     //need to find each user by ID and then retrieve their email
-    for (let invite of pendingInvitesIn) {
-      const user = await User.findById(invite.referrer);
+    // for (let invite of pendingInvitesIn) {
+    //   const user = await User.findById(invite.referrer);
 
-      let newInvite = {
-        status: invite.status,
-        _id: invite._id,
-        referrer: invite.referrer,
-        createdAt: invite.createdAt,
-        referrerEmail: user.email,
-      };
+    //   let newInvite = {
+    //     status: invite.status,
+    //     _id: invite._id,
+    //     referrer: invite.referrer,
+    //     createdAt: invite.createdAt,
+    //     referrerEmail: user.email,
+    //   };
 
-      pendingInvitesIn.splice(pendingInvitesIn.indexOf(invite, 1, newInvite));
-      console.log('pendingInvitesIn:', pendingInvitesIn);
-    }
+    //   pendingInvitesIn.splice(pendingInvitesIn.indexOf(invite, 1, newInvite));
+    //   console.log('pendingInvitesIn:', pendingInvitesIn);
+    // }
+
+    console.log('pendingInvitesIn:', pendingInvitesIn);
 
     const pendingInvitesOut = await Invitation.find({
       referrer: userId,
@@ -277,10 +279,8 @@ router.post(
       //check if receiver is already on the platform
       const isReceiverAlreadyMember = await User.findOne({ email: toEmail });
 
-      if (isReceiverAlreadyMember) {
-        return res
-          .status(400)
-          .json({ msg: 'User already on platform', toEmail });
+      if (!isReceiverAlreadyMember) {
+        return res.status(400).json({ msg: 'User not on platform', toEmail });
       }
 
       //Find all invitations sent to the receiver
@@ -291,11 +291,11 @@ router.post(
         (invitation) => invitation.referrer.toString() === referrer,
       );
       //can't send invite if already sent
-      if (invitationAlreadyCreated) {
-        return res
-          .status(400)
-          .json({ msg: 'Invitation already created.', toEmail });
-      }
+      // if (invitationAlreadyCreated) {
+      //   return res
+      //     .status(400)
+      //     .json({ msg: 'Invitation already created.', toEmail });
+      // }
 
       const newInvitation = new Invitation({
         referrer: user,

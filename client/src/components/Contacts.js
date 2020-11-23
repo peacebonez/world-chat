@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Contacts = (props) => {
   const { userState } = useContext(UserContext);
+  console.log('userState:', userState);
 
   const classes = useStyles();
 

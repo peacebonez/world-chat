@@ -15,21 +15,21 @@ router.put('/:id/approve', auth, async (req, res) => {
       res.status(404).send('Invitation not found');
     }
 
+    //Locate the sender of the approved invitation
+    const sender = await User.findById(invitation.referrer);
+
+    //if sender is no longer on the platform
+    if (!sender) {
+      return res.status(404).send('User not found');
+    }
+
     //change status to approved if pending
     if (invitation.status === 'pending') {
       invitation.status = 'approved';
-
-      //if so, conver their invitation to approved too.
     } else {
       return res
         .status(400)
         .json({ msg: `Invitation status already ${invitation.status}` });
-    }
-
-    const sender = await User.findById(invitation.referrer);
-
-    if (!sender) {
-      return res.status(404).send('User not found');
     }
 
     const receiver = await User.findOne({ email: invitation.toEmail });
@@ -61,16 +61,17 @@ router.put('/:id/approve', auth, async (req, res) => {
       }
     }
 
-    //check if sender has an invitation from the receiver and also set it to approved
-    const receiverInvitationToUser = await Invitation.findOne({
-      toEmail: sender.email,
-      referrer: receiver.id,
-    });
-    if (receiverInvitationToUser) receiverInvitationToUser.status = 'approved';
+    //check if sender also has an invitation from the receiver and also set it to approved
+    //I DONT KNOW IF THIS NEEDS TO BE DONE
+    // const receiverInvitationToUser = await Invitation.findOne({
+    //   toEmail: sender.email,
+    //   referrer: receiver.id,
+    // });
+    // if (receiverInvitationToUser) receiverInvitationToUser.status = 'approved';
 
     await invitation.save();
 
-    await receiverInvitationToUser.save();
+    // await receiverInvitationToUser.save();
 
     await sender.save();
 

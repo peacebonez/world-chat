@@ -45,6 +45,7 @@ const Invites = (props) => {
   const [showRequests, setShowRequests] = useState(true);
   const [showSent, setShowSent] = useState(false);
   const [invites, setInvites] = useState(null);
+  console.log('invites:', invites);
 
   const requestsShow = () => {
     setShowRequests(true);
@@ -56,15 +57,25 @@ const Invites = (props) => {
   };
 
   //both of these will need to make API calls to save modified state
-  const handleApproveRequest = (invite) => {
-    //change status of invite and save it
-    invite.status = 'approved';
-    invites.pendingInvitesIn.splice(invite.index, 1);
+  const handleApproveRequest = async (invite) => {
+    console.log('invite:', invite);
+    try {
+      const res = await axios.put(`/invitation/${invite._id}/approve`);
+      return res;
+    } catch (err) {
+      console.log(err.message);
+    }
+
+    // invites.pendingInvitesIn.splice(invite.index, 1);
   };
-  const handleRejectRequest = (invite) => {
-    //change status of invite and save it
-    invite.status = 'rejected';
-    invites.pendingInvitesIn.splice(invite.index, 1);
+  const handleRejectRequest = async (invite) => {
+    console.log('invite:', invite);
+    try {
+      const res = await axios.put(`/invitation/${invite._id}/reject`);
+      return res;
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
   useEffect(() => {
