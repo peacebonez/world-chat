@@ -86,7 +86,7 @@ export default function Login() {
       }, 1000);
     }
     return () => clearTimeout(timer);
-  });
+  }, [email, password.length, backendError]);
 
   return (
     <Box display="flex">

@@ -103,7 +103,7 @@ const Invites = () => {
         //dispatch user error
       }
     })();
-  }, [invites]);
+  }, [invites, userState.user.id]);
 
   //clears the backend error alert msg
   useEffect(() => {

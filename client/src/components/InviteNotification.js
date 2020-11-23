@@ -57,6 +57,11 @@ const InviteNotification = ({
   );
 };
 
-InviteNotification.propTypes = {};
+InviteNotification.propTypes = {
+  setNotifyOpen: PropTypes.func.isRequired,
+  notifyOpen: PropTypes.bool.isRequired,
+  successEmails: PropTypes.array,
+  failedEmails: PropTypes.array,
+};
 
 export default InviteNotification;

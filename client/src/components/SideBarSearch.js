@@ -105,6 +105,13 @@ const SideBarSearch = ({
   );
 };
 
-SideBarSearch.propTypes = {};
+SideBarSearch.propTypes = {
+  chatsShown: PropTypes.bool,
+  invitesShown: PropTypes.bool,
+  contactsShown: PropTypes.bool,
+  handleInvitesShow: PropTypes.func.isRequired,
+  handleChatsShow: PropTypes.func.isRequired,
+  handleContactsShow: PropTypes.func.isRequired,
+};
 
 export default SideBarSearch;

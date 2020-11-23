@@ -74,6 +74,7 @@ const SideBarHeader = () => {
         <div className={classes.sideBarImgWrapper}>
           <img
             src={userState.user.avatar ? userState.user.avatar : happyChatter}
+            alt="user avatar"
             className={classes.sideBarImg}
           />
           <span
