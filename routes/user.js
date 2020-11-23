@@ -128,19 +128,6 @@ router.post(
 );
 
 router.get(
-  '/:id',
-  runAsyncWrapper(async function (req, res) {
-    const user = await User.findById(req.params.id);
-
-    if (!user) {
-      return res.status(400).json({ error: 'User not found' });
-    } else {
-      return res.status(200).json(user);
-    }
-  }),
-);
-
-router.get(
   '/get_current_user',
   auth,
   runAsyncWrapper(async function (req, res) {
@@ -160,6 +147,19 @@ router.get(
   runAsyncWrapper(async function (req, res) {
     const users = await User.find();
     return res.status(200).json(users);
+  }),
+);
+
+router.get(
+  '/:id',
+  runAsyncWrapper(async function (req, res) {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' });
+    } else {
+      return res.status(200).json(user);
+    }
   }),
 );
 

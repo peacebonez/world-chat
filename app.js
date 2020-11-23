@@ -42,7 +42,7 @@ app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, 'public')));
 
-app.use('/conversation', require('./routes/conversation'))
+app.use('/conversation', require('./routes/conversation'));
 app.use('/user', require('./routes/user'));
 app.use('/invitation', require('./routes/invitation'));
 
@@ -57,28 +57,55 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   console.log(req.app.get('env'), err.message);
   res.locals.error = req.app.get('env') == 'development' ? err : {};
+  console.log('error', err);
   // render the error page
   res.status(err.status || 500);
   res.json({ error: err.message });
 });
 
-io.on('connection', (socket) => { /* socket object may be used to send specific messages to the new connected client */
+io.on('connection', (socket) => {
+  /* socket object may be used to send specific messages to the new connected client */
   console.log('new client connected');
   socket.emit('connection', null);
 
+  socket.on('join', async (room) => {
+    // The room is likely going to be a Conversation ID
+    // TODO: If the conversation ID does not exist yet, create on before joining in
+    socket.join(room);
+  });
+
   // when the client emits 'new message', this listens and executes
   socket.on('new message', (data) => {
+    console.log('new message', data);
     // we tell the client to execute 'new message'
-    socket.broadcast.emit('new message', {
-      name: req.session.user._id,
-      message: data
-    });
+    // socket.broadcast.emit('new message', {
+    //   name: req.session.user._id,
+    //   message: data,
+    // });
+  });
+
+  socket.on('message', async (data) => {
+    // TODO: you might want to pass in more useful info such as name and avatar pic
+    const { room, email, message } = data;
+    const createdOn = new Date();
+
+    // TODO: Save the message
+
+    // const chatRoom = await models.ChatRoom.findAll({
+    //   where: { name: chatRoomName },
+    // });
+    // const chatRoomId = chatRoom[0].id;
+    // const chatMessage = await models.ChatMessage.create({
+    //   chatRoomId,
+    //   author,
+    //   message: message,
+    // });
+    socket.emit('newMessage', { ...data, createdOn });
   });
 });
 
 http.listen(3001, () => {
   console.log('listening on *:3001');
 });
-
 
 module.exports = app;

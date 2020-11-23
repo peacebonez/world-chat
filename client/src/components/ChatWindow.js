@@ -1,49 +1,52 @@
-import React, {useState, useEffect} from "react";
-import io from 'socket.io-client';
-import ChatInput from "./ChatInput";
-import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useState, useEffect, useContext } from 'react';
+import ChatInput from './ChatInput';
+import { makeStyles } from '@material-ui/core/styles';
+import { UserContext } from '../contexts/userContext';
 
 require('dotenv').config();
-const BASE_URL = process.env.REACT_APP_baseURL;
-const serverURL = process.env.serverURL;
-
 const useStyles = makeStyles((theme) => ({
   chatWindow: {
-    width: "100%",
-    height: "85vh",
-    background: "#fff",
+    width: '100%',
+    height: '85vh',
+    background: '#fff',
     marginTop: 10,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "space-between",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 }));
 
 const ChatWindow = (props) => {
   const classes = useStyles();
-
-  const [msg, setMsg] = useState({
-    name: '',
-    message: ''
-  });
+  const { socket } = useContext(UserContext);
   const [chat, setChat] = useState([]);
 
   useEffect(() => {
-    const socket = io(serverURL);
     socket.on('connect', () => {
-      console.log(socket.id);
-      console.log(socket.connected);
-    })
-    
-    // CLEAN UP THE EFFECT
-    return () => socket.disconnect();
+      socket.emit('join', 123); // replace 123 with conversation id
+    });
+
+    socket.on('roomJoined', (room) => {
+      console.log('successfull joined', room);
+    });
+
+    socket.on('newMessage', (data) => {
+      console.log('new message coming in', data);
+      setChat((prevChat) => [...prevChat, data]);
+    });
   }, []);
 
   return (
     <div className={classes.chatWindow}>
       chat window!
+      <ul>
+        {chat.map((message) => (
+          <li key={message.createdOn}>
+            {message.message} by {message.email}
+          </li>
+        ))}
+      </ul>
       <ChatInput />
     </div>
   );
