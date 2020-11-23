@@ -7,6 +7,9 @@ const logger = require('morgan');
 require('dotenv').config();
 
 const mongoose = require('mongoose');
+const uuid = require("uuid");
+
+const Conversation = require('./models/Conversation');
 
 const { json, urlencoded } = express;
 
@@ -71,6 +74,9 @@ io.on('connection', (socket) => {
   socket.on('join', async (room) => {
     // The room is likely going to be a Conversation ID
     // TODO: If the conversation ID does not exist yet, create on before joining in
+    if (!room) {
+      room = uuid.v4();
+    }
     socket.join(room);
   });
 
@@ -78,28 +84,28 @@ io.on('connection', (socket) => {
   socket.on('new message', (data) => {
     console.log('new message', data);
     // we tell the client to execute 'new message'
-    // socket.broadcast.emit('new message', {
-    //   name: req.session.user._id,
-    //   message: data,
-    // });
+    socket.to(data.id).broadcast.emit('message', {
+      name: req.session.user.name,
+      message: data.msg
+    });
   });
 
   socket.on('message', async (data) => {
     // TODO: you might want to pass in more useful info such as name and avatar pic
-    const { room, email, message } = data;
+    const { room, email, message} = data;
     const createdOn = new Date();
 
     // TODO: Save the message
-
-    // const chatRoom = await models.ChatRoom.findAll({
-    //   where: { name: chatRoomName },
-    // });
-    // const chatRoomId = chatRoom[0].id;
-    // const chatMessage = await models.ChatMessage.create({
-    //   chatRoomId,
-    //   author,
-    //   message: message,
-    // });
+    
+    const conversations = await Conversation.findAll({
+      where: { name: chatRoomName },
+    });
+    const chatRoomId = conversations[0].id;
+    const chatMessage = await models.ChatMessage.create({
+      chatRoomId,
+      author,
+      message: message,
+    });
     socket.emit('newMessage', { ...data, createdOn });
   });
 });

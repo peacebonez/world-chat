@@ -39,6 +39,9 @@ const Sidebar = (props) => {
   //get contacts from user
   //get converstations from user
   //map out both to their respective components
+  useEffect(() => {
+    console.log("cookie: ", document.cookie)
+  }, [])
 
   return (
     <div className={classes.sideBar}>

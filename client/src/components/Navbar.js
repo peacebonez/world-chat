@@ -49,7 +49,7 @@ const Navbar = (props) => {
       <div>
         <div className={classes.flexCenter}>
           <img src={testFlag} />
-          <Typography variant="h5">Santiago</Typography>
+          <Typography variant="h5">{props.groupchat ? "Group Chat" : 'Santiago'}</Typography>
           {/* background will depend on online status */}
           <span
             className={`${classes.statusIcon} ${classes.onlineIcon}`}

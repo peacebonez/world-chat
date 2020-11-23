@@ -1,8 +1,9 @@
 import React, { createContext, useReducer, useEffect } from 'react';
+import io from 'socket.io-client';
 import { useHistory } from 'react-router-dom';
 import { userReducer } from '../reducers/userReducer';
 import axios from 'axios';
-import io from 'socket.io-client';
+
 
 import { UPDATE_USER, USER_ERROR } from '../reducers/userReducer';
 
