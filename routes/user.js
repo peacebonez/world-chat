@@ -22,32 +22,45 @@ function runAsyncWrapper(callback) {
 sgMail.setApiKey(process.env.EMAIL_KEY);
 
 // User Login
-router.post(
-  '/login',
-  runAsyncWrapper(async (req, res) => {
-    let email = req.body.email;
+router.post('/login', async (req, res) => {
+  const email = req.body.email;
+
+  try {
     const user = await User.findOne({ email });
+
     if (!user) {
       return res.status(400).send('No user with this email');
     } else if (!bcrypt.compareSync(req.body.password, user.password)) {
       return res.status(400).send('Incorrect Password');
     }
+    //Set up the jwt payload to user ID and email option
+    const payload = {
+      id: user._id,
+      email,
+    };
+
     // success -> Get a JWT Token
-    const accessToken = jwt.sign(
-      /* payload */ { email },
+    jwt.sign(
+      payload,
       process.env.ACCESS_TOKEN_SECRET,
       {
-        algorithm: 'HS256',
         expiresIn: JWT_EXPIRY_TIME,
       },
-    );
+      (err, token) => {
+        console.log('token before sending:', token);
 
-    // req.session.user = user;
-    // return res.status(201).send(user);
-    res.cookie('token', accessToken, { httpOnly: true });
-    res.status(201).send();
-  }),
-);
+        if (err) throw err;
+        return res
+          .status(201)
+          .cookie('token', token, { httpOnly: true })
+          .json({ token, msg: 'User Authenticated' });
+      },
+    );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 // User Registration
 router.post(
@@ -88,10 +101,8 @@ router.post(
 
       //Set up the jwt payload to user ID and email option
       const payload = {
-        user: {
-          id: user._id,
-          email,
-        },
+        id: user._id,
+        email,
       };
 
       // success -> Get a JWT Token
@@ -102,13 +113,10 @@ router.post(
         { expiresIn: JWT_EXPIRY_TIME },
         (err, token) => {
           if (err) throw err;
-          return (
-            res
-              .status(201)
-              // .cookie(token, { httpOnly: true })
-              .cookie('token', token)
-              .json({ token, msg: 'Register Success!' })
-          );
+          return res
+            .status(201)
+            .cookie('token', token, { httpOnly: true })
+            .json({ token, msg: 'Register Success!' });
         },
       );
     } catch (err) {

@@ -19,23 +19,25 @@ const UserProvider = (props) => {
     fetchUser: async () => {
       try {
         const res = await axios.get('/user/get_current_user');
+        console.log('res:', res);
 
         if (res.status === 200) {
           const data = await res.data;
-          console.log('res:', res);
+          console.log('data:', data);
+
           dispatch({ type: UPDATE_USER, payload: data });
         } else {
           // if error then redirect to login
           console.log('ERROR USER NOT FOUND');
 
           dispatch({ type: USER_ERROR });
-          history.push('/login');
+          // history.push('/login');
         }
       } catch (err) {
         console.log('ERROR USER NOT FOUND');
 
         dispatch({ type: USER_ERROR });
-        history.push('/login');
+        // history.push('/login');
       }
     },
   };

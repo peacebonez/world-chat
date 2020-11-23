@@ -68,12 +68,7 @@ const SideBarHeader = () => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    const cookie = Cookies.get();
-    console.log('cookie:', cookie);
-    delete cookie.token;
-    history.push('/login');
-  };
+  const handleLogout = () => {};
 
   return (
     <div className={classes.sideBarHeader}>
