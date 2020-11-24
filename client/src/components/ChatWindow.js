@@ -24,7 +24,7 @@ const ChatWindow = (props) => {
 
   useEffect(() => {
     socket.on('connect', () => {
-      socket.emit('join', 123 ); // replace 123 with conversation id
+      socket.emit('join', '123' ); // replace 123 with conversation id
     });
 
     socket.on('roomJoined', (room) => {
