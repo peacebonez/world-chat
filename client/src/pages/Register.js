@@ -42,7 +42,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Landing() {
+export default function Register() {
   const history = useHistory();
   const classes = useStyles();
 
@@ -144,7 +144,7 @@ export default function Landing() {
       <Box className={classes.outerMargins}>
         <Box display="flex" className={classes.marginBottom50}>
           <Typography variant="h5">Already have an account? </Typography>
-          <Link to="/login">
+          <Link to="/">
             <Button
               variant="outlined"
               color="primary"

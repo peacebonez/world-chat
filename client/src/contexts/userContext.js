@@ -29,13 +29,13 @@ const UserProvider = (props) => {
           console.log('ERROR USER NOT FOUND');
 
           dispatch({ type: USER_ERROR });
-          history.push('/login');
+          history.push('/');
         }
       } catch (err) {
         console.log('ERROR USER NOT FOUND');
 
         dispatch({ type: USER_ERROR });
-        history.push('/login');
+        history.push('/');
       }
     },
   };
