@@ -4,7 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import happyChatter from '../assets/happy-chatter.png';
 import { Typography, Menu, MenuItem, Button } from '@material-ui/core';
+<<<<<<< HEAD
 import AddIcon from '@material-ui/icons/Add';
+=======
+>>>>>>> e2654f422560b2847dd435d733edf445fb012287
 
 import { UserContext } from '../contexts/userContext';
 
@@ -75,8 +78,11 @@ const SideBarHeader = () => {
   const { userState } = useContext(UserContext);
   const classes = useStyles();
 
+<<<<<<< HEAD
   const [userAvatar, setUserAvatar] = useState(happyChatter);
   const [isHover, setIsHover] = useState(false);
+=======
+>>>>>>> e2654f422560b2847dd435d733edf445fb012287
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
