@@ -62,10 +62,7 @@ const InviteIn = ({ invite, handleApproveRequest, handleRejectRequest }) => {
             className={classes.sideBarImg}
           />
         </div>
-        <Typography variant="body1">
-          {/* {referrer.substr(0, 18) + '...'} */}
-          {referrerEmail}
-        </Typography>
+        <Typography variant="body1">{referrerEmail}</Typography>
       </div>
       <div>
         <button

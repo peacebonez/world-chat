@@ -141,11 +141,7 @@ export default function FormDialog() {
 
   const createInvite = async (toEmail) => {
     try {
-      const res = await axios.post(
-        `/user/${userId}/invitation`,
-        { toEmail },
-        config,
-      );
+      const res = await axios.post(`/user/invitation`, { toEmail }, config);
 
       return res;
     } catch (err) {
@@ -156,7 +152,7 @@ export default function FormDialog() {
   const sendInvite = async (toEmail) => {
     try {
       const res = await axios.post(
-        `/user/${userId}/invitation/send`,
+        `/user/invitation/send`,
         { toEmail },
         config,
       );

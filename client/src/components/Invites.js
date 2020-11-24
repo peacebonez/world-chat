@@ -76,9 +76,7 @@ const Invites = () => {
     //is called whenever a change in invitations takes place
     (async function fetchPendingInvites() {
       try {
-        const res = await axios.get(
-          `user/${userState.user.id}/invitations/pending`,
-        );
+        const res = await axios.get(`user/invitations/pending`);
 
         //if response is ok or user has no invites
         if (res.status === 200 || res.status === 204) {

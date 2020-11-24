@@ -161,8 +161,8 @@ router.get(
 );
 
 //GET all user outgoing invitations PRIVATE ROUTE
-router.get('/:id/invitations/out', auth, async (req, res) => {
-  const userId = req.params.id;
+router.get('/invitations/out', auth, async (req, res) => {
+  const userId = req.user.id;
   try {
     const invites = await Invitation.find({ referrer: userId });
 
@@ -178,8 +178,8 @@ router.get('/:id/invitations/out', auth, async (req, res) => {
 });
 
 //GET all user incoming invitations PRIVATE ROUTE
-router.get('/:id/invitations/in', auth, async (req, res) => {
-  const userId = req.params.id;
+router.get('/invitations/in', auth, async (req, res) => {
+  const userId = req.user.id;
   try {
     const user = await User.findById(userId);
 
@@ -200,14 +200,14 @@ router.get('/:id/invitations/in', auth, async (req, res) => {
   }
 });
 
-//GET all user incoming PENDING invitations
-router.get('/:id/invitations/pending', async (req, res) => {
-  const userId = req.params.id;
+//GET all user incoming PENDING invitations PRIVATE
+router.get('/invitations/pending', auth, async (req, res) => {
+  const userId = req.user.id;
   try {
     const user = await User.findById(userId);
 
     if (!user) {
-      res.status(404).send('User not found');
+      return res.status(404).send('User not found');
     }
 
     const pendingInvitesIn = await Invitation.find({
@@ -219,11 +219,8 @@ router.get('/:id/invitations/pending', async (req, res) => {
     for (let invite of pendingInvitesIn) {
       const user = await User.findById(invite.referrer);
       invite.referrerEmail = user.email;
-      console.log('invite:', invite);
       await invite.save();
     }
-
-    console.log('pendingInvitesIn:', pendingInvitesIn);
 
     const pendingInvitesOut = await Invitation.find({
       referrer: userId,
@@ -248,7 +245,7 @@ router.get('/:id/invitations/pending', async (req, res) => {
 
 //POST create a user invitation PRIVATE ROUTE
 router.post(
-  '/:id/invitation',
+  '/invitation',
   [check('toEmail', 'Email required').isEmail().trim()],
   auth,
   async (req, res) => {
@@ -258,7 +255,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const referrer = req.params.id;
+    const referrer = req.user.id;
     const toEmail = req.body.toEmail;
 
     try {
@@ -313,7 +310,7 @@ router.post(
 
 //POST send a user invitation PRIVATE ROUTE
 router.post(
-  '/:id/invitation/send',
+  '/invitation/send',
   [check('toEmail', 'Email required').isEmail().trim()],
   auth,
   async (req, res) => {
@@ -327,7 +324,7 @@ router.post(
 
     try {
       //locate user from parameter
-      const user = await User.findById(req.params.id);
+      const user = await User.findById(req.user.id);
 
       if (!user) {
         return res.status(404).json({ msg: 'User not found', toEmail });
@@ -372,8 +369,8 @@ router.post(
 );
 
 //GET user contacts PRIVATE ROUTE
-router.get('/:id/contacts', auth, async (req, res) => {
-  const userId = req.params.id;
+router.get('/contacts', auth, async (req, res) => {
+  const userId = req.user.id;
   try {
     const user = await User.findById(userId).select('-password');
 
