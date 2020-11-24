@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
+import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
-
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import happyChatter from '../assets/happy-chatter.png';
-import { Typography } from '@material-ui/core';
+import { Typography, Menu, MenuItem, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 
 import { UserContext } from '../contexts/userContext';
@@ -55,6 +55,11 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     color: '#BCC8D9',
   },
+  noStyleBtn: {
+    border: 'none',
+    background: 'none',
+    cursor: 'pointer',
+  },
   statusIcon: {
     width: 12,
     height: 12,
@@ -69,40 +74,44 @@ const useStyles = makeStyles((theme) => ({
 const SideBarHeader = () => {
   const { userState } = useContext(UserContext);
   const classes = useStyles();
+
   const [userAvatar, setUserAvatar] = useState(happyChatter);
   const [isHover, setIsHover] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const onFileChange = (e) => {
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSelectedFile = (e) => {
     setUserAvatar(e.target.files[0]);
   };
 
-  const onFileUpload = () => {
-    const formData = new FormData();
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+    setUserAvatar(file);
 
-    formData.append(
-      'avatar',
-      userAvatar,
-      userState.user.email + '_' + 'avatar',
-    );
+    const data = new FormData();
+    data.append('file', file, file.name);
+
+    try {
+      const res = await axios.post('/user/avatar', data);
+      console.log('res:', res);
+    } catch (err) {}
   };
+  console.log('userAvatar:', userAvatar);
 
   return (
     <div className={classes.sideBarHeader}>
       <div>
-        <input
-          type="file"
-          name="avatar"
-          id="avatar"
-          accept="image/png, image/jpeg"
-        />
-        {/* <form
-          action="/file-upload"
-          name="avatar"
-          method="post"
-          enctype="multipart/form-data"
-          className="dropzone"
-        > */}
         <div className={classes.sideBarImgWrapper}>
+          <input type="file" onChange={handleUpload} />
+
           <AddIcon
             className={`${classes.addIcon} ${isHover && classes.shown} `}
             onMouseOver={() => setIsHover(true)}
@@ -121,14 +130,21 @@ const SideBarHeader = () => {
             className={`${classes.statusIcon} ${classes.onlineIcon}`}
           ></span>
         </div>
-        {/* </form> */}
         <Typography variant="h5">{userState.user.name}</Typography>
       </div>
-      <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
+      <Button className={classes.noStyleBtn} onClick={handleClick}>
+        <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
+      </Button>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        keepMounted
+        onClose={handleClose}
+      >
+        <MenuItem>Logout</MenuItem>
+      </Menu>
     </div>
   );
 };
-
-SideBarHeader.propTypes = {};
 
 export default SideBarHeader;

@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.secondary.main,
     '& input': {
       background: theme.palette.secondary.main,
+      paddingLeft: theme.spacing(1),
     },
   },
   noStyleBtn: {
@@ -29,63 +30,57 @@ const useStyles = makeStyles((theme) => ({
   header: {
     color: '#BEC5D3',
     '&:hover': {
-      color: '#000',
+      color: theme.palette.primary.blue,
     },
   },
   headerActive: {
-    color: '#000',
+    color: theme.palette.primary.blue,
+    fontSize: 26,
   },
 }));
 
-const SideBarSearch = ({ setChatShown, setContactsShown, setInvitesShown }) => {
+const SideBarSearch = ({
+  chatsShown,
+  invitesShown,
+  contactsShown,
+  handleInvitesShow,
+  handleContactsShow,
+  handleChatsShow,
+}) => {
   const classes = useStyles();
-
-  const showComponent = (type) => {
-    switch (type) {
-      case 'Chats':
-        setChatShown(true);
-        setContactsShown(false);
-        setInvitesShown(false);
-        break;
-      case 'Contacts':
-        setChatShown(false);
-        setContactsShown(true);
-        setInvitesShown(false);
-        break;
-      case 'Invites':
-        setChatShown(false);
-        setContactsShown(false);
-        setInvitesShown(true);
-        break;
-      default:
-        break;
-    }
-  };
-
   return (
     <div className={classes.wrapper}>
       <div>
-        <button
-          className={classes.noStyleBtn}
-          onClick={(e) => showComponent(e.target.innerHTML)}
-        >
-          <Typography display="inline" variant="h6" className={classes.header}>
+        <button className={classes.noStyleBtn} onClick={handleChatsShow}>
+          <Typography
+            display="inline"
+            variant="h6"
+            className={`${classes.header} ${
+              chatsShown && classes.headerActive
+            }`}
+          >
             Chats
           </Typography>
         </button>
-        <button
-          className={classes.noStyleBtn}
-          onClick={(e) => showComponent(e.target.innerHTML)}
-        >
-          <Typography display="inline" variant="h6" className={classes.header}>
+        <button className={classes.noStyleBtn} onClick={handleContactsShow}>
+          <Typography
+            display="inline"
+            variant="h6"
+            className={`${classes.header} ${
+              contactsShown && classes.headerActive
+            }`}
+          >
             Contacts
           </Typography>
         </button>
-        <button
-          className={classes.noStyleBtn}
-          onClick={(e) => showComponent(e.target.innerHTML)}
-        >
-          <Typography display="inline" variant="h6" className={classes.header}>
+        <button className={classes.noStyleBtn} onClick={handleInvitesShow}>
+          <Typography
+            display="inline"
+            variant="h6"
+            className={`${classes.header} ${
+              invitesShown && classes.headerActive
+            }`}
+          >
             Invites
           </Typography>
         </button>
@@ -99,7 +94,9 @@ const SideBarSearch = ({ setChatShown, setContactsShown, setInvitesShown }) => {
             autoFocus
             placeholder="Search"
             InputProps={{
-              startAdornment: <SearchOutlinedIcon />,
+              startAdornment: (
+                <SearchOutlinedIcon className={classes.noStyleBtn} />
+              ),
             }}
           />
         </form>
@@ -108,6 +105,13 @@ const SideBarSearch = ({ setChatShown, setContactsShown, setInvitesShown }) => {
   );
 };
 
-SideBarSearch.propTypes = {};
+SideBarSearch.propTypes = {
+  chatsShown: PropTypes.bool,
+  invitesShown: PropTypes.bool,
+  contactsShown: PropTypes.bool,
+  handleInvitesShow: PropTypes.func.isRequired,
+  handleChatsShow: PropTypes.func.isRequired,
+  handleContactsShow: PropTypes.func.isRequired,
+};
 
 export default SideBarSearch;

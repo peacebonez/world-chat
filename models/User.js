@@ -20,6 +20,17 @@ const UserSchema = new Schema(
       required: true,
       unique: true,
     },
+    avatar: {
+      name: {
+        type: String,
+      },
+      url: {
+        type: String,
+      },
+      key: {
+        type: String,
+      },
+    },
     primaryLanguage: {
       type: String,
       required: true,
