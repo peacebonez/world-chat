@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import SideBarHeader from './SideBarHeader';
@@ -28,10 +28,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Sidebar = (props) => {
-  const [chatShown, setChatShown] = useState(false);
+const Sidebar = () => {
+  const [chatsShown, setChatsShown] = useState(true);
   const [contactsShown, setContactsShown] = useState(false);
-  const [invitesShown, setInvitesShown] = useState(true);
+  const [invitesShown, setInvitesShown] = useState(false);
   const classes = useStyles();
 
   //TODOS
@@ -42,24 +42,40 @@ const Sidebar = (props) => {
   useEffect(() => {
     console.log("cookie: ", document.cookie)
   }, [])
+  const handleChatsShow = () => {
+    setChatsShown(true);
+    setContactsShown(false);
+    setInvitesShown(false);
+  };
+  const handleContactsShow = () => {
+    setChatsShown(false);
+    setContactsShown(true);
+    setInvitesShown(false);
+  };
+  const handleInvitesShow = () => {
+    setChatsShown(false);
+    setContactsShown(false);
+    setInvitesShown(true);
+  };
 
   return (
     <div className={classes.sideBar}>
       <SideBarHeader />
       <SideBarSearch
-        setChatShown={setChatShown}
-        setContactsShown={setContactsShown}
-        setInvitesShown={setInvitesShown}
+        chatsShown={chatsShown}
+        invitesShown={invitesShown}
+        contactsShown={contactsShown}
+        handleChatsShow={handleChatsShow}
+        handleContactsShow={handleContactsShow}
+        handleInvitesShow={handleInvitesShow}
       />
       <div className={classes.listContainer}>
-        {chatShown && <ChatList />}
+        {chatsShown && <ChatList />}
         {contactsShown && <Contacts />}
         {invitesShown && <Invites />}
       </div>
     </div>
   );
 };
-
-Sidebar.propTypes = {};
 
 export default Sidebar;

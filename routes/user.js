@@ -23,42 +23,43 @@ function runAsyncWrapper(callback) {
 sgMail.setApiKey(process.env.EMAIL_KEY);
 
 // User Login
-router.post(
-  '/login',
-  runAsyncWrapper(async (req, res) => {
-    const email = req.body.email;
-    try {
-      const user = await User.findOne({ email });
-      if (!user) {
-        return res.status(404).send('No user with this email');
-      } else if (!bcrypt.compareSync(req.body.password, user.password)) {
-        return res.status(400).send('Incorrect Password');
-      }
+router.post('/login', async (req, res) => {
+  const email = req.body.email;
 
-      const payload = {
-        id: user._id,
-        email,
-      };
+  try {
+    const user = await User.findOne({ email });
 
-      // success -> Get a JWT Token
-      jwt.sign(
-        payload,
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: JWT_EXPIRY_TIME },
-        (err, token) => {
-          if (err) throw err;
-          return res
-            .status(201)
-            .cookie('token', token, { httpOnly: true })
-            .json({ token, msg: 'User Authenticated' });
-        },
-      );
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server Error');
+    if (!user) {
+      return res.status(400).send('No user with this email');
+    } else if (!bcrypt.compareSync(req.body.password, user.password)) {
+      return res.status(400).send('Incorrect Password');
     }
-  }),
-);
+    //Set up the jwt payload to user ID and email option
+    const payload = {
+      id: user._id,
+      email,
+    };
+
+    // success -> Get a JWT Token
+    jwt.sign(
+      payload,
+      process.env.ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: JWT_EXPIRY_TIME,
+      },
+      (err, token) => {
+        if (err) throw err;
+        return res
+          .status(201)
+          .cookie('token', token, { httpOnly: true })
+          .json({ token, msg: 'User Authenticated' });
+      },
+    );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 // User Registration
 router.post(
@@ -163,7 +164,7 @@ router.get(
   '/get_all',
   runAsyncWrapper(async function (req, res) {
     const users = await User.find();
-    return res.status(200).json(users);
+    return res.status(200).jsonp(users);
   }),
 );
 
@@ -194,8 +195,8 @@ router.get('/conversations', auth, async (req, res) => {
 });
 
 //GET all user outgoing invitations PRIVATE ROUTE
-router.get('/:id/invitations/out', auth, async (req, res) => {
-  const userId = req.params.id;
+router.get('/invitations/out', auth, async (req, res) => {
+  const userId = req.user.id;
   try {
     const invites = await Invitation.find({ referrer: userId });
 
@@ -211,8 +212,8 @@ router.get('/:id/invitations/out', auth, async (req, res) => {
 });
 
 //GET all user incoming invitations PRIVATE ROUTE
-router.get('/:id/invitations/in', auth, async (req, res) => {
-  const userId = req.params.id;
+router.get('/invitations/in', auth, async (req, res) => {
+  const userId = req.user.id;
   try {
     const user = await User.findById(userId);
 
@@ -233,9 +234,49 @@ router.get('/:id/invitations/in', auth, async (req, res) => {
   }
 });
 
+//GET all user incoming PENDING invitations PRIVATE
+router.get('/invitations/pending', auth, async (req, res) => {
+  const userId = req.user.id;
+  let invites = {
+    pendingInvitesIn: [],
+    pendingInvitesOut: [],
+  };
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    const pendingInvitesIn = await Invitation.find({
+      toEmail: user.email,
+      status: 'pending',
+    });
+
+    const pendingInvitesOut = await Invitation.find({
+      referrer: userId,
+      status: 'pending',
+    });
+
+    invites = {
+      pendingInvitesIn,
+      pendingInvitesOut,
+    };
+
+    if (invites.pendingInvitesIn.length < 1 && invites.pendingInvitesOut < 1) {
+      return res.status(204).json(invites);
+    }
+
+    res.json(invites);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 //POST create a user invitation PRIVATE ROUTE
 router.post(
-  '/:id/invitation',
+  '/invitation',
   [check('toEmail', 'Email required').isEmail().trim()],
   auth,
   async (req, res) => {
@@ -245,7 +286,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const referrer = req.params.id;
+    const referrer = req.user.id;
     const toEmail = req.body.toEmail;
 
     try {
@@ -254,29 +295,47 @@ router.post(
       if (!user) {
         return res.status(404).json({ msg: 'User not found', toEmail });
       }
-      //TODO: SETUP UP CONDITION THAT YOU CANNOT INVITE YOURSELF
 
-      //find all outgoing invitations to the toEmail (array)
+      //Cannot invite yourself
+      if (user.email === toEmail)
+        return res
+          .status(400)
+          .json({ msg: 'Sorry but you cannot invite yourself', toEmail });
+
+      /*
+      THIS IS AN OPTIONAL CONDITION WE MAY WANT TO IMPLEMENT
+      check if receiver is already on the platform
+      const isReceiverAlreadyMember = await User.findOne({ email: toEmail });
+
+      if (isReceiverAlreadyMember) {
+        return res.status(400).json({ msg: 'User not on platform', toEmail });
+      }
+      */
+
+      //Find all invitations sent to the receiver
       const invitations = await Invitation.find({ toEmail });
 
-      //see if an invitation was alreasdy sent from user to toEmail
+      //see if an invitation was already sent from user to receiver
       const invitationAlreadyCreated = invitations.find(
         (invitation) => invitation.referrer.toString() === referrer,
       );
-      //can't send invite if already sent
+
+      // can't send invite if already sent
       if (invitationAlreadyCreated) {
         return res
           .status(400)
           .json({ msg: 'Invitation already created.', toEmail });
-      } else {
-        const newInvitation = new Invitation({
-          referrer: user,
-          toEmail,
-        });
-
-        await newInvitation.save();
-        res.status(200).json({ msg: 'Invitation created!', toEmail });
       }
+
+      const newInvitation = new Invitation({
+        referrer: user,
+        referrerEmail: user.email,
+        toEmail,
+      });
+
+      await newInvitation.save();
+
+      res.status(200).json({ msg: 'Invitation created!', toEmail });
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
@@ -286,7 +345,7 @@ router.post(
 
 //POST send a user invitation PRIVATE ROUTE
 router.post(
-  '/:id/invitation/send',
+  '/invitation/send',
   [check('toEmail', 'Email required').isEmail().trim()],
   auth,
   async (req, res) => {
@@ -297,21 +356,38 @@ router.post(
     }
 
     const toEmail = req.body.toEmail;
-    console.log('toEmail:', toEmail);
 
     try {
       //locate user from parameter
-      const user = await User.findById(req.params.id);
+      const user = await User.findById(req.user.id);
 
       if (!user) {
         return res.status(404).json({ msg: 'User not found', toEmail });
       }
 
+      //Cannot invite yourself
+      if (user.email === toEmail)
+        return res
+          .status(400)
+          .json({ msg: 'Sorry but you cannot invite yourself', toEmail });
+
+      //If toEmail is already in current user's contacts
+      const alreadyFriends = user.contacts.find(
+        (contact) => contact.email.toString() === toEmail,
+      );
+
+      if (alreadyFriends) {
+        return res
+          .status(400)
+          .json({ msg: 'Email already in user contacts.', toEmail });
+      }
+
+      //from email must match sendGrid account email
       const msg = {
         to: toEmail,
         from: 'teamcocoapuffs1@gmail.com',
         subject: 'WorldChat: A friend has invited you to chat!',
-        text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000/register`,
+        text: `Your friend ${user.email} is asking you to join our platform at http://localhost:3000/signup?referral=${user.email}`,
       };
 
       sgMail.send(msg, (err, info) => {
@@ -328,8 +404,8 @@ router.post(
 );
 
 //GET user contacts PRIVATE ROUTE
-router.get('/:id/contacts', auth, async (req, res) => {
-  const userId = req.params.id;
+router.get('/contacts', auth, async (req, res) => {
+  const userId = req.user.id;
   try {
     const user = await User.findById(userId).select('-password');
 

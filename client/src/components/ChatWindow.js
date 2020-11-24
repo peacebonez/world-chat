@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ChatWindow = (props) => {
+const ChatWindow = () => {
   const classes = useStyles();
   const { socket } = useContext(UserContext);
   const [chat, setChat] = useState([]); // an array of "data's"
@@ -50,7 +50,5 @@ const ChatWindow = (props) => {
     </div>
   );
 };
-
-ChatWindow.propTypes = {};
 
 export default ChatWindow;

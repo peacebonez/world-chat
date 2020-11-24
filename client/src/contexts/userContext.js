@@ -27,7 +27,7 @@ const UserProvider = (props) => {
 
         if (res.status === 200) {
           const data = await res.data;
-          console.log('res:', res);
+
           dispatch({ type: UPDATE_USER, payload: data });
         } else {
           // if error then redirect to login

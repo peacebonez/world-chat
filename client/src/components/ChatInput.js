@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ChatInput = (props) => {
+const ChatInput = () => {
   const classes = useStyles();
   const { socket, userState } = useContext(UserContext);
 
@@ -46,13 +46,9 @@ const ChatInput = (props) => {
           fullWidth
           autoFocus
           placeholder="Type something..."
-          value={message}
-          InputProps={
-            {
-              // endAdornment: [<Smiley />, <PhotosIcon />],
-            }
-          }
-          onChange={(e) => setMessage(e.target.value)}
+          InputProps={{
+            endAdornment: [<Smiley key={1} />, <PhotosIcon key={2} />],
+          }}
         />
         <Button 
           variant="outlined" 
@@ -65,7 +61,5 @@ const ChatInput = (props) => {
     </div>
   );
 };
-
-ChatInput.propTypes = {};
 
 export default ChatInput;
