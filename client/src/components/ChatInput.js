@@ -1,7 +1,8 @@
 import React from 'react';
-import { TextField } from '@material-ui/core';
+import { TextField, Button } from '@material-ui/core';
 import Smiley from '@material-ui/icons/InsertEmoticonOutlined';
 import PhotosIcon from '@material-ui/icons/PhotoLibraryOutlined';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -31,11 +32,12 @@ const ChatInput = () => {
             endAdornment: [<Smiley key={1} />, <PhotosIcon key={2} />],
           }}
         />
+        <Button variant="outlined" color="primary">
+          <ChevronRightIcon />
+        </Button>
       </form>
     </div>
   );
 };
-
-ChatInput.propTypes = {};
 
 export default ChatInput;

@@ -1,7 +1,8 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-
 import ChatInput from './ChatInput';
+
+import { makeStyles } from '@material-ui/core/styles';
+require('dotenv').config();
 
 const useStyles = makeStyles((theme) => ({
   chatWindow: {
@@ -18,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ChatWindow = () => {
   const classes = useStyles();
+
   return (
     <div className={classes.chatWindow}>
       chat window!
@@ -25,7 +27,5 @@ const ChatWindow = () => {
     </div>
   );
 };
-
-ChatWindow.propTypes = {};
 
 export default ChatWindow;

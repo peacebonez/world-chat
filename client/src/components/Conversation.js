@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Conversation = () => {
   const classes = useStyles();
+
   return (
     <div className={classes.conversation}>
       <Navbar />
