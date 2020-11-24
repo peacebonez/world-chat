@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 const ChatWindow = (props) => {
   const classes = useStyles();
   const { socket } = useContext(UserContext);
-  const [chat, setChat] = useState([]);
+  const [chat, setChat] = useState([]); // an array of "data's"
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -31,7 +31,7 @@ const ChatWindow = (props) => {
       console.log('successfull joined', room);
     });
 
-    socket.on('newMessage', (data) => {
+    socket.on('messageFromServer', (data) => {
       console.log('new message coming in', data);
       setChat((prevChat) => [...prevChat, data]);
     });
@@ -41,10 +41,10 @@ const ChatWindow = (props) => {
     <div className={classes.chatWindow}>
       chat window!
       <ul>
-        {chat.map((message) => (
+        {chat.map((datum) => (
 
-          <li key={message.createdOn}>
-            {message.message} by {message.email}
+          <li key={datum.createdOn}>
+            {datum.message} by {datum.email} on {datum.createdOn}
           </li>
         ))}
       </ul>

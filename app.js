@@ -81,11 +81,11 @@ io.on('connection', (socket) => {
   });
 
   // when the client emits 'new message', this listens and executes
-  socket.on('newMessage', (data) => {
-    console.log('new message', data);
-  });
+  // socket.on('newMessage', (data) => {
+  //   console.log('new message', data);
+  // });
 
-  socket.on('message', async (data) => {
+  socket.on('messageToClient', async (data) => {
     // TODO: you might want to pass in more useful info such as name and avatar pic
     const { room, email, message, chatRoomName} = data;
     const createdOn = new Date();
@@ -101,7 +101,7 @@ io.on('connection', (socket) => {
     //   author,
     //   message: message,
     // });
-    socket.emit('newMessage', { ...data, createdOn });
+    socket.emit('messageFromServer', { ...data, createdOn });
   });
 });
 

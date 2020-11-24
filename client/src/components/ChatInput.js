@@ -27,14 +27,14 @@ const ChatInput = (props) => {
 
   const sendMessage = (e) => {
     e.preventDefault();
-
+    console.log(userState)
     const data = {
       email: userState.user.email,
-      message: message,
+      message,
       room: 123,
     };
     console.log(data.message)
-    socket.emit('message', data);
+    socket.emit('messageToClient', data);
     setMessage('');
   };
 
