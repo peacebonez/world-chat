@@ -36,10 +36,8 @@ router.post(
       }
 
       const payload = {
-        user: {
-          id: user._id,
-          email,
-        },
+        id: user._id,
+        email,
       };
 
       // success -> Get a JWT Token
@@ -101,10 +99,8 @@ router.post(
 
       //Set up the jwt payload to user ID and email option
       const payload = {
-        user: {
-          id: user._id,
-          email,
-        },
+        id: user._id,
+        email,
       };
 
       // success -> Get a JWT Token
