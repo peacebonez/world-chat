@@ -1,28 +1,23 @@
-import React, {useEffect} from "react";
-import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 
-import ChatWindow from "./ChatWindow";
+import ChatWindow from './ChatWindow';
 
-import Navbar from "./Navbar";
-require('dotenv').config();
-
-const serverURL = process.env.serverURL;
+import Navbar from './Navbar';
 
 const useStyles = makeStyles((theme) => ({
   conversation: {
     background: theme.palette.primary.gray,
-    height: "100vh",
-    width: "66.66%",
-    position: "absolute",
+    height: '100vh',
+    width: '66.66%',
+    position: 'absolute',
     right: 0,
   },
 }));
 
-const Conversation = (props) => {
+const Conversation = () => {
   const classes = useStyles();
 
-  
   return (
     <div className={classes.conversation}>
       <Navbar />
@@ -30,7 +25,5 @@ const Conversation = (props) => {
     </div>
   );
 };
-
-Conversation.propTypes = {};
 
 export default Conversation;

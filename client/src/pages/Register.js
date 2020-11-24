@@ -82,7 +82,7 @@ export default function Register() {
       }, 5000);
     }
     return () => clearTimeout(timer);
-  });
+  }, [name, email, password.length, primaryLanguage, errorBackend]);
 
   const isEmail = (email) => /^\S+@\S+$/.test(email);
   const isName = (name) => /^[A-Z]+$/i.test(name);
