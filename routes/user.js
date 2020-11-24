@@ -9,6 +9,7 @@ require('dotenv').config({ path: '../.env' });
 const sgMail = require('@sendgrid/mail');
 const User = require('../models/User');
 const Invitation = require('../models/Invitation');
+const Conversation = require('../models/Conversation');
 
 const JWT_EXPIRY_TIME = 30 * 60 * 60 * 24; // 30 days
 
@@ -128,9 +129,11 @@ router.post(
 );
 
 router.get(
-  '/:id',
+  '/get_current_user',
+  auth,
   runAsyncWrapper(async function (req, res) {
-    const user = await User.findById(req.params.id);
+    const userEmail = req.user.email;
+    const user = await User.findOne({ email: userEmail });
 
     if (!user) {
       return res.status(400).json({ error: 'User not found' });
@@ -141,11 +144,9 @@ router.get(
 );
 
 router.get(
-  '/get_current_user',
-  auth,
+  '/:id',
   runAsyncWrapper(async function (req, res) {
-    const userEmail = req.user.email;
-    const user = await User.findOne({ email: userEmail });
+    const user = await User.findById(req.params.id);
 
     if (!user) {
       return res.status(400).json({ error: 'User not found' });
@@ -162,6 +163,32 @@ router.get(
     return res.status(200).json(users);
   }),
 );
+
+//GET all user conversations PRIVATE
+router.get('/conversations', auth, async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' });
+    }
+
+    const conversations = await Conversation.find({
+      members: { _id: userId },
+    });
+
+    if (conversations.length < 1) {
+      return res.status(204).json({ error: 'No conversations found' });
+    }
+
+    return res.status(200).json({ conversations });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 //GET all user outgoing invitations PRIVATE ROUTE
 router.get('/:id/invitations/out', auth, async (req, res) => {

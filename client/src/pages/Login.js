@@ -115,7 +115,7 @@ export default function Login() {
       <Box className={classes.outerMargins}>
         <Box display="flex" className={classes.marginBottom50}>
           <Typography variant="subtitle1" className={classes.grayText}>Don't have an account? </Typography>
-          <Link to="/" className={classes.noUnderlineLink}>
+          <Link to="/signup" className={classes.noUnderlineLink}>
             <Button size="large" variant="outlined" color="primary" className={classes.createAccountButton}>
                 Create account
             </Button>

@@ -52,7 +52,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function Landing() {
+export default function Register() {
   const history = useHistory();
   const classes = useStyles();
 
@@ -154,7 +154,7 @@ export default function Landing() {
       <Box className={classes.outerMargins}>
         <Box display="flex" className={classes.marginBottom50}>
           <Typography variant="subtitle1" className={classes.grayText}>Already have an account? </Typography>
-          <Link to="/login" className={classes.noUnderlineLink}>
+          <Link to="/" className={classes.noUnderlineLink}>
             <Button
               size="large"
               variant="outlined"
