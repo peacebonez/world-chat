@@ -28,7 +28,7 @@ const ChatWindow = (props) => {
     });
 
     socket.on('roomJoined', (room) => {
-      console.log('successfull joined', room);
+      console.log('successfully joined', room);
     });
 
     socket.on('messageFromServer', (data) => {
@@ -39,10 +39,8 @@ const ChatWindow = (props) => {
 
   return (
     <div className={classes.chatWindow}>
-      chat window!
       <ul>
         {chat.map((datum) => (
-
           <li key={datum.createdOn}>
             {datum.message} by {datum.email} on {datum.createdOn}
           </li>
