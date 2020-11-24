@@ -34,10 +34,6 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     cursor: 'pointer',
     zIndex: 2,
-    // '&:hover': {
-    //   opacity: 0.5,
-    //   background: '#000',
-    // },
   },
   sideBarImgHover: {
     opacity: 0.5,
@@ -73,16 +69,39 @@ const useStyles = makeStyles((theme) => ({
 const SideBarHeader = () => {
   const { userState } = useContext(UserContext);
   const classes = useStyles();
+  const [userAvatar, setUserAvatar] = useState(happyChatter);
   const [isHover, setIsHover] = useState(false);
+
+  const onFileChange = (e) => {
+    setUserAvatar(e.target.files[0]);
+  };
+
+  const onFileUpload = () => {
+    const formData = new FormData();
+
+    formData.append(
+      'avatar',
+      userAvatar,
+      userState.user.email + '_' + 'avatar',
+    );
+  };
+
   return (
     <div className={classes.sideBarHeader}>
       <div>
-        {/* <input
+        <input
           type="file"
           name="avatar"
           id="avatar"
           accept="image/png, image/jpeg"
-        /> */}
+        />
+        {/* <form
+          action="/file-upload"
+          name="avatar"
+          method="post"
+          enctype="multipart/form-data"
+          className="dropzone"
+        > */}
         <div className={classes.sideBarImgWrapper}>
           <AddIcon
             className={`${classes.addIcon} ${isHover && classes.shown} `}
@@ -90,7 +109,7 @@ const SideBarHeader = () => {
             onMouseOut={() => setIsHover(false)}
           />
           <img
-            src={userState.user.avatar ? userState.user.avatar : happyChatter}
+            src={userState.user.avatar ? userState.user.avatar : userAvatar}
             className={`${classes.sideBarImg} ${
               isHover && classes.sideBarImgHover
             }`}
@@ -102,6 +121,7 @@ const SideBarHeader = () => {
             className={`${classes.statusIcon} ${classes.onlineIcon}`}
           ></span>
         </div>
+        {/* </form> */}
         <Typography variant="h5">{userState.user.name}</Typography>
       </div>
       <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
