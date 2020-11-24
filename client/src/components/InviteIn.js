@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const InviteIn = ({ invite, handleApproveRequest, handleRejectRequest }) => {
+const InviteIn = ({ invite, handleApproveOrReject }) => {
   const { referrer, referrerEmail } = invite;
   const classes = useStyles();
 
@@ -67,13 +67,13 @@ const InviteIn = ({ invite, handleApproveRequest, handleRejectRequest }) => {
       <div>
         <button
           className={classes.button}
-          onClick={() => handleApproveRequest(invite)}
+          onClick={() => handleApproveOrReject(invite, 'approve')}
         >
           <CheckIcon className={`${classes.icon} ${classes.check}`} />
         </button>
         <button
           className={classes.button}
-          onClick={() => handleRejectRequest(invite)}
+          onClick={() => handleApproveOrReject(invite, 'reject')}
         >
           <ClearIcon className={`${classes.icon} ${classes.cross}`} />
         </button>

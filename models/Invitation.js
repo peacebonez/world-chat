@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
+// const User = require('./User');
 
 const InvitationSchema = new Schema(
   {
@@ -23,14 +24,23 @@ const InvitationSchema = new Schema(
       default: Date.now,
     },
   },
-  {
-    toJSON: {
-      transform: function (doc, ret) {},
-    },
-    toObject: {
-      transform: function (doc, ret) {},
-    },
-  },
+  //Was trying to add referralEmail here but did not succeed.
+  // {
+  //   toJSON: {
+  //     transform: async function (doc, ret) {
+  //       const user = await User.findById(doc.referrer);
+  //       ret.referrerEmail = user.email;
+  //       return ret;
+  //     },
+  //   },
+  //   toObject: {
+  //     transform: async function (doc, ret) {
+  //       const user = await User.findById(doc.referrer);
+  //       ret.referrerEmail = user.email;
+  //       return ret;
+  //     },
+  //   },
+  // },
 );
 
-module.exports = User = mongoose.model('invitation', InvitationSchema);
+module.exports = Invitation = mongoose.model('invitation', InvitationSchema);

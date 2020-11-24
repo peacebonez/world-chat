@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../contexts/userContext';
 import axios from 'axios';
 
 import InviteIn from './InviteIn';
@@ -39,7 +38,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Invites = () => {
   const classes = useStyles();
-  const { userState } = useContext(UserContext);
 
   const [showRequests, setShowRequests] = useState(true);
   const [showSent, setShowSent] = useState(false);
@@ -56,21 +54,17 @@ const Invites = () => {
     setShowRequests(false);
   };
 
-  //both of these will need to make API calls to save modified state
-  const handleApproveRequest = async (invite) => {
+  const handleApproveOrReject = async (invite, type) => {
     try {
-      await axios.put(`/invitation/${invite._id}/approve`);
+      await axios.put(`/invitation/${invite._id}/${type}`);
+      const invitesCopy = invites;
+      invitesCopy.pendingInvitesIn.splice(invite.index, 1);
+      setInvites(invitesCopy);
     } catch (err) {
       console.log(err.message);
     }
   };
-  const handleRejectRequest = async (invite) => {
-    try {
-      await axios.put(`/invitation/${invite._id}/reject`);
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
+
   useEffect(() => {
     //axios fetch all the PENDING invites user has sent and received
     //is called whenever a change in invitations takes place
@@ -94,11 +88,10 @@ const Invites = () => {
         console.log(err.message);
         setInvitesErrorMsg('Error fetching invites');
         setInvites(true);
-        //server error
         //dispatch user error
       }
     })();
-  }, [invites]);
+  }, []);
 
   //clears the backend error alert msg
   useEffect(() => {
@@ -136,6 +129,7 @@ const Invites = () => {
         {showRequests && (
           <ul className={classes.inviteUl}>
             {invites &&
+              invites.pendingInvitesIn.length > 0 &&
               invites.pendingInvitesIn.map((invite, index) => {
                 invite.index = index;
                 return (
@@ -143,8 +137,7 @@ const Invites = () => {
                     key={invite._id}
                     invite={invite}
                     invitesIn={invites.pendingInvitesIn}
-                    handleApproveRequest={handleApproveRequest}
-                    handleRejectRequest={handleRejectRequest}
+                    handleApproveOrReject={handleApproveOrReject}
                   />
                 );
               })}
@@ -154,6 +147,7 @@ const Invites = () => {
         {showSent && (
           <ul className={classes.inviteUl}>
             {invites &&
+              invites.pendingInvitesOut.length > 0 &&
               invites.pendingInvitesOut.map((invite) => (
                 <InviteOut key={invite._id} invite={invite} />
               ))}

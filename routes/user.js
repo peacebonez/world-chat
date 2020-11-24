@@ -230,6 +230,10 @@ router.get('/invitations/in', auth, async (req, res) => {
 //GET all user incoming PENDING invitations PRIVATE
 router.get('/invitations/pending', auth, async (req, res) => {
   const userId = req.user.id;
+  let invites = {
+    pendingInvitesIn: [],
+    pendingInvitesOut: [],
+  };
   try {
     const user = await User.findById(userId);
 
@@ -242,25 +246,18 @@ router.get('/invitations/pending', auth, async (req, res) => {
       status: 'pending',
     });
 
-    //need to find each user by ID and then retrieve their email
-    for (let invite of pendingInvitesIn) {
-      const user = await User.findById(invite.referrer);
-      invite.referrerEmail = user.email;
-      await invite.save();
-    }
-
     const pendingInvitesOut = await Invitation.find({
       referrer: userId,
       status: 'pending',
     });
 
-    const invites = {
+    invites = {
       pendingInvitesIn,
       pendingInvitesOut,
     };
 
     if (invites.pendingInvitesIn.length < 1 && invites.pendingInvitesOut < 1) {
-      return res.status(204).json({ invites, msg: 'No invites' });
+      return res.status(204).json(invites);
     }
 
     res.json(invites);
@@ -298,12 +295,15 @@ router.post(
           .status(400)
           .json({ msg: 'Sorry but you cannot invite yourself', toEmail });
 
-      // check if receiver is already on the platform
-      // const isReceiverAlreadyMember = await User.findOne({ email: toEmail });
+      /*
+      THIS IS AN OPTIONAL CONDITION WE MAY WANT TO IMPLEMENT
+      check if receiver is already on the platform
+      const isReceiverAlreadyMember = await User.findOne({ email: toEmail });
 
-      // if (isReceiverAlreadyMember) {
-      //   return res.status(400).json({ msg: 'User not on platform', toEmail });
-      // }
+      if (isReceiverAlreadyMember) {
+        return res.status(400).json({ msg: 'User not on platform', toEmail });
+      }
+      */
 
       //Find all invitations sent to the receiver
       const invitations = await Invitation.find({ toEmail });
@@ -322,6 +322,7 @@ router.post(
 
       const newInvitation = new Invitation({
         referrer: user,
+        referrerEmail: user.email,
         toEmail,
       });
 
