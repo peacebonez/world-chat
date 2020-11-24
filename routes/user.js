@@ -299,11 +299,11 @@ router.post(
           .json({ msg: 'Sorry but you cannot invite yourself', toEmail });
 
       // check if receiver is already on the platform
-      const isReceiverAlreadyMember = await User.findOne({ email: toEmail });
+      // const isReceiverAlreadyMember = await User.findOne({ email: toEmail });
 
-      if (isReceiverAlreadyMember) {
-        return res.status(400).json({ msg: 'User not on platform', toEmail });
-      }
+      // if (isReceiverAlreadyMember) {
+      //   return res.status(400).json({ msg: 'User not on platform', toEmail });
+      // }
 
       //Find all invitations sent to the receiver
       const invitations = await Invitation.find({ toEmail });

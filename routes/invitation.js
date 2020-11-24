@@ -66,11 +66,12 @@ router.put('/:id/approve', auth, async (req, res) => {
       toEmail: sender.email,
       referrer: receiver.id,
     });
-    if (receiverInvitationToUser) receiverInvitationToUser.status = 'approved';
+    if (receiverInvitationToUser) {
+      receiverInvitationToUser.status = 'approved';
+      await receiverInvitationToUser.save();
+    }
 
     await invitation.save();
-
-    await receiverInvitationToUser.save();
 
     await sender.save();
 
