@@ -52,7 +52,7 @@ router.post('/login', async (req, res) => {
         return res
           .status(201)
           .cookie('token', token, { httpOnly: true })
-          .json({ token, msg: 'User Authenticated' });
+          .json(user);
       },
     );
   } catch (err) {
