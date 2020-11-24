@@ -165,8 +165,8 @@ router.get(
 );
 
 //GET all user conversations PRIVATE
-router.get('/:id/conversations', auth, async (req, res) => {
-  const userId = req.params.id;
+router.get('/conversations', auth, async (req, res) => {
+  const userId = req.user.id;
 
   try {
     const user = await User.findById(userId);
