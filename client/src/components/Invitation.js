@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
   },
   invitationLink: {
-    width: 400,
+    marginTop: theme.spacing(2),
   },
   invitationDialogueP: {
     fontWeight: 'bold',
@@ -70,7 +70,7 @@ export default function FormDialog() {
   const [notifyOpen, setNotifyOpen] = useState(false);
 
   const userId = userState.user.id;
-  const inviteUrl = 'https://www.worldchat.com/join/' + userState.user.email;
+  const inviteUrl = `https://www.worldchat.com/signup?referral=${userState.user.email}`;
 
   /*generate unique id for URL */
 
@@ -141,11 +141,7 @@ export default function FormDialog() {
 
   const createInvite = async (toEmail) => {
     try {
-      const res = await axios.post(
-        `/user/${userId}/invitation`,
-        { toEmail },
-        config,
-      );
+      const res = await axios.post(`/user/invitation`, { toEmail }, config);
 
       return res;
     } catch (err) {
@@ -156,7 +152,7 @@ export default function FormDialog() {
   const sendInvite = async (toEmail) => {
     try {
       const res = await axios.post(
-        `/user/${userId}/invitation/send`,
+        `/user/invitation/send`,
         { toEmail },
         config,
       );

@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
-import happyChatter from '../assets/happy-chatter.png';
 import PropTypes from 'prop-types';
 import tempAvatar from '../assets/temp-avatar.jpg';
 
@@ -41,9 +40,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Contact = ({ contact }) => {
-  //test hard code
+  //test isOnline hard code
   let isOnline = 'true';
-  console.log('contact:', contact);
   const classes = useStyles();
   return (
     <li className={classes.sideBarHeader}>
@@ -66,6 +64,8 @@ const Contact = ({ contact }) => {
   );
 };
 
-Contact.propTypes = {};
+Contact.propTypes = {
+  contact: PropTypes.object.isRequired,
+};
 
 export default Contact;

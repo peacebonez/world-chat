@@ -43,41 +43,15 @@ const SideBarSearch = ({
   chatsShown,
   invitesShown,
   contactsShown,
-  setChatsShown,
-  setContactsShown,
-  setInvitesShown,
+  handleInvitesShow,
+  handleContactsShow,
+  handleChatsShow,
 }) => {
   const classes = useStyles();
-
-  const showComponent = (type) => {
-    switch (type) {
-      case 'Chats':
-        setChatsShown(true);
-        setContactsShown(false);
-        setInvitesShown(false);
-        break;
-      case 'Contacts':
-        setChatsShown(false);
-        setContactsShown(true);
-        setInvitesShown(false);
-        break;
-      case 'Invites':
-        setChatsShown(false);
-        setContactsShown(false);
-        setInvitesShown(true);
-        break;
-      default:
-        break;
-    }
-  };
-
   return (
     <div className={classes.wrapper}>
       <div>
-        <button
-          className={classes.noStyleBtn}
-          onClick={(e) => showComponent(e.target.innerHTML)}
-        >
+        <button className={classes.noStyleBtn} onClick={handleChatsShow}>
           <Typography
             display="inline"
             variant="h6"
@@ -88,10 +62,7 @@ const SideBarSearch = ({
             Chats
           </Typography>
         </button>
-        <button
-          className={classes.noStyleBtn}
-          onClick={(e) => showComponent(e.target.innerHTML)}
-        >
+        <button className={classes.noStyleBtn} onClick={handleContactsShow}>
           <Typography
             display="inline"
             variant="h6"
@@ -102,10 +73,7 @@ const SideBarSearch = ({
             Contacts
           </Typography>
         </button>
-        <button
-          className={classes.noStyleBtn}
-          onClick={(e) => showComponent(e.target.innerHTML)}
-        >
+        <button className={classes.noStyleBtn} onClick={handleInvitesShow}>
           <Typography
             display="inline"
             variant="h6"
@@ -137,6 +105,13 @@ const SideBarSearch = ({
   );
 };
 
-SideBarSearch.propTypes = {};
+SideBarSearch.propTypes = {
+  chatsShown: PropTypes.bool,
+  invitesShown: PropTypes.bool,
+  contactsShown: PropTypes.bool,
+  handleInvitesShow: PropTypes.func.isRequired,
+  handleChatsShow: PropTypes.func.isRequired,
+  handleContactsShow: PropTypes.func.isRequired,
+};
 
 export default SideBarSearch;

@@ -18,6 +18,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Background from '../assets/background.png';
 require('dotenv').config();
 const useStyles = makeStyles({
+  noUnderlineLink: {
+    textDecoration: 'none'
+  },
   outerMargins: {
     marginTop: '2%',
     paddingLeft: '10%',
@@ -28,8 +31,8 @@ const useStyles = makeStyles({
   marginBottom50: {
     marginBottom: '50%',
   },
-  marginLeft10: {
-    marginLeft: '10%',
+  loginButton: {
+    marginLeft: '10%'
   },
   marginBottom5: {
     marginBottom: '5%',
@@ -40,9 +43,16 @@ const useStyles = makeStyles({
   errors: {
     color: 'red',
   },
+  grayText: {
+    color: '#9c9c9c'
+  }, 
+  createButton: {
+    width: '60%',
+    margin: 'auto'
+  }
 });
 
-export default function Landing() {
+export default function Register() {
   const history = useHistory();
   const classes = useStyles();
 
@@ -72,7 +82,7 @@ export default function Landing() {
       }, 5000);
     }
     return () => clearTimeout(timer);
-  });
+  }, [name, email, password.length, primaryLanguage, errorBackend]);
 
   const isEmail = (email) => /^\S+@\S+$/.test(email);
   const isName = (name) => /^[A-Z]+$/i.test(name);
@@ -143,12 +153,13 @@ export default function Landing() {
       {/** The right side, the sign up */}
       <Box className={classes.outerMargins}>
         <Box display="flex" className={classes.marginBottom50}>
-          <Typography variant="h5">Already have an account? </Typography>
-          <Link to="/login">
+          <Typography variant="subtitle1" className={classes.grayText}>Already have an account? </Typography>
+          <Link to="/" className={classes.noUnderlineLink}>
             <Button
+              size="large"
               variant="outlined"
               color="primary"
-              className={classes.marginLeft10}
+              className={classes.loginButton}
             >
               Login
             </Button>
@@ -218,7 +229,13 @@ export default function Landing() {
           <Typography variant="h6" className={classes.errors}>
             {errorLanguage}
           </Typography>
-          <Button variant="contained" color="primary" onClick={handleSubmit}>
+          <Button 
+            className={classes.createButton}
+            variant="contained" 
+            size="large"
+            color="primary" 
+            onClick={handleSubmit}
+          >
             Create
           </Button>
         </Box>

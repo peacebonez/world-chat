@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
@@ -48,8 +48,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const InviteIn = ({ invite, handleApproveRequest, handleRejectRequest }) => {
-  const { referrer } = invite;
+const InviteIn = ({ invite, handleApproveOrReject }) => {
+  const { referrer, referrerEmail } = invite;
   const classes = useStyles();
 
   return (
@@ -62,20 +62,18 @@ const InviteIn = ({ invite, handleApproveRequest, handleRejectRequest }) => {
             className={classes.sideBarImg}
           />
         </div>
-        <Typography variant="body1">
-          {referrer.substr(0, 18) + '...'}
-        </Typography>
+        <Typography variant="body1">{referrerEmail}</Typography>
       </div>
       <div>
         <button
           className={classes.button}
-          onClick={() => handleApproveRequest(invite)}
+          onClick={() => handleApproveOrReject(invite, 'approve')}
         >
           <CheckIcon className={`${classes.icon} ${classes.check}`} />
         </button>
         <button
           className={classes.button}
-          onClick={() => handleRejectRequest(invite)}
+          onClick={() => handleApproveOrReject(invite, 'reject')}
         >
           <ClearIcon className={`${classes.icon} ${classes.cross}`} />
         </button>

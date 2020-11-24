@@ -17,6 +17,9 @@ import Background from '../assets/background.png';
 require('dotenv').config();
 
 const useStyles = makeStyles({
+  noUnderlineLink: {
+    textDecoration: 'none'
+  },
   inline: {
     inline: 'true',
   },
@@ -30,12 +33,21 @@ const useStyles = makeStyles({
   marginBottom50: {
     marginBottom: '50%',
   },
-  marginLeft15: {
-    marginLeft: '15%',
+  grayText: {
+    color: '#9c9c9c'
   },
   marginBottom5: {
     marginBottom: '5%',
   },
+  createAccountButton: {
+    marginLeft: '15%',
+    outline: 'none'
+  },
+  loginButton: {
+    marginTop: '15%',
+    width: '60%',
+    margin: 'auto'
+  }
 });
 
 export default function Login() {
@@ -86,7 +98,7 @@ export default function Login() {
       }, 1000);
     }
     return () => clearTimeout(timer);
-  });
+  }, [email, password.length, backendError]);
 
   return (
     <Box display="flex">
@@ -104,14 +116,10 @@ export default function Login() {
       {/** The right side, the sign up */}
       <Box className={classes.outerMargins}>
         <Box display="flex" className={classes.marginBottom50}>
-          <Typography variant="h5">Don't have an account? </Typography>
-          <Link to="/">
-            <Button
-              variant="outlined"
-              color="primary"
-              className={classes.marginLeft15}
-            >
-              Create account
+          <Typography variant="subtitle1" className={classes.grayText}>Don't have an account? </Typography>
+          <Link to="/signup" className={classes.noUnderlineLink}>
+            <Button size="large" variant="outlined" color="primary" className={classes.createAccountButton}>
+                Create account
             </Button>
           </Link>
         </Box>
@@ -143,7 +151,13 @@ export default function Login() {
               errorPassword && 'Password must be at least 6 characters.'
             }
           />
-          <Button variant="contained" color="primary" onClick={handleClick}>
+          <Button 
+            variant="contained"
+            size="large" 
+            color="primary" 
+            onClick={handleClick}
+            className={classes.loginButton}
+          >
             Login
           </Button>
         </Box>

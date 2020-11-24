@@ -27,6 +27,8 @@ const InviteOut = ({ invite }) => {
   );
 };
 
-InviteOut.propTypes = {};
+InviteOut.propTypes = {
+  invite: PropTypes.object.isRequired,
+};
 
 export default InviteOut;

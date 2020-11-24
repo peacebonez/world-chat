@@ -28,11 +28,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Sidebar = (props) => {
+const Sidebar = () => {
   const [chatsShown, setChatsShown] = useState(true);
   const [contactsShown, setContactsShown] = useState(false);
   const [invitesShown, setInvitesShown] = useState(false);
   const classes = useStyles();
+
+  const handleChatsShow = () => {
+    setChatsShown(true);
+    setContactsShown(false);
+    setInvitesShown(false);
+  };
+  const handleContactsShow = () => {
+    setChatsShown(false);
+    setContactsShown(true);
+    setInvitesShown(false);
+  };
+  const handleInvitesShow = () => {
+    setChatsShown(false);
+    setContactsShown(false);
+    setInvitesShown(true);
+  };
 
   return (
     <div className={classes.sideBar}>
@@ -41,9 +57,9 @@ const Sidebar = (props) => {
         chatsShown={chatsShown}
         invitesShown={invitesShown}
         contactsShown={contactsShown}
-        setChatsShown={setChatsShown}
-        setContactsShown={setContactsShown}
-        setInvitesShown={setInvitesShown}
+        handleChatsShow={handleChatsShow}
+        handleContactsShow={handleContactsShow}
+        handleInvitesShow={handleInvitesShow}
       />
       <div className={classes.listContainer}>
         {chatsShown && <ChatList />}
@@ -53,7 +69,5 @@ const Sidebar = (props) => {
     </div>
   );
 };
-
-Sidebar.propTypes = {};
 
 export default Sidebar;

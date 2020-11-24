@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
   noStyleBtn: {
     border: 'none',
     background: 'none',
-    // outline: 'none',
     cursor: 'pointer',
   },
   statusIcon: {
@@ -54,8 +53,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SideBarHeader = () => {
-  const history = useHistory();
   const { userState } = useContext(UserContext);
+  const history = useHistory()
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -83,6 +82,7 @@ const SideBarHeader = () => {
         <div className={classes.sideBarImgWrapper}>
           <img
             src={userState.user.avatar ? userState.user.avatar : happyChatter}
+            alt="user avatar"
             className={classes.sideBarImg}
           />
           <span
@@ -105,7 +105,5 @@ const SideBarHeader = () => {
     </div>
   );
 };
-
-SideBarHeader.propTypes = {};
 
 export default SideBarHeader;

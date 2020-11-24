@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
-import { UserContext } from '../contexts/userContext';
 import axios from 'axios';
 
 import InviteIn from './InviteIn';
 import InviteOut from './InviteOut';
 
 import { makeStyles } from '@material-ui/core/styles';
+import Alert from '@material-ui/lab/Alert';
+import { Snackbar } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -36,16 +36,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Invites = (props) => {
-  let history = useHistory();
+const Invites = () => {
   const classes = useStyles();
-  const { userState } = useContext(UserContext);
-  console.log('userState:', userState);
 
   const [showRequests, setShowRequests] = useState(true);
   const [showSent, setShowSent] = useState(false);
   const [invites, setInvites] = useState(null);
-  console.log('invites:', invites);
+  const [invitesError, setInvitesError] = useState(false);
+  const [invitesErrorMsg, setInvitesErrorMsg] = useState('');
 
   const requestsShow = () => {
     setShowRequests(true);
@@ -56,23 +54,12 @@ const Invites = (props) => {
     setShowRequests(false);
   };
 
-  //both of these will need to make API calls to save modified state
-  const handleApproveRequest = async (invite) => {
-    console.log('invite:', invite);
+  const handleApproveOrReject = async (invite, type) => {
     try {
-      const res = await axios.put(`/invitation/${invite._id}/approve`);
-      return res;
-    } catch (err) {
-      console.log(err.message);
-    }
-
-    // invites.pendingInvitesIn.splice(invite.index, 1);
-  };
-  const handleRejectRequest = async (invite) => {
-    console.log('invite:', invite);
-    try {
-      const res = await axios.put(`/invitation/${invite._id}/reject`);
-      return res;
+      await axios.put(`/invitation/${invite._id}/${type}`);
+      const invitesCopy = { ...invites };
+      invitesCopy.pendingInvitesIn.splice(invite.index, 1);
+      setInvites(invitesCopy);
     } catch (err) {
       console.log(err.message);
     }
@@ -83,30 +70,39 @@ const Invites = (props) => {
     //is called whenever a change in invitations takes place
     (async function fetchPendingInvites() {
       try {
-        const res = await axios.get(
-          `user/${userState.user.id}/invitations/pending`,
-        );
+        const res = await axios.get(`user/invitations/pending`);
 
         //if response is ok or user has no invites
         if (res.status === 200 || res.status === 204) {
-          const pendingInvites = res.data;
-
           //sets invites to an object of pending in and out invites
+          const pendingInvites = res.data;
           return setInvites(pendingInvites);
         }
         if (res.status === 404 || res.status === 500) {
           //user not found
           //dispatch user error
-          history.push('/');
+          setInvitesErrorMsg('Error fetching invites');
+          setInvites(true);
         }
       } catch (err) {
         console.log(err.message);
-        //server error
+        setInvitesErrorMsg('Error fetching invites');
+        setInvites(true);
         //dispatch user error
-        // history.push('/');
       }
     })();
-  }, [invites]);
+  }, []);
+
+  //clears the backend error alert msg
+  useEffect(() => {
+    let timer;
+    if (invitesError) {
+      timer = setTimeout(() => {
+        setInvitesError(false);
+      }, 1000);
+    }
+    return () => clearTimeout(timer);
+  });
 
   return (
     <div className={classes.wrapper}>
@@ -133,15 +129,15 @@ const Invites = (props) => {
         {showRequests && (
           <ul className={classes.inviteUl}>
             {invites &&
+              invites.pendingInvitesIn.length > 0 &&
               invites.pendingInvitesIn.map((invite, index) => {
                 invite.index = index;
                 return (
                   <InviteIn
-                    key={invite.referrer}
+                    key={invite._id}
                     invite={invite}
                     invitesIn={invites.pendingInvitesIn}
-                    handleApproveRequest={handleApproveRequest}
-                    handleRejectRequest={handleRejectRequest}
+                    handleApproveOrReject={handleApproveOrReject}
                   />
                 );
               })}
@@ -151,101 +147,25 @@ const Invites = (props) => {
         {showSent && (
           <ul className={classes.inviteUl}>
             {invites &&
+              invites.pendingInvitesOut.length > 0 &&
               invites.pendingInvitesOut.map((invite) => (
-                <InviteOut key={invite} invite={invite} />
+                <InviteOut key={invite._id} invite={invite} />
               ))}
           </ul>
         )}
       </div>
+      {/* Error alerts */}
+      <Snackbar
+        open={invitesError}
+        autoHideDuration={2000}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert severity="error" variant="filled">
+          {invitesErrorMsg}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
 
-Invites.propTypes = {};
-
 export default Invites;
-
-//will actually load userState.user.email
-const testReferrer = {
-  email: 'test@aol.com',
-};
-const testInvitesIn = [
-  {
-    referrer: testReferrer.email,
-    toEmail: 'friend0@aol.com',
-    name: 'friend0',
-    status: 'pending',
-    createdAt: '11/11/2020',
-  },
-  {
-    referrer: testReferrer.email,
-    toEmail: 'friend1@aol.com',
-    name: 'friend1',
-    status: 'pending',
-    createdAt: '11/11/2020',
-  },
-  {
-    referrer: testReferrer.email,
-    toEmail: 'friend2@aol.com',
-    name: 'friend2',
-    status: 'pending',
-    createdAt: '11/11/2020',
-  },
-  {
-    referrer: testReferrer.email,
-    toEmail: 'friend3@aol.com',
-    name: 'friend3',
-    status: 'pending',
-    createdAt: '11/11/2020',
-  },
-  {
-    referrer: testReferrer.email,
-    toEmail: 'friend4@aol.com',
-    name: 'friend4',
-    status: 'pending',
-    createdAt: '11/11/2020',
-  },
-  {
-    referrer: testReferrer.email,
-    toEmail: 'friend5@aol.com',
-    name: 'friend5',
-    status: 'pending',
-    createdAt: '11/11/2020',
-  },
-  {
-    referrer: testReferrer.email,
-    toEmail: 'friend6@aol.com',
-    name: 'friend6',
-    status: 'pending',
-    createdAt: '11/11/2020',
-  },
-  {
-    referrer: testReferrer.email,
-    toEmail: 'friend7@aol.com',
-    name: 'friend7',
-    status: 'pending',
-    createdAt: '11/11/2020',
-  },
-  {
-    referrer: testReferrer.email,
-    toEmail: 'friend8@aol.com',
-    name: 'friend8',
-    status: 'pending',
-    createdAt: '11/11/2020',
-  },
-  {
-    referrer: testReferrer.email,
-    toEmail: 'friend9@aol.com',
-    name: 'friend9',
-    status: 'pending',
-    createdAt: '11/11/2020',
-  },
-];
-const testInvitesOut = [
-  'friend6@aol.com',
-  'friend7@aol.com',
-  'friend8@aol.com',
-  'friend9@aol.com',
-  'friend10@aol.com',
-  'friend11@aol.com',
-];
