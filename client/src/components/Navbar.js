@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 //TODOS
 //Will have 2 types of Navbars: group and one-on-one
 
-const Navbar = () => {
+const Navbar = (props) => {
   const classes = useStyles();
 
   return (

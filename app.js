@@ -88,7 +88,14 @@ io.on('connection', (socket) => {
   socket.on('messageToClient', async (data) => {
     // TODO: you might want to pass in more useful info such as name and avatar pic
     const { room, email, message, chatRoomName} = data;
-    const createdOn = new Date();
+    const now = new Date();
+    const createdOn = {
+      year: now.getFullYear(),
+      month: now.getMonth(),
+      date: now.getDate(),
+      hour: now.getHours(),
+      minute: now.getMinutes()
+    };
     // TODO: Save the message
     
     // const conversations = await Conversation.findAll({
@@ -100,8 +107,8 @@ io.on('connection', (socket) => {
     //   author,
     //   message: message,
     // });
-    socket.to('123').emit('messageFromServer', { ...data, createdOn });
-    socket.emit('messageFromServer', { ...data, createdOn });
+    socket.to('123').emit('messageFromServer', { ...data, createdOn }); // other person's message
+    socket.emit('messageFromServer', { ...data, createdOn }); // your message
   });
 });
 

@@ -49,6 +49,8 @@ const ChatInput = () => {
           InputProps={{
             endAdornment: [<Smiley key={1} />, <PhotosIcon key={2} />],
           }}
+          value={message} // b/c of setMessage(''), clears input field upon submit
+          onChange={e => setMessage(e.target.value)}
         />
         <Button 
           variant="outlined" 
