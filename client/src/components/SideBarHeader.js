@@ -77,6 +77,12 @@ const SideBarHeader = () => {
   return (
     <div className={classes.sideBarHeader}>
       <div>
+        {/* <input
+          type="file"
+          name="avatar"
+          id="avatar"
+          accept="image/png, image/jpeg"
+        /> */}
         <div className={classes.sideBarImgWrapper}>
           <AddIcon
             className={`${classes.addIcon} ${isHover && classes.shown} `}
@@ -91,6 +97,7 @@ const SideBarHeader = () => {
             onMouseOver={() => setIsHover(true)}
             onMouseOut={() => setIsHover(false)}
           />
+
           <span
             className={`${classes.statusIcon} ${classes.onlineIcon}`}
           ></span>
