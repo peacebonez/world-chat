@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import happyChatter from '../assets/happy-chatter.png';
 import { Typography } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 
 import { UserContext } from '../contexts/userContext';
 
@@ -31,6 +32,28 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     width: '70px',
     marginRight: theme.spacing(1),
+    cursor: 'pointer',
+    zIndex: 2,
+    // '&:hover': {
+    //   opacity: 0.5,
+    //   background: '#000',
+    // },
+  },
+  sideBarImgHover: {
+    opacity: 0.5,
+    background: '#000',
+  },
+  addIcon: {
+    color: '#fff',
+    position: 'absolute',
+    fontSize: '200%',
+    transform: 'translateX(17px)',
+    display: 'none',
+    zIndex: 3,
+    cursor: 'pointer',
+  },
+  shown: {
+    display: 'block',
   },
   dotMenu: {
     cursor: 'pointer',
@@ -41,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
     height: 12,
     border: 'solid white 1px',
     borderRadius: '50%',
+    zIndex: 4,
   },
   onlineIcon: { background: '#4DED84' },
   offlineIcon: { background: 'lightgray' },
@@ -49,13 +73,23 @@ const useStyles = makeStyles((theme) => ({
 const SideBarHeader = () => {
   const { userState } = useContext(UserContext);
   const classes = useStyles();
+  const [isHover, setIsHover] = useState(false);
   return (
     <div className={classes.sideBarHeader}>
       <div>
         <div className={classes.sideBarImgWrapper}>
+          <AddIcon
+            className={`${classes.addIcon} ${isHover && classes.shown} `}
+            onMouseOver={() => setIsHover(true)}
+            onMouseOut={() => setIsHover(false)}
+          />
           <img
             src={userState.user.avatar ? userState.user.avatar : happyChatter}
-            className={classes.sideBarImg}
+            className={`${classes.sideBarImg} ${
+              isHover && classes.sideBarImgHover
+            }`}
+            onMouseOver={() => setIsHover(true)}
+            onMouseOut={() => setIsHover(false)}
           />
           <span
             className={`${classes.statusIcon} ${classes.onlineIcon}`}
