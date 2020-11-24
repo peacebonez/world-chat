@@ -57,7 +57,7 @@ const Invites = () => {
   const handleApproveOrReject = async (invite, type) => {
     try {
       await axios.put(`/invitation/${invite._id}/${type}`);
-      const invitesCopy = invites;
+      const invitesCopy = { ...invites };
       invitesCopy.pendingInvitesIn.splice(invite.index, 1);
       setInvites(invitesCopy);
     } catch (err) {
