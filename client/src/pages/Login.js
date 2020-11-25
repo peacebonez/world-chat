@@ -55,7 +55,6 @@ export default function Login() {
   const classes = useStyles();
   const history = useHistory();
   const { userActions, userState } = useContext(UserContext);
-  console.log('userState:', userState);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
