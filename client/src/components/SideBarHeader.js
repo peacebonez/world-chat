@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import tempAvatar from '../assets/temp-avatar.jpg';
 import {
@@ -89,6 +90,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SideBarHeader = () => {
   const { userState } = useContext(UserContext);
+  const history = useHistory();
   const classes = useStyles();
 
   const [userAvatar, setUserAvatar] = useState(null);
@@ -119,6 +121,15 @@ const SideBarHeader = () => {
       console.log(err.message);
       setErrorAvatarMsg('Error uploading image');
       setErrorAvatar(true);
+    }
+  };
+
+  const handleLogout = async () => {
+    history.push('/');
+    await axios.get('/user/logout');
+    try {
+    } catch (err) {
+      console.log(err.message);
     }
   };
 
@@ -157,6 +168,7 @@ const SideBarHeader = () => {
           />
           <img
             src={userAvatar || tempAvatar}
+            alt="user-avatar"
             className={`${classes.sideBarImg} ${
               isHover && classes.sideBarImgHover
             }`}
@@ -177,7 +189,7 @@ const SideBarHeader = () => {
         keepMounted
         onClose={handleClose}
       >
-        <MenuItem>Logout</MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
       {/* Error alerts */}
       <Snackbar

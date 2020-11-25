@@ -49,7 +49,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const InviteIn = ({ invite, handleApproveOrReject }) => {
-  const { referrer, referrerEmail } = invite;
   const classes = useStyles();
 
   return (
@@ -62,7 +61,7 @@ const InviteIn = ({ invite, handleApproveOrReject }) => {
             className={classes.sideBarImg}
           />
         </div>
-        <Typography variant="body1">{referrerEmail}</Typography>
+        <Typography variant="body1">{invite.referrerEmail}</Typography>
       </div>
       <div>
         <button
