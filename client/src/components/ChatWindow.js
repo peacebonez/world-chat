@@ -65,11 +65,13 @@ const ChatWindow = () => {
     <div className={classes.chatWindow}>
       <ul>
         {chat.map((datum, index) => {   
-          console.log('datum: ', datum);
+          let yours = datum.email === userState.user.email;
+          console.log(datum.email, userState.user.email);
+          console.log(yours);
           return (
-            <section key={index} className={classes.chatUnitYours}>
+            <section key={index} className={yours ? classes.chatUnitYours : classes.chatUnit}>
               <Typography variant="subtitle2">{datum.moreData.userName} {datum.createdOn.hour}:{datum.createdOn.minute}</Typography>
-              <ChatBubble message={datum.message} />
+              <ChatBubble message={datum.message} yours={yours}/>
             </section>
             // <li key={datum.createdOn}>
             //   {datum.message} by {datum.email} on {datum.createdOn}
@@ -87,7 +89,7 @@ const ChatBubble = (props) => {
   const classes = useStyles();
 
   return (
-    <section className={classes.bubble}>
+    <section className={props.yours ? classes.bubbleYours : classes.bubble}>
       <Typography variant="subtitle1" className={classes.textInBubble}>{props.message}</Typography>
     </section>
   )
