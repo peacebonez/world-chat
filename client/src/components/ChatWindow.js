@@ -16,10 +16,23 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  chatUnit: {
+  
+  },
+  chatUnitYours: {
+    
+  },
   bubble: {
     background: 'linear-gradient(0deg, rgba(26,114,183,1) 0%, rgba(14,172,117,1) 100%)',
     maxWidth: '18rem',
-    wordWrap: 'break-word'
+    wordWrap: 'break-word',
+    borderRadius: '0px 15px 15px 15px'
+  },
+  bubbleYours: {
+    background: 'linear-gradient(0deg, rgba(26,114,183,1) 0%, rgba(14,172,117,1) 100%)',
+    maxWidth: '18rem',
+    wordWrap: 'break-word',
+    borderRadius: '15px 15px 0px 15px'
   },
   textInBubble: {
     color: 'white',
@@ -33,7 +46,6 @@ const ChatWindow = () => {
   const { socket, userState } = useContext(UserContext);
   const [chat, setChat] = useState([]); // an array of "data's"
 
-  const name = userState.user.name;
   useEffect(() => {
     socket.on('connect', () => {
       socket.emit('join', '123' ); // replace 123 with conversation id
@@ -52,15 +64,19 @@ const ChatWindow = () => {
   return (
     <div className={classes.chatWindow}>
       <ul>
-        {chat.map((datum, index) => (
-          <section key={index}>
-            <Typography variant="subtitle2">{name} {datum.createdOn.hour}:{datum.createdOn.minute}</Typography>
-            <ChatBubble message={datum.message} />
-          </section>
-          // <li key={datum.createdOn}>
-          //   {datum.message} by {datum.email} on {datum.createdOn}
-          // </li>
-        ))}
+        {chat.map((datum, index) => {   
+          console.log('datum: ', datum);
+          return (
+            <section key={index} className={classes.chatUnitYours}>
+              <Typography variant="subtitle2">{datum.moreData.userName} {datum.createdOn.hour}:{datum.createdOn.minute}</Typography>
+              <ChatBubble message={datum.message} />
+            </section>
+            // <li key={datum.createdOn}>
+            //   {datum.message} by {datum.email} on {datum.createdOn}
+            // </li>
+          );
+        }
+        )}
       </ul>
       <ChatInput />
     </div>
