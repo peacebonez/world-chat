@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link, useHistory, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import {
   Box,
@@ -13,12 +13,13 @@ import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Background from '../assets/background.png';
+import { UserContext } from '../contexts/userContext';
 
 require('dotenv').config();
 
 const useStyles = makeStyles({
   noUnderlineLink: {
-    textDecoration: 'none'
+    textDecoration: 'none',
   },
   inline: {
     inline: 'true',
@@ -34,25 +35,27 @@ const useStyles = makeStyles({
     marginBottom: '50%',
   },
   grayText: {
-    color: '#9c9c9c'
+    color: '#9c9c9c',
   },
   marginBottom5: {
     marginBottom: '5%',
   },
   createAccountButton: {
     marginLeft: '15%',
-    outline: 'none'
+    outline: 'none',
   },
   loginButton: {
     marginTop: '15%',
     width: '60%',
-    margin: 'auto'
-  }
+    margin: 'auto',
+  },
 });
 
 export default function Login() {
   const classes = useStyles();
   const history = useHistory();
+  const { userActions, userState } = useContext(UserContext);
+  console.log('userState:', userState);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -73,6 +76,7 @@ export default function Login() {
     try {
       const res = await axios.post('/user/login', { email, password });
       if (res && (res.status === 200 || res.status === 201)) {
+        userActions.fetchUser();
         history.push('/messenger');
       }
 
@@ -100,6 +104,8 @@ export default function Login() {
     return () => clearTimeout(timer);
   }, [email, password.length, backendError]);
 
+  if (userState.user.email) return <Redirect to="/messenger" />;
+
   return (
     <Box display="flex">
       {/** The left side: Image saying "Converse with anyone with any language" */}
@@ -116,10 +122,17 @@ export default function Login() {
       {/** The right side, the sign up */}
       <Box className={classes.outerMargins}>
         <Box display="flex" className={classes.marginBottom50}>
-          <Typography variant="subtitle1" className={classes.grayText}>Don't have an account? </Typography>
+          <Typography variant="subtitle1" className={classes.grayText}>
+            Don't have an account?{' '}
+          </Typography>
           <Link to="/signup" className={classes.noUnderlineLink}>
-            <Button size="large" variant="outlined" color="primary" className={classes.createAccountButton}>
-                Create account
+            <Button
+              size="large"
+              variant="outlined"
+              color="primary"
+              className={classes.createAccountButton}
+            >
+              Create account
             </Button>
           </Link>
         </Box>
@@ -151,10 +164,10 @@ export default function Login() {
               errorPassword && 'Password must be at least 6 characters.'
             }
           />
-          <Button 
+          <Button
             variant="contained"
-            size="large" 
-            color="primary" 
+            size="large"
+            color="primary"
             onClick={handleClick}
             className={classes.loginButton}
           >
