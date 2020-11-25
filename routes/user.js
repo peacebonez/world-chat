@@ -463,7 +463,7 @@ router.post('/avatar', auth, upload.single('file'), async (req, res) => {
       } else {
         const newFileUploaded = {
           name: params.Key,
-          url: s3FileUrl + file.originalname,
+          url: `${s3FileUrl}/${user.email}/${file.originalname}`,
         };
 
         user.avatar = newFileUploaded;
