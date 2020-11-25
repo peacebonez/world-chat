@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
@@ -7,7 +7,7 @@ const ConversationSchema = new Schema({
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: "users", //references the users model
+        ref: 'users', //references the users model
       },
     },
   ],
@@ -16,7 +16,7 @@ const ConversationSchema = new Schema({
       messageBody: {
         fromUser: {
           type: Schema.Types.ObjectId,
-          ref: "users", //references the users model
+          ref: 'users', //references the users model
         },
         originalLanguage: {
           type: String,
@@ -33,4 +33,4 @@ const ConversationSchema = new Schema({
   ],
 });
 
-module.exports = User = mongoose.model("conversation", ConversationSchema);
+module.exports = User = mongoose.model('conversation', ConversationSchema);

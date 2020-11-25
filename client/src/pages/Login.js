@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link, useHistory, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import {
   Box,
@@ -13,10 +13,14 @@ import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Background from '../assets/background.png';
+import { UserContext } from '../contexts/userContext';
 
 require('dotenv').config();
 
 const useStyles = makeStyles({
+  noUnderlineLink: {
+    textDecoration: 'none',
+  },
   inline: {
     inline: 'true',
   },
@@ -30,17 +34,27 @@ const useStyles = makeStyles({
   marginBottom50: {
     marginBottom: '50%',
   },
-  marginLeft15: {
-    marginLeft: '15%',
+  grayText: {
+    color: '#9c9c9c',
   },
   marginBottom5: {
     marginBottom: '5%',
+  },
+  createAccountButton: {
+    marginLeft: '15%',
+    outline: 'none',
+  },
+  loginButton: {
+    marginTop: '15%',
+    width: '60%',
+    margin: 'auto',
   },
 });
 
 export default function Login() {
   const classes = useStyles();
   const history = useHistory();
+  const { userActions, userState } = useContext(UserContext);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -55,10 +69,13 @@ export default function Login() {
     login();
   };
 
+  const isEmail = (email) => /^\S+@\S+$/.test(email);
+
   const login = async () => {
     try {
       const res = await axios.post('/user/login', { email, password });
       if (res && (res.status === 200 || res.status === 201)) {
+        userActions.fetchUser();
         history.push('/messenger');
       }
 
@@ -73,8 +90,8 @@ export default function Login() {
   };
   //deactivates errors when user inputs into form
   useEffect(() => {
-    if (email) setErrorEmail(false);
-    if (password) setErrorPassword(false);
+    if (isEmail(email)) setErrorEmail(false);
+    if (password.length > 5) setErrorPassword(false);
 
     //clears the backend error alert msg
     let timer;
@@ -84,7 +101,9 @@ export default function Login() {
       }, 1000);
     }
     return () => clearTimeout(timer);
-  });
+  }, [email, password.length, backendError]);
+
+  if (userState.user.email) return <Redirect to="/messenger" />;
 
   return (
     <Box display="flex">
@@ -102,12 +121,15 @@ export default function Login() {
       {/** The right side, the sign up */}
       <Box className={classes.outerMargins}>
         <Box display="flex" className={classes.marginBottom50}>
-          <Typography variant="h5">Don't have an account? </Typography>
-          <Link to="/">
+          <Typography variant="subtitle1" className={classes.grayText}>
+            Don't have an account?{' '}
+          </Typography>
+          <Link to="/signup" className={classes.noUnderlineLink}>
             <Button
+              size="large"
               variant="outlined"
               color="primary"
-              className={classes.marginLeft15}
+              className={classes.createAccountButton}
             >
               Create account
             </Button>
@@ -141,7 +163,13 @@ export default function Login() {
               errorPassword && 'Password must be at least 6 characters.'
             }
           />
-          <Button variant="contained" color="primary" onClick={handleClick}>
+          <Button
+            variant="contained"
+            size="large"
+            color="primary"
+            onClick={handleClick}
+            className={classes.loginButton}
+          >
             Login
           </Button>
         </Box>
