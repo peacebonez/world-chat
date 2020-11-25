@@ -94,6 +94,7 @@ const SideBarHeader = () => {
   const classes = useStyles();
 
   const [userAvatar, setUserAvatar] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const [errorAvatar, setErrorAvatar] = useState(false);
   const [errorAvatarMsg, setErrorAvatarMsg] = useState('');
   const [isHover, setIsHover] = useState(false);
@@ -109,18 +110,35 @@ const SideBarHeader = () => {
 
   const handleUpload = async (e) => {
     e.preventDefault();
+
     const file = e.target.files[0];
 
     const data = new FormData();
+    if (!data) {
+      setErrorAvatarMsg('Error uploading image');
+      setErrorAvatar(true);
+      setUploading(false);
+      return;
+    }
+
     data.append('file', file, file.name);
 
     try {
+      setUploading(true);
       const res = await axios.post('/user/avatar', data);
-      setUserAvatar(res.data.avatar.url);
+      if (res.status === 200) {
+        setUserAvatar(res.data.avatar.url);
+        setUploading(false);
+      } else {
+        setErrorAvatarMsg('Error uploading image');
+        setErrorAvatar(true);
+        setUploading(false);
+      }
     } catch (err) {
       console.log(err.message);
       setErrorAvatarMsg('Error uploading image');
       setErrorAvatar(true);
+      setUploading(false);
     }
   };
 
@@ -155,6 +173,7 @@ const SideBarHeader = () => {
         <div className={classes.sideBarImgWrapper}>
           <input
             type="file"
+            accept="image/png, image/jpeg"
             onChange={handleUpload}
             className={classes.fileInput}
             onMouseOver={() => setIsHover(true)}

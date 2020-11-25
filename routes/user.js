@@ -433,6 +433,9 @@ const upload = multer({ storage });
 
 router.post('/avatar', auth, upload.single('file'), async (req, res) => {
   const file = req.file;
+  if (!file) {
+    return res.status(404).send('File not found');
+  }
   const userId = req.user.id;
   const s3FileUrl = process.env.AWS_S3_FILE_URL;
 
