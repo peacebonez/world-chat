@@ -451,7 +451,7 @@ router.post('/avatar', auth, upload.single('file'), async (req, res) => {
 
     const params = {
       Bucket: process.env.AWS_BUCKET,
-      Key: file.originalname,
+      Key: user.email,
       Body: file.buffer,
       ContentType: file.mimetype,
       ACL: 'public-read',
@@ -462,8 +462,8 @@ router.post('/avatar', auth, upload.single('file'), async (req, res) => {
         return res.status(500).json('S3 upload error');
       } else {
         const newFileUploaded = {
-          name: params.Key,
-          url: `${s3FileUrl}/${user.email}/${file.originalname}`,
+          name: file.originalname,
+          url: `${s3FileUrl}${user.email}`,
         };
 
         user.avatar = newFileUploaded;
