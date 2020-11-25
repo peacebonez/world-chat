@@ -424,9 +424,8 @@ const upload = multer({ storage });
 
 router.post('/avatar', auth, upload.single('file'), async (req, res) => {
   const file = req.file;
-  console.log('file:', file);
   const userId = req.user.id;
-  const s3FileUrl = 'https://worldchat1.s3.us-east-1.amazonaws.com/';
+  const s3FileUrl = process.env.AWS_S3_FILE_URL;
 
   try {
     const user = await User.findById(userId);
@@ -435,14 +434,12 @@ router.post('/avatar', auth, upload.single('file'), async (req, res) => {
       return res.status(404).send('User not found');
     }
 
-    console.log('MADE IT PAST USER');
     let s3bucket = new AWS.S3({
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
       region: process.env.AWS_REGION,
     });
 
-    console.log('MADE IT PAST S3 BUCKET');
     const params = {
       Bucket: process.env.AWS_BUCKET,
       Key: file.originalname,
@@ -451,23 +448,18 @@ router.post('/avatar', auth, upload.single('file'), async (req, res) => {
       ACL: 'public-read',
     };
 
-    console.log('MADE IT PAST PARAMS');
-
     s3bucket.upload(params, async (err, data) => {
       if (err) {
-        return res.status(500).json('Server error');
+        return res.status(500).json('S3 upload error');
       } else {
-        console.log('MADE IT INTO UPLOAD');
-        // res.send({ data });
         const newFileUploaded = {
-          url: s3FileUrl + file.originalname,
           name: params.Key,
+          url: s3FileUrl + file.originalname,
         };
 
         user.avatar = newFileUploaded;
 
         await user.save();
-        console.log('user:', user);
         res.status(200).json(user);
       }
     });

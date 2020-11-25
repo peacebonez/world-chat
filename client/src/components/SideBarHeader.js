@@ -1,13 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import happyChatter from '../assets/happy-chatter.png';
-import { Typography, Menu, MenuItem, Button } from '@material-ui/core';
-<<<<<<< HEAD
+import tempAvatar from '../assets/temp-avatar.jpg';
+import {
+  Typography,
+  Menu,
+  MenuItem,
+  Button,
+  Snackbar,
+} from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import AddIcon from '@material-ui/icons/Add';
-=======
->>>>>>> e2654f422560b2847dd435d733edf445fb012287
 
 import { UserContext } from '../contexts/userContext';
 
@@ -34,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '100%',
     overflow: 'hidden',
     width: '70px',
+    height: '70px',
     marginRight: theme.spacing(1),
     cursor: 'pointer',
     zIndex: 2,
@@ -78,11 +83,10 @@ const SideBarHeader = () => {
   const { userState } = useContext(UserContext);
   const classes = useStyles();
 
-<<<<<<< HEAD
-  const [userAvatar, setUserAvatar] = useState(happyChatter);
+  const [userAvatar, setUserAvatar] = useState(null);
+  const [errorAvatar, setErrorAvatar] = useState(false);
+  const [errorAvatarMsg, setErrorAvatarMsg] = useState('');
   const [isHover, setIsHover] = useState(false);
-=======
->>>>>>> e2654f422560b2847dd435d733edf445fb012287
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -93,24 +97,38 @@ const SideBarHeader = () => {
     setAnchorEl(null);
   };
 
-  const handleSelectedFile = (e) => {
-    setUserAvatar(e.target.files[0]);
-  };
-
   const handleUpload = async (e) => {
     e.preventDefault();
     const file = e.target.files[0];
-    setUserAvatar(file);
 
     const data = new FormData();
     data.append('file', file, file.name);
 
     try {
       const res = await axios.post('/user/avatar', data);
-      console.log('res:', res);
-    } catch (err) {}
+      setUserAvatar(res.data.avatar.url);
+    } catch (err) {
+      console.log(err.message);
+      setErrorAvatarMsg('Error uploading image');
+      setErrorAvatar(true);
+    }
   };
-  console.log('userAvatar:', userAvatar);
+
+  useEffect(() => {
+    let timer;
+    if (errorAvatar) {
+      timer = setTimeout(() => {
+        setErrorAvatar(false);
+      }, 5000);
+    }
+    return () => clearTimeout(timer);
+  });
+
+  useEffect(() => {
+    if (userState.user.avatar) {
+      setUserAvatar(userState.user.avatar.url);
+    }
+  }, [userState]);
 
   return (
     <div className={classes.sideBarHeader}>
@@ -124,7 +142,7 @@ const SideBarHeader = () => {
             onMouseOut={() => setIsHover(false)}
           />
           <img
-            src={userState.user.avatar ? userState.user.avatar : userAvatar}
+            src={userAvatar || tempAvatar}
             className={`${classes.sideBarImg} ${
               isHover && classes.sideBarImgHover
             }`}
@@ -149,6 +167,16 @@ const SideBarHeader = () => {
       >
         <MenuItem>Logout</MenuItem>
       </Menu>
+      {/* Error alerts */}
+      <Snackbar
+        open={errorAvatar}
+        autoHideDuration={5000}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert severity="error" variant="filled">
+          {errorAvatarMsg}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
