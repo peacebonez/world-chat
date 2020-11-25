@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import happyChatter from '../assets/happy-chatter.png';
 import { Typography, Menu, MenuItem, Button } from '@material-ui/core';
@@ -52,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SideBarHeader = () => {
   const { userState } = useContext(UserContext);
+  const history = useHistory()
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -64,8 +67,13 @@ const SideBarHeader = () => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    //Todo- implement in different branch
+  const handleLogout = async () => {
+    history.push('/');
+    await axios.get('/user/logout');
+    try {
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
   return (
