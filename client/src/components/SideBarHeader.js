@@ -34,13 +34,21 @@ const useStyles = makeStyles((theme) => ({
       transform: 'translate(-200%,180%)',
     },
   },
+  fileInput: {
+    position: 'absolute',
+    zIndex: 4,
+    width: '70px',
+    height: '70px',
+    borderRadius: '50%',
+    opacity: 0,
+    cursor: 'pointer',
+  },
   sideBarImg: {
     borderRadius: '100%',
     overflow: 'hidden',
     width: '70px',
     height: '70px',
     marginRight: theme.spacing(1),
-    cursor: 'pointer',
     zIndex: 2,
   },
   sideBarImgHover: {
@@ -134,7 +142,13 @@ const SideBarHeader = () => {
     <div className={classes.sideBarHeader}>
       <div>
         <div className={classes.sideBarImgWrapper}>
-          <input type="file" onChange={handleUpload} />
+          <input
+            type="file"
+            onChange={handleUpload}
+            className={classes.fileInput}
+            onMouseOver={() => setIsHover(true)}
+            onMouseOut={() => setIsHover(false)}
+          />
 
           <AddIcon
             className={`${classes.addIcon} ${isHover && classes.shown} `}
@@ -146,8 +160,6 @@ const SideBarHeader = () => {
             className={`${classes.sideBarImg} ${
               isHover && classes.sideBarImgHover
             }`}
-            onMouseOver={() => setIsHover(true)}
-            onMouseOut={() => setIsHover(false)}
           />
 
           <span
