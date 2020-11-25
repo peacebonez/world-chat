@@ -43,17 +43,12 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = () => {
   const classes = useStyles();
 
-  const handleSwitch = () => {
-    // show original language
-    return
-  };
-
   return (
     <div className={classes.navBar}>
       <div>
         <div className={classes.flexCenter}>
-          <img src={testFlag} alt="avatar of your message receiver" />
-          <Typography variant="h5">Santiago</Typography>
+          <img src={testFlag} />
+          <Typography variant="h5">{props.groupchat ? "Group Chat" : 'Santiago'}</Typography>
           {/* background will depend on online status */}
           <span
             className={`${classes.statusIcon} ${classes.onlineIcon}`}

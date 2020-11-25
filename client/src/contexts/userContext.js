@@ -1,9 +1,14 @@
 import React, { createContext, useReducer, useEffect } from 'react';
+import io from 'socket.io-client';
 import { useHistory } from 'react-router-dom';
 import { userReducer } from '../reducers/userReducer';
 import axios from 'axios';
 
+
 import { UPDATE_USER, USER_ERROR } from '../reducers/userReducer';
+
+const serverURL = process.env.serverURL;
+const socket = io(serverURL);
 
 const UserContext = createContext();
 
@@ -49,6 +54,13 @@ const UserProvider = (props) => {
      * Otherwise, it will redirect you to the login page
      */
     actions.fetchUser();
+
+    // TODO: probably want to check if user is successfully logged in before connecting
+    socket.on('connect', () => {
+      console.log('Connected, assigned:', socket.id, socket.connected);
+    });
+    // CLEAN UP THE EFFECT
+    return () => socket.disconnect();
   }, []);
 
   return (
@@ -56,6 +68,7 @@ const UserProvider = (props) => {
       value={{
         userState,
         userActions: actions,
+        socket,
       }}
     >
       {props.children}
