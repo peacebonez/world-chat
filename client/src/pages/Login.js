@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useHistory, Redirect } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import {
   Box,
@@ -60,50 +60,22 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
-  const [backendError, setBackendError] = useState(false);
-  const [backendErrorMsg, setBackendErrorMsg] = useState('');
 
   const handleClick = () => {
     if (!email) return setErrorEmail(true);
     if (!password) return setErrorPassword(true);
-    login();
+    userActions.login(email, password);
   };
 
   const isEmail = (email) => /^\S+@\S+$/.test(email);
 
-  const login = async () => {
-    try {
-      const res = await axios.post('/user/login', { email, password });
-      if (res && (res.status === 200 || res.status === 201)) {
-        userActions.fetchUser();
-        history.push('/messenger');
-      }
-
-      return res;
-    } catch (err) {
-      setBackendError(true);
-      if (err.message.includes('400'))
-        setBackendErrorMsg('Invalid credentials');
-      if (err.message.includes('404')) setBackendErrorMsg('User not found');
-      if (err.message.includes('500')) setBackendErrorMsg('Server Error');
-    }
-  };
   //deactivates errors when user inputs into form
   useEffect(() => {
     if (isEmail(email)) setErrorEmail(false);
     if (password.length > 5) setErrorPassword(false);
+  }, [email, password.length, userState.user]);
 
-    //clears the backend error alert msg
-    let timer;
-    if (backendError) {
-      timer = setTimeout(() => {
-        setBackendError(false);
-      }, 1000);
-    }
-    return () => clearTimeout(timer);
-  }, [email, password.length, backendError]);
-
-  if (userState.user.email) return <Redirect to="/messenger" />;
+  console.log('userState:', userState);
 
   return (
     <Box display="flex">
@@ -176,12 +148,13 @@ export default function Login() {
       </Box>
       {/* Error alerts */}
       <Snackbar
-        open={backendError}
+        open={userState.user.errorMsg}
         autoHideDuration={2000}
+        onClose={userState.user.errorMsg === ''}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert severity="error" variant="filled">
-          {backendErrorMsg}
+          {userState.user.errorMsg ? userState.user.errorMsg : ''}
         </Alert>
       </Snackbar>
     </Box>

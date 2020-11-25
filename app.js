@@ -7,6 +7,9 @@ const logger = require('morgan');
 require('dotenv').config();
 
 const mongoose = require('mongoose');
+const uuid = require("uuid");
+
+const Conversation = require('./models/Conversation');
 
 const { json, urlencoded } = express;
 
@@ -14,23 +17,7 @@ const { json, urlencoded } = express;
 
 var app = express();
 const http = require('http').createServer(app);
-const io = require('socket.io')(http,  {
-  handlePreflightRequest: (req, res) => {
-      const headers = {
-          "Access-Control-Allow-Headers": "Content-Type, Authorization",
-          "Access-Control-Allow-Origin": req.headers.origin, //or the specific origin you want to give access to,
-          "Access-Control-Allow-Credentials": true
-      };
-      res.writeHead(200, headers);
-      res.end();
-  },
-  cors: {
-    origin: "https://example.com",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
-    credentials: true
-  }
-});
+const io = require('socket.io')(http);
 
 //connect mongoDB database
 const connectDB = async () => {
@@ -58,7 +45,7 @@ app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, 'public')));
 
-app.use('/conversation', require('./routes/conversation'))
+app.use('/conversation', require('./routes/conversation'));
 app.use('/user', require('./routes/user'));
 app.use('/invitation', require('./routes/invitation'));
 
@@ -73,28 +60,53 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   console.log(req.app.get('env'), err.message);
   res.locals.error = req.app.get('env') == 'development' ? err : {};
+  console.log('error', err);
   // render the error page
   res.status(err.status || 500);
   res.json({ error: err.message });
 });
 
-io.on('connection', (socket) => { /* socket object may be used to send specific messages to the new connected client */
+io.on('connection', (socket) => {
+  /* socket object may be used to send specific messages to the new connected client */
   console.log('new client connected');
   socket.emit('connection', null);
 
+  socket.on('join', async (room) => {
+    // The room is likely going to be a Conversation ID
+    // TODO: If the conversation ID does not exist yet, create on before joining in
+    if (!room) {
+      room = uuid.v4();
+    }
+    socket.join(room);
+  });
+
   // when the client emits 'new message', this listens and executes
-  socket.on('new message', (data) => {
-    // we tell the client to execute 'new message'
-    socket.broadcast.emit('new message', {
-      // username: socket.username,
-      message: data
-    });
+  // socket.on('newMessage', (data) => {
+  //   console.log('new message', data);
+  // });
+
+  socket.on('messageToClient', async (data) => {
+    // TODO: you might want to pass in more useful info such as name and avatar pic
+    const { room, email, message, chatRoomName} = data;
+    const createdOn = new Date();
+    // TODO: Save the message
+    
+    // const conversations = await Conversation.findAll({
+    //   where: { name: chatRoomName },
+    // });
+    // const chatRoomId = conversations[0].id;
+    // const chatMessage = await models.ChatMessage.create({
+    //   chatRoomId,
+    //   author,
+    //   message: message,
+    // });
+    socket.to('123').emit('messageFromServer', { ...data, createdOn });
+    socket.emit('messageFromServer', { ...data, createdOn });
   });
 });
 
 http.listen(3001, () => {
   console.log('listening on *:3001');
 });
-
 
 module.exports = app;

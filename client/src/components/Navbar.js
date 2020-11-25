@@ -40,20 +40,17 @@ const useStyles = makeStyles((theme) => ({
 //TODOS
 //Will have 2 types of Navbars: group and one-on-one
 
-const Navbar = () => {
+const Navbar = (props) => {
   const classes = useStyles();
-
-  const handleSwitch = () => {
-    // show original language
-    return
-  };
 
   return (
     <div className={classes.navBar}>
       <div>
         <div className={classes.flexCenter}>
-          <img src={testFlag} alt="avatar of your message receiver" />
-          <Typography variant="h5">Santiago</Typography>
+          <img src={testFlag} />
+          <Typography variant="h5">
+            {props.groupchat ? 'Group Chat' : 'Santiago'}
+          </Typography>
           {/* background will depend on online status */}
           <span
             className={`${classes.statusIcon} ${classes.onlineIcon}`}
@@ -63,7 +60,7 @@ const Navbar = () => {
       </div>
       <div className={classes.flexCenter}>
         <Typography variant="subtitle2">Original Language</Typography>
-        <Switch color="primary" name="language"  />
+        <Switch color="primary" name="language" />
         <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
       </div>
     </div>
