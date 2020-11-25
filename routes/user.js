@@ -61,6 +61,15 @@ router.post('/login', async (req, res) => {
   }
 });
 
+router.get('/logout', auth, async (req, res) => {
+  try {
+    res.clearCookie('token').send();
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // User Registration
 router.post(
   '/signup',
