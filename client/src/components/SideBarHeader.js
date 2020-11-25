@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import happyChatter from '../assets/happy-chatter.png';
 import { Typography, Menu, MenuItem, Button } from '@material-ui/core';
@@ -53,8 +52,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SideBarHeader = () => {
-  const { userState } = useContext(UserContext);
-  const history = useHistory()
+  const { userState, userActions } = useContext(UserContext);
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -66,15 +64,8 @@ const SideBarHeader = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const handleLogout = async () => {
-    history.push('/');
-    await axios.get('/user/logout');
-    try {
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
+  console.log('userState:', userState);
+  if (!userState.user.name) return <Redirect to="/" />;
 
   return (
     <div className={classes.sideBarHeader}>
@@ -100,7 +91,7 @@ const SideBarHeader = () => {
         keepMounted
         onClose={handleClose}
       >
-        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        <MenuItem onClick={userActions.logout}>Logout</MenuItem>
       </Menu>
     </div>
   );

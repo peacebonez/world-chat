@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { userReducer } from '../reducers/userReducer';
 import axios from 'axios';
 
-import { UPDATE_USER, USER_ERROR } from '../reducers/userReducer';
+import { UPDATE_USER, USER_ERROR, USER_LOGOUT } from '../reducers/userReducer';
 
 const UserContext = createContext();
 
@@ -36,6 +36,14 @@ const UserProvider = (props) => {
 
         dispatch({ type: USER_ERROR });
         history.push('/');
+      }
+    },
+    logout: async () => {
+      try {
+        await axios.get('/user/logout');
+        dispatch({ type: USER_LOGOUT });
+      } catch (err) {
+        console.log(err.message);
       }
     },
   };
