@@ -52,9 +52,18 @@ router.post('/login', async (req, res) => {
         return res
           .status(201)
           .cookie('token', token, { httpOnly: true })
-          .json({ token, msg: 'User Authenticated' });
+          .json(user);
       },
     );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+router.get('/logout', auth, async (req, res) => {
+  try {
+    res.clearCookie('token').send();
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

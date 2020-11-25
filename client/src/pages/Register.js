@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link, useHistory, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import {
   Box,
@@ -16,10 +16,11 @@ import {
 import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 import Background from '../assets/background.png';
+import { UserContext } from '../contexts/userContext';
 require('dotenv').config();
 const useStyles = makeStyles({
   noUnderlineLink: {
-    textDecoration: 'none'
+    textDecoration: 'none',
   },
   outerMargins: {
     marginTop: '2%',
@@ -32,7 +33,7 @@ const useStyles = makeStyles({
     marginBottom: '50%',
   },
   loginButton: {
-    marginLeft: '10%'
+    marginLeft: '10%',
   },
   marginBottom5: {
     marginBottom: '5%',
@@ -44,17 +45,18 @@ const useStyles = makeStyles({
     color: 'red',
   },
   grayText: {
-    color: '#9c9c9c'
-  }, 
+    color: '#9c9c9c',
+  },
   createButton: {
     width: '60%',
-    margin: 'auto'
-  }
+    margin: 'auto',
+  },
 });
 
 export default function Register() {
   const history = useHistory();
   const classes = useStyles();
+  const { userState } = useContext(UserContext);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -137,6 +139,8 @@ export default function Register() {
     }
   };
 
+  if (userState.user.email) return <Redirect to="/messenger" />;
+
   return (
     <Box display="flex">
       {/** The left side: Image saying "Converse with anyone with any language" */}
@@ -153,7 +157,9 @@ export default function Register() {
       {/** The right side, the sign up */}
       <Box className={classes.outerMargins}>
         <Box display="flex" className={classes.marginBottom50}>
-          <Typography variant="subtitle1" className={classes.grayText}>Already have an account? </Typography>
+          <Typography variant="subtitle1" className={classes.grayText}>
+            Already have an account?{' '}
+          </Typography>
           <Link to="/" className={classes.noUnderlineLink}>
             <Button
               size="large"
@@ -229,11 +235,11 @@ export default function Register() {
           <Typography variant="h6" className={classes.errors}>
             {errorLanguage}
           </Typography>
-          <Button 
+          <Button
             className={classes.createButton}
-            variant="contained" 
+            variant="contained"
             size="large"
-            color="primary" 
+            color="primary"
             onClick={handleSubmit}
           >
             Create
