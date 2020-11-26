@@ -4,8 +4,12 @@ import { useHistory } from 'react-router-dom';
 import { userReducer } from '../reducers/userReducer';
 import axios from 'axios';
 
-
-import { UPDATE_USER, USER_ERROR } from '../reducers/userReducer';
+import {
+  UPDATE_USER,
+  USER_ERROR,
+  USER_LOGOUT,
+  CLEAR_ERRORS,
+} from '../reducers/userReducer';
 
 const serverURL = process.env.serverURL;
 const socket = io(serverURL);
@@ -17,10 +21,37 @@ const initialState = {
 };
 
 const UserProvider = (props) => {
-  let history = useHistory();
+  const history = useHistory();
   const [userState, dispatch] = useReducer(userReducer, initialState);
 
   const actions = {
+    signUpUser: async (name, email, password, primaryLanguage) => {
+      try {
+        const res = await axios.post('/user/signup', {
+          name,
+          email,
+          password,
+          primaryLanguage,
+        });
+        const data = res.data;
+        dispatch({ type: UPDATE_USER, payload: data });
+        history.push('/messenger');
+      } catch (err) {
+        if (err.message.includes('400')) {
+          dispatch({
+            type: USER_ERROR,
+            payload: 'User already exists.',
+          });
+        }
+
+        if (err.message.includes('500')) {
+          dispatch({
+            type: USER_ERROR,
+            payload: 'Server error',
+          });
+        }
+      }
+    },
     fetchUser: async () => {
       try {
         const res = await axios.get('/user/get_current_user');
@@ -29,19 +60,73 @@ const UserProvider = (props) => {
           const data = await res.data;
 
           dispatch({ type: UPDATE_USER, payload: data });
+          history.push('/messenger');
         } else {
-          // if error then redirect to login
-          console.log('ERROR USER NOT FOUND');
-
-          dispatch({ type: USER_ERROR });
           history.push('/');
         }
       } catch (err) {
-        console.log('ERROR USER NOT FOUND');
-
-        dispatch({ type: USER_ERROR });
         history.push('/');
       }
+    },
+    login: async (email, password) => {
+      try {
+        const res = await axios.post('/user/login', { email, password });
+        if (res && (res.status === 200 || res.status === 201)) {
+          await actions.fetchUser();
+          history.push('/messenger');
+        }
+
+        return res;
+      } catch (err) {
+        let errorMsg;
+        if (err.message.includes('400')) errorMsg = 'Invalid Credentials';
+        if (err.message.includes('404')) errorMsg = 'User not found';
+        if (err.message.includes('500')) errorMsg = 'Server error';
+
+        dispatch({
+          type: USER_ERROR,
+          payload: errorMsg,
+        });
+      }
+    },
+    fetchPendingInvites: async () => {
+      try {
+        const res = await axios.get(`user/invitations/pending`);
+
+        //if response is ok or user has no invites
+        if (res.status === 200 || res.status === 204) {
+          return res.data;
+        }
+        if (res.status === 404 || res.status === 500) {
+          //user not found
+          dispatch({
+            type: USER_ERROR,
+            payload: 'Error fetching invites',
+          });
+          return res.data;
+        }
+      } catch (err) {
+        console.log(err.message);
+        dispatch({
+          type: USER_ERROR,
+          payload: 'Error fetching invites',
+        });
+      }
+    },
+    logout: async () => {
+      try {
+        await axios.get('/user/logout');
+        dispatch({ type: USER_LOGOUT });
+      } catch (err) {
+        console.log(err.message);
+        dispatch({
+          type: USER_ERROR,
+          payload: 'Logout Error',
+        });
+      }
+    },
+    clearErrors: () => {
+      dispatch({ type: CLEAR_ERRORS });
     },
   };
 
@@ -62,6 +147,16 @@ const UserProvider = (props) => {
     // CLEAN UP THE EFFECT
     return () => socket.disconnect();
   }, []);
+
+  useEffect(() => {
+    let timer;
+    if (userState.errorMsg) {
+      timer = setTimeout(() => {
+        actions.clearErrors();
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  });
 
   return (
     <UserContext.Provider

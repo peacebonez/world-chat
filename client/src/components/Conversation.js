@@ -1,12 +1,10 @@
-import React, {useEffect} from "react";
+import React from 'react';
 
-import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 
 import ChatWindow from './ChatWindow';
 
-import Navbar from "./Navbar";
-
+import Navbar from './Navbar';
 
 const useStyles = makeStyles((theme) => ({
   conversation: {
