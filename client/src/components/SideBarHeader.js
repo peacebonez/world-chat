@@ -64,7 +64,7 @@ const SideBarHeader = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  console.log('userState:', userState);
+
   if (!userState.user.name) return <Redirect to="/" />;
 
   return (

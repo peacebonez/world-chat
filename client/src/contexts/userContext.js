@@ -26,26 +26,16 @@ const UserProvider = (props) => {
 
   const actions = {
     signUpUser: async (name, email, password, primaryLanguage) => {
-      //POST config header values
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
       try {
-        let res = await axios.post(
-          '/user/signup',
-          {
-            name,
-            email,
-            password,
-            primaryLanguage,
-          },
-          config,
-        );
-        console.log('signup res:', res);
-        dispatch({ type: UPDATE_USER, payload: res.data });
-        return res;
+        let res = await axios.post('/user/signup', {
+          name,
+          email,
+          password,
+          primaryLanguage,
+        });
+        const data = res.data;
+        dispatch({ type: UPDATE_USER, payload: data });
+        history.push('/messenger');
       } catch (err) {
         if (err.message.includes('400')) {
           dispatch({
@@ -72,17 +62,9 @@ const UserProvider = (props) => {
           dispatch({ type: UPDATE_USER, payload: data });
           history.push('/messenger');
         } else {
-          dispatch({
-            type: USER_ERROR,
-            payload: { errorMsg: 'User Not Found' },
-          });
           history.push('/');
         }
       } catch (err) {
-        dispatch({
-          type: USER_ERROR,
-          payload: { errorMsg: 'User Not Found' },
-        });
         history.push('/');
       }
     },
@@ -113,6 +95,30 @@ const UserProvider = (props) => {
           });
       }
     },
+    fetchPendingInvites: async () => {
+      try {
+        const res = await axios.get(`user/invitations/pending`);
+
+        //if response is ok or user has no invites
+        if (res.status === 200 || res.status === 204) {
+          return res.data;
+        }
+        if (res.status === 404 || res.status === 500) {
+          //user not found
+          dispatch({
+            type: USER_ERROR,
+            payload: { errorMsg: 'Error fetching invites' },
+          });
+          return res.data;
+        }
+      } catch (err) {
+        console.log(err.message);
+        dispatch({
+          type: USER_ERROR,
+          payload: { errorMsg: 'Error fetching invites' },
+        });
+      }
+    },
     logout: async () => {
       try {
         await axios.get('/user/logout');
@@ -140,14 +146,6 @@ const UserProvider = (props) => {
      */
     actions.fetchUser();
 
-    let timer;
-    if (userState.user.errorMsg) {
-      timer = setTimeout(() => {
-        actions.clearErrors();
-      }, 3000);
-    }
-    return () => clearTimeout(timer);
-
     // TODO: probably want to check if user is successfully logged in before connecting
     socket.on('connect', () => {
       console.log('Connected, assigned:', socket.id, socket.connected);
@@ -155,6 +153,16 @@ const UserProvider = (props) => {
     // CLEAN UP THE EFFECT
     return () => socket.disconnect();
   }, []);
+
+  useEffect(() => {
+    let timer;
+    if (userState.user.errorMsg) {
+      timer = setTimeout(() => {
+        actions.clearErrors();
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  });
 
   return (
     <UserContext.Provider

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -9,10 +9,9 @@ import {
   Select,
   MenuItem,
   Button,
-  Snackbar,
   Hidden,
 } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
+import AppAlert from '../components/AppAlert';
 import { makeStyles } from '@material-ui/core/styles';
 import Background from '../assets/background.png';
 import { UserContext } from '../contexts/userContext';
@@ -54,7 +53,6 @@ const useStyles = makeStyles({
 });
 
 export default function Register() {
-  const history = useHistory();
   const classes = useStyles();
   const { userState, userActions } = useContext(UserContext);
 
@@ -68,13 +66,6 @@ export default function Register() {
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorLanguage, setErrorLanguage] = useState(false);
 
-  useEffect(() => {
-    if (isName(name)) setErrorName(false);
-    if (isEmail(email)) setErrorEmail(false);
-    if (password.length > 5) setErrorPassword(false);
-    if (primaryLanguage) setErrorLanguage(false);
-  }, [name, email, password.length, primaryLanguage]);
-
   const isEmail = (email) => /^\S+@\S+$/.test(email);
   const isName = (name) => /^[A-Z]+$/i.test(name);
 
@@ -87,25 +78,24 @@ export default function Register() {
       !userState.user.errorMsg === ''
     );
   };
-  const handleSubmit = async () => {
-    console.log('clicked');
+
+  const handleSubmit = () => {
     if (!isEmail(email)) setErrorEmail(true);
     if (!isName(name)) setErrorName(true);
     if (!password) setErrorPassword(true);
     if (!primaryLanguage) setErrorLanguage(true);
 
     if (!errors()) {
-      let res = await userActions.signUpUser(
-        name,
-        email,
-        password,
-        primaryLanguage,
-      );
-      if (res && (res.status === 200 || res.status === 201)) {
-        history.push('/messenger');
-      }
+      userActions.signUpUser(name, email, password, primaryLanguage);
     }
   };
+
+  useEffect(() => {
+    if (isName(name)) setErrorName(false);
+    if (isEmail(email)) setErrorEmail(false);
+    if (password.length > 5) setErrorPassword(false);
+    if (primaryLanguage) setErrorLanguage(false);
+  }, [name, email, password.length, primaryLanguage]);
 
   return (
     <Box display="flex">
@@ -143,7 +133,7 @@ export default function Register() {
           fontWeight="fontWeightBold"
           className={classes.marginBottom5}
         >
-          Create an Account.
+          Create an Account
         </Typography>
         <Box display="flex" flexDirection="column">
           <TextField
@@ -152,7 +142,7 @@ export default function Register() {
             className={classes.marginBottom5}
             required
             error={errorName}
-            helperText={'Name required.'}
+            helperText={errorName ? 'Name required.' : ''}
           />
           <Typography variant="h6" className={classes.errors}></Typography>
           <TextField
@@ -161,7 +151,7 @@ export default function Register() {
             className={classes.marginBottom5}
             required
             error={errorEmail}
-            helperText={'Invalid email.'}
+            helperText={errorEmail ? 'Invalid email.' : ''}
           />
           <Typography variant="h6" className={classes.errors}></Typography>
           <TextField
@@ -171,7 +161,9 @@ export default function Register() {
             className={classes.marginBottom5}
             required
             error={errorPassword}
-            helperText={'Password must be at least 6 characters.'}
+            helperText={
+              errorPassword ? 'Password must be at least 6 characters.' : ''
+            }
           />
           <Typography variant="h6" className={classes.errors}></Typography>
           <FormControl className={classes.marginBottom20}>
@@ -200,15 +192,7 @@ export default function Register() {
         </Box>
       </Box>
       {/* Error alerts */}
-      <Snackbar
-        open={!userState.user.errorMsg === ''}
-        autoHideDuration={5000}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert severity="error" variant="filled">
-          {userState.user.errorMsg ? userState.user.errorMsg : ''}
-        </Alert>
-      </Snackbar>
+      <AppAlert condition={userState.user.errorMsg} />
     </Box>
   );
 }

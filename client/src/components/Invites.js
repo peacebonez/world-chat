@@ -3,10 +3,10 @@ import axios from 'axios';
 
 import InviteIn from './InviteIn';
 import InviteOut from './InviteOut';
+import { UserContext } from '../contexts/userContext';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Alert from '@material-ui/lab/Alert';
-import { Snackbar } from '@material-ui/core';
+import AppAlert from './AppAlert';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -37,13 +37,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Invites = () => {
+  const { userState, userActions } = useContext(UserContext);
   const classes = useStyles();
 
   const [showRequests, setShowRequests] = useState(true);
   const [showSent, setShowSent] = useState(false);
   const [invites, setInvites] = useState(null);
-  const [invitesError, setInvitesError] = useState(false);
-  const [invitesErrorMsg, setInvitesErrorMsg] = useState('');
 
   const requestsShow = () => {
     setShowRequests(true);
@@ -66,43 +65,12 @@ const Invites = () => {
   };
 
   useEffect(() => {
-    //axios fetch all the PENDING invites user has sent and received
-    //is called whenever a change in invitations takes place
-    (async function fetchPendingInvites() {
-      try {
-        const res = await axios.get(`user/invitations/pending`);
-
-        //if response is ok or user has no invites
-        if (res.status === 200 || res.status === 204) {
-          //sets invites to an object of pending in and out invites
-          const pendingInvites = res.data;
-          return setInvites(pendingInvites);
-        }
-        if (res.status === 404 || res.status === 500) {
-          //user not found
-          //dispatch user error
-          setInvitesErrorMsg('Error fetching invites');
-          setInvites(true);
-        }
-      } catch (err) {
-        console.log(err.message);
-        setInvitesErrorMsg('Error fetching invites');
-        setInvites(true);
-        //dispatch user error
-      }
+    //fetch all the PENDING invites user has sent and received on load
+    (async function fetchInvites() {
+      const fetchedInvites = await userActions.fetchPendingInvites();
+      setInvites(fetchedInvites);
     })();
   }, []);
-
-  //clears the backend error alert msg
-  useEffect(() => {
-    let timer;
-    if (invitesError) {
-      timer = setTimeout(() => {
-        setInvitesError(false);
-      }, 1000);
-    }
-    return () => clearTimeout(timer);
-  });
 
   return (
     <div className={classes.wrapper}>
@@ -155,15 +123,7 @@ const Invites = () => {
         )}
       </div>
       {/* Error alerts */}
-      <Snackbar
-        open={invitesError}
-        autoHideDuration={2000}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert severity="error" variant="filled">
-          {invitesErrorMsg}
-        </Alert>
-      </Snackbar>
+      <AppAlert condition={userState.user.errorMsg} />
     </div>
   );
 };

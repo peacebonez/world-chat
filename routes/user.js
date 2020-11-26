@@ -124,7 +124,7 @@ router.post(
           return res
             .status(201)
             .cookie('token', token, { httpOnly: true })
-            .json({ token, msg: 'Register Success!' });
+            .json(user);
         },
       );
     } catch (err) {

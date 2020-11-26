@@ -1,14 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Snackbar,
-  Hidden,
-} from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
+import { Link } from 'react-router-dom';
+import { Box, Typography, TextField, Button, Hidden } from '@material-ui/core';
+import AppAlert from '../components/AppAlert';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Background from '../assets/background.png';
@@ -115,6 +108,7 @@ export default function Login() {
           <TextField
             label="Email"
             onChange={(event) => setEmail(event.target.value)}
+            value={email}
             className={classes.marginBottom5}
             required
             error={errorEmail}
@@ -123,6 +117,7 @@ export default function Login() {
           <TextField
             label="Password"
             type="password"
+            value={password}
             onChange={(event) => setPassword(event.target.value)}
             className={classes.marginBottom5}
             required
@@ -143,15 +138,7 @@ export default function Login() {
         </Box>
       </Box>
       {/* Error alerts */}
-      <Snackbar
-        open={!userState.user.errorMsg === ''}
-        autoHideDuration={2000}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert severity="error" variant="filled">
-          {userState.user.errorMsg ? userState.user.errorMsg : ''}
-        </Alert>
-      </Snackbar>
+      <AppAlert condition={userState.user.errorMsg} />
     </Box>
   );
 }
