@@ -25,6 +25,43 @@ const UserProvider = (props) => {
   const [userState, dispatch] = useReducer(userReducer, initialState);
 
   const actions = {
+    signUpUser: async (name, email, password, primaryLanguage) => {
+      //POST config header values
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+      try {
+        let res = await axios.post(
+          '/user/signup',
+          {
+            name,
+            email,
+            password,
+            primaryLanguage,
+          },
+          config,
+        );
+        console.log('signup res:', res);
+        dispatch({ type: UPDATE_USER, payload: res.data });
+        return res;
+      } catch (err) {
+        if (err.message.includes('400')) {
+          dispatch({
+            type: USER_ERROR,
+            payload: { errorMsg: 'User already exists.' },
+          });
+        }
+
+        if (err.message.includes('500')) {
+          dispatch({
+            type: USER_ERROR,
+            payload: { errorMsg: 'Server error' },
+          });
+        }
+      }
+    },
     fetchUser: async () => {
       try {
         const res = await axios.get('/user/get_current_user');
@@ -82,6 +119,10 @@ const UserProvider = (props) => {
         dispatch({ type: USER_LOGOUT });
       } catch (err) {
         console.log(err.message);
+        dispatch({
+          type: USER_ERROR,
+          payload: { errorMsg: 'Logout Error' },
+        });
       }
     },
     clearErrors: () => {

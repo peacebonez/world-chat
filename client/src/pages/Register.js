@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useHistory, Redirect } from 'react-router-dom';
-import axios from 'axios';
+import { Link, useHistory } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -18,6 +17,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Background from '../assets/background.png';
 import { UserContext } from '../contexts/userContext';
 require('dotenv').config();
+
 const useStyles = makeStyles({
   noUnderlineLink: {
     textDecoration: 'none',
@@ -56,7 +56,7 @@ const useStyles = makeStyles({
 export default function Register() {
   const history = useHistory();
   const classes = useStyles();
-  const { userState } = useContext(UserContext);
+  const { userState, userActions } = useContext(UserContext);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -67,79 +67,45 @@ export default function Register() {
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorLanguage, setErrorLanguage] = useState(false);
-  const [errorBackend, setErrorBackend] = useState(false);
-  const [backendErrorMsg, setBackendErrorMsg] = useState('');
 
   useEffect(() => {
     if (isName(name)) setErrorName(false);
     if (isEmail(email)) setErrorEmail(false);
     if (password.length > 5) setErrorPassword(false);
     if (primaryLanguage) setErrorLanguage(false);
-
-    //clears backend error msg
-    let timer;
-    if (errorBackend) {
-      timer = setTimeout(() => {
-        setErrorBackend(false);
-      }, 5000);
-    }
-    return () => clearTimeout(timer);
-  }, [name, email, password.length, primaryLanguage, errorBackend]);
+  }, [name, email, password.length, primaryLanguage]);
 
   const isEmail = (email) => /^\S+@\S+$/.test(email);
   const isName = (name) => /^[A-Z]+$/i.test(name);
+
   const errors = () => {
     return (
-      errorName || errorEmail || errorPassword || errorLanguage || errorBackend
+      errorName ||
+      errorEmail ||
+      errorPassword ||
+      errorLanguage ||
+      !userState.user.errorMsg === ''
     );
   };
   const handleSubmit = async () => {
+    console.log('clicked');
     if (!isEmail(email)) setErrorEmail(true);
     if (!isName(name)) setErrorName(true);
     if (!password) setErrorPassword(true);
     if (!primaryLanguage) setErrorLanguage(true);
 
     if (!errors()) {
-      let res = await signUpUser();
+      let res = await userActions.signUpUser(
+        name,
+        email,
+        password,
+        primaryLanguage,
+      );
       if (res && (res.status === 200 || res.status === 201)) {
         history.push('/messenger');
       }
     }
   };
-
-  const signUpUser = async () => {
-    //POST config header values
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-    try {
-      let res = await axios.post(
-        '/user/signup',
-        {
-          name,
-          email,
-          password,
-          primaryLanguage,
-        },
-        config,
-      );
-      return res;
-    } catch (err) {
-      if (err.message.includes('400')) {
-        setErrorBackend(true);
-        setBackendErrorMsg('User already exists.');
-      }
-
-      if (err.message.includes('500')) {
-        setErrorBackend(true);
-        setBackendErrorMsg('Server error');
-      }
-    }
-  };
-
-  if (userState.user.email) return <Redirect to="/messenger" />;
 
   return (
     <Box display="flex">
@@ -186,22 +152,18 @@ export default function Register() {
             className={classes.marginBottom5}
             required
             error={errorName}
-            helpertext={errorName && 'Name required.'}
+            helperText={'Name required.'}
           />
-          <Typography variant="h6" className={classes.errors}>
-            {errorName}
-          </Typography>
+          <Typography variant="h6" className={classes.errors}></Typography>
           <TextField
             label="Email"
             onChange={(event) => setEmail(event.target.value)}
             className={classes.marginBottom5}
             required
             error={errorEmail}
-            helpertext={errorEmail && 'Invalid email.'}
+            helperText={'Invalid email.'}
           />
-          <Typography variant="h6" className={classes.errors}>
-            {errorEmail}
-          </Typography>
+          <Typography variant="h6" className={classes.errors}></Typography>
           <TextField
             label="Password"
             type="password"
@@ -209,17 +171,10 @@ export default function Register() {
             className={classes.marginBottom5}
             required
             error={errorPassword}
-            helpertext={
-              errorPassword && 'Password must be at least 6 characters.'
-            }
+            helperText={'Password must be at least 6 characters.'}
           />
-          <Typography variant="h6" className={classes.errors}>
-            {errorPassword}
-          </Typography>
-          <FormControl
-            className={classes.marginBottom20}
-            helpertext={errorLanguage && 'Please select a language.'}
-          >
+          <Typography variant="h6" className={classes.errors}></Typography>
+          <FormControl className={classes.marginBottom20}>
             <InputLabel id="language-select">Select a Language</InputLabel>
             <Select
               id="language-select"
@@ -232,9 +187,7 @@ export default function Register() {
               <MenuItem value={'French'}>French</MenuItem>
             </Select>
           </FormControl>
-          <Typography variant="h6" className={classes.errors}>
-            {errorLanguage}
-          </Typography>
+          <Typography variant="h6" className={classes.errors}></Typography>
           <Button
             className={classes.createButton}
             variant="contained"
@@ -248,12 +201,12 @@ export default function Register() {
       </Box>
       {/* Error alerts */}
       <Snackbar
-        open={errorBackend}
+        open={!userState.user.errorMsg === ''}
         autoHideDuration={5000}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert severity="error" variant="filled">
-          {backendErrorMsg}
+          {userState.user.errorMsg ? userState.user.errorMsg : ''}
         </Alert>
       </Snackbar>
     </Box>

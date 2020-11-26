@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import axios from 'axios';
 import {
   Box,
   Typography,
@@ -53,7 +52,6 @@ const useStyles = makeStyles({
 
 export default function Login() {
   const classes = useStyles();
-  const history = useHistory();
   const { userActions, userState } = useContext(UserContext);
 
   const [email, setEmail] = useState('');
@@ -73,9 +71,7 @@ export default function Login() {
   useEffect(() => {
     if (isEmail(email)) setErrorEmail(false);
     if (password.length > 5) setErrorPassword(false);
-  }, [email, password.length, userState.user]);
-
-  console.log('userState:', userState);
+  }, [email, password.length]);
 
   return (
     <Box display="flex">
@@ -148,9 +144,8 @@ export default function Login() {
       </Box>
       {/* Error alerts */}
       <Snackbar
-        open={userState.user.errorMsg}
+        open={!userState.user.errorMsg === ''}
         autoHideDuration={2000}
-        onClose={userState.user.errorMsg === ''}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert severity="error" variant="filled">
