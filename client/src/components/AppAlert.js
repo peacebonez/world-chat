@@ -2,15 +2,15 @@ import React from 'react';
 import Alert from '@material-ui/lab/Alert';
 import { Snackbar } from '@material-ui/core';
 
-const AppAlert = ({ condition }) => {
+const AppAlert = ({ trigger }) => {
   return (
     <Snackbar
-      open={Boolean(condition)}
+      open={Boolean(trigger)}
       autoHideDuration={5000}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
     >
       <Alert severity="error" variant="filled">
-        {condition ? condition : ''}
+        {trigger ? trigger : ''}
       </Alert>
     </Snackbar>
   );

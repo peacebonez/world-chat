@@ -21,13 +21,13 @@ const initialState = {
 };
 
 const UserProvider = (props) => {
-  let history = useHistory();
+  const history = useHistory();
   const [userState, dispatch] = useReducer(userReducer, initialState);
 
   const actions = {
     signUpUser: async (name, email, password, primaryLanguage) => {
       try {
-        let res = await axios.post('/user/signup', {
+        const res = await axios.post('/user/signup', {
           name,
           email,
           password,
@@ -40,14 +40,14 @@ const UserProvider = (props) => {
         if (err.message.includes('400')) {
           dispatch({
             type: USER_ERROR,
-            payload: { errorMsg: 'User already exists.' },
+            payload: 'User already exists.',
           });
         }
 
         if (err.message.includes('500')) {
           dispatch({
             type: USER_ERROR,
-            payload: { errorMsg: 'Server error' },
+            payload: 'Server error',
           });
         }
       }
@@ -78,21 +78,15 @@ const UserProvider = (props) => {
 
         return res;
       } catch (err) {
-        if (err.message.includes('400'))
-          dispatch({
-            type: USER_ERROR,
-            payload: { errorMsg: 'Invalid Credentials' },
-          });
-        if (err.message.includes('404'))
-          dispatch({
-            type: USER_ERROR,
-            payload: { errorMsg: 'User Not Found' },
-          });
-        if (err.message.includes('500'))
-          dispatch({
-            type: USER_ERROR,
-            payload: { errorMsg: 'Server Error' },
-          });
+        let errorMsg;
+        if (err.message.includes('400')) errorMsg = 'Invalid Credentials';
+        if (err.message.includes('404')) errorMsg = 'User not found';
+        if (err.message.includes('500')) errorMsg = 'Server error';
+
+        dispatch({
+          type: USER_ERROR,
+          payload: errorMsg,
+        });
       }
     },
     fetchPendingInvites: async () => {
@@ -107,7 +101,7 @@ const UserProvider = (props) => {
           //user not found
           dispatch({
             type: USER_ERROR,
-            payload: { errorMsg: 'Error fetching invites' },
+            payload: 'Error fetching invites',
           });
           return res.data;
         }
@@ -115,7 +109,7 @@ const UserProvider = (props) => {
         console.log(err.message);
         dispatch({
           type: USER_ERROR,
-          payload: { errorMsg: 'Error fetching invites' },
+          payload: 'Error fetching invites',
         });
       }
     },
@@ -127,7 +121,7 @@ const UserProvider = (props) => {
         console.log(err.message);
         dispatch({
           type: USER_ERROR,
-          payload: { errorMsg: 'Logout Error' },
+          payload: 'Logout Error',
         });
       }
     },
@@ -156,7 +150,7 @@ const UserProvider = (props) => {
 
   useEffect(() => {
     let timer;
-    if (userState.user.errorMsg) {
+    if (userState.errorMsg) {
       timer = setTimeout(() => {
         actions.clearErrors();
       }, 3000);

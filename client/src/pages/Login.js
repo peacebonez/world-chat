@@ -138,7 +138,7 @@ export default function Login() {
         </Box>
       </Box>
       {/* Error alerts */}
-      <AppAlert condition={userState.user.errorMsg} />
+      <AppAlert trigger={userState.errorMsg} />
     </Box>
   );
 }

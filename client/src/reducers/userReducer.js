@@ -19,9 +19,9 @@ export const userReducer = (state, action) => {
         },
       };
     case USER_ERROR:
-      return { ...state, user: payload };
+      return { ...state, errorMsg: payload };
     case CLEAR_ERRORS:
-      return { ...state, user: { errorMsg: '' } };
+      return { ...state, errorMsg: '' };
     default:
       return state;
   }

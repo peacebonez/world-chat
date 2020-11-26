@@ -65,6 +65,7 @@ const SideBarHeader = () => {
     setAnchorEl(null);
   };
 
+  //redirects after logout
   if (!userState.user.name) return <Redirect to="/" />;
 
   return (

@@ -192,7 +192,7 @@ export default function Register() {
         </Box>
       </Box>
       {/* Error alerts */}
-      <AppAlert condition={userState.user.errorMsg} />
+      <AppAlert trigger={userState.errorMsg} />
     </Box>
   );
 }

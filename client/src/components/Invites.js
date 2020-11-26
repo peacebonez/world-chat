@@ -123,7 +123,7 @@ const Invites = () => {
         )}
       </div>
       {/* Error alerts */}
-      <AppAlert condition={userState.user.errorMsg} />
+      <AppAlert trigger={userState.errorMsg} />
     </div>
   );
 };
