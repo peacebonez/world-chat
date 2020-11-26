@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { TextField, Button } from '@material-ui/core';
 import Smiley from '@material-ui/icons/InsertEmoticonOutlined';
 import PhotosIcon from '@material-ui/icons/PhotoLibraryOutlined';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import { UserContext } from '../contexts/userContext';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -20,9 +21,26 @@ const useStyles = makeStyles((theme) => ({
 
 const ChatInput = () => {
   const classes = useStyles();
+  const { socket, userState } = useContext(UserContext);
+
+  const [message, setMessage] = useState('');
+
+  const sendMessage = (e) => {
+    e.preventDefault();
+    console.log(userState)
+    const data = {
+      email: userState.user.email,
+      message,
+      room: '123'
+    };
+    console.log(data.message)
+    socket.emit('messageToClient', data);
+    setMessage('');
+  };
+
   return (
     <div className={classes.chatInput}>
-      <form noValidate autoComplete="off">
+      <form noValidate autoComplete="off" onSubmit={sendMessage}>
         <TextField
           variant="outlined"
           fullWidth
@@ -32,7 +50,11 @@ const ChatInput = () => {
             endAdornment: [<Smiley key={1} />, <PhotosIcon key={2} />],
           }}
         />
-        <Button variant="outlined" color="primary">
+        <Button 
+          variant="outlined" 
+          color="primary"
+          onClick={sendMessage}
+        >
           <ChevronRightIcon />
         </Button>
       </form>
