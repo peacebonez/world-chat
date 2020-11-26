@@ -16,21 +16,38 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  chatUnit: {},
-  chatUnitYours: {},
+  sectionChat: {
+    width: '100%',
+    display: 'inlineBlock',
+  },
+  chatUnit: {
+    float: 'left',
+    marginBottom: '1rem',
+    width: '50%',
+  },
+  chatUnitYours: {
+    float: 'right',
+    marginBottom: '1rem',
+    width: '50%',
+    marginRight: theme.spacing(2),
+  },
   bubble: {
     background:
       'linear-gradient(0deg, rgba(26,114,183,1) 0%, rgba(14,172,117,1) 100%)',
     maxWidth: '18rem',
     wordWrap: 'break-word',
     borderRadius: '0px 15px 15px 15px',
+    display: 'inline-block',
+    float: 'left',
   },
   bubbleYours: {
     background:
-      'linear-gradient(0deg, rgba(26,114,183,1) 0%, rgba(14,172,117,1) 100%)',
+      'radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%)',
     maxWidth: '18rem',
     wordWrap: 'break-word',
     borderRadius: '15px 15px 0px 15px',
+    display: 'inline-block',
+    float: 'right',
   },
   textInBubble: {
     color: 'white',
@@ -59,14 +76,16 @@ const ChatWindow = () => {
   }, []);
 
   return (
-    <div className={classes.chatWindow}>
-      <ul>
+    <div className={classes.chatWindow} style={{ border: '10px solid pink' }}>
+      <div style={{ border: '5px solid red' }} className={classes.sectionChat}>
         {chat.map((datum, index) => {
+          console.log(datum);
           let yours = datum.email === userState.user.email;
           return (
             <section
               key={index}
               className={yours ? classes.chatUnitYours : classes.chatUnit}
+              style={{ border: '5px solid aqua' }}
             >
               <Typography variant="subtitle2">
                 {yours ? '' : datum.moreData.userName} {datum.createdOn.hour}:
@@ -76,7 +95,7 @@ const ChatWindow = () => {
             </section>
           );
         })}
-      </ul>
+      </div>
       <ChatInput />
     </div>
   );

@@ -27,6 +27,7 @@ const ChatInput = () => {
 
   const sendMessage = (e) => {
     e.preventDefault();
+    if (message === '') return;
     console.log(userState)
     const data = {
       email: userState.user.email,
@@ -45,20 +46,20 @@ const ChatInput = () => {
           variant="outlined"
           fullWidth
           autoFocus
-          placeholder="Type something..."
+          placeholder="Type something... (Press ENTER to send)"
           InputProps={{
             endAdornment: [<Smiley key={1} />, <PhotosIcon key={2} />],
           }}
           value={message} // b/c of setMessage(''), clears input field upon submit
           onChange={e => setMessage(e.target.value)}
         />
-        <Button 
+        {/* <Button 
           variant="outlined" 
           color="primary"
           onClick={sendMessage}
         >
           <ChevronRightIcon />
-        </Button>
+        </Button> */}
       </form>
     </div>
   );
