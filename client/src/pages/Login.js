@@ -1,15 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useHistory, Redirect } from 'react-router-dom';
-import axios from 'axios';
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Snackbar,
-  Hidden,
-} from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
+import { Link } from 'react-router-dom';
+import { Box, Typography, TextField, Button, Hidden } from '@material-ui/core';
+import AppAlert from '../components/AppAlert';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Background from '../assets/background.png';
@@ -53,57 +45,26 @@ const useStyles = makeStyles({
 
 export default function Login() {
   const classes = useStyles();
-  const history = useHistory();
   const { userActions, userState } = useContext(UserContext);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
-  const [backendError, setBackendError] = useState(false);
-  const [backendErrorMsg, setBackendErrorMsg] = useState('');
 
   const handleClick = () => {
     if (!email) return setErrorEmail(true);
     if (!password) return setErrorPassword(true);
-    login();
+    userActions.login(email, password);
   };
 
   const isEmail = (email) => /^\S+@\S+$/.test(email);
 
-  const login = async () => {
-    try {
-      const res = await axios.post('/user/login', { email, password });
-      if (res && (res.status === 200 || res.status === 201)) {
-        userActions.fetchUser();
-        history.push('/messenger');
-      }
-
-      return res;
-    } catch (err) {
-      setBackendError(true);
-      if (err.message.includes('400'))
-        setBackendErrorMsg('Invalid credentials');
-      if (err.message.includes('404')) setBackendErrorMsg('User not found');
-      if (err.message.includes('500')) setBackendErrorMsg('Server Error');
-    }
-  };
   //deactivates errors when user inputs into form
   useEffect(() => {
     if (isEmail(email)) setErrorEmail(false);
     if (password.length > 5) setErrorPassword(false);
-
-    //clears the backend error alert msg
-    let timer;
-    if (backendError) {
-      timer = setTimeout(() => {
-        setBackendError(false);
-      }, 1000);
-    }
-    return () => clearTimeout(timer);
-  }, [email, password.length, backendError]);
-
-  if (userState.user.email) return <Redirect to="/messenger" />;
+  }, [email, password.length]);
 
   return (
     <Box display="flex">
@@ -147,6 +108,7 @@ export default function Login() {
           <TextField
             label="Email"
             onChange={(event) => setEmail(event.target.value)}
+            value={email}
             className={classes.marginBottom5}
             required
             error={errorEmail}
@@ -155,6 +117,7 @@ export default function Login() {
           <TextField
             label="Password"
             type="password"
+            value={password}
             onChange={(event) => setPassword(event.target.value)}
             className={classes.marginBottom5}
             required
@@ -175,15 +138,7 @@ export default function Login() {
         </Box>
       </Box>
       {/* Error alerts */}
-      <Snackbar
-        open={backendError}
-        autoHideDuration={2000}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert severity="error" variant="filled">
-          {backendErrorMsg}
-        </Alert>
-      </Snackbar>
+      <AppAlert trigger={userState.errorMsg} />
     </Box>
   );
 }
