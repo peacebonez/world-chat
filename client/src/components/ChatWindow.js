@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import ChatInput from './ChatInput';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../contexts/userContext';
@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
   sectionChat: {
     width: '100%',
     display: 'inlineBlock',
+    overflow: 'auto',
   },
   chatUnit: {
     float: 'left',
@@ -76,8 +77,8 @@ const ChatWindow = () => {
   }, []);
 
   return (
-    <div className={classes.chatWindow} style={{ border: '10px solid pink' }}>
-      <div style={{ border: '5px solid red' }} className={classes.sectionChat}>
+    <div className={classes.chatWindow}>
+      <div className={classes.sectionChat}>
         {chat.map((datum, index) => {
           console.log(datum);
           let yours = datum.email === userState.user.email;
@@ -85,11 +86,10 @@ const ChatWindow = () => {
             <section
               key={index}
               className={yours ? classes.chatUnitYours : classes.chatUnit}
-              style={{ border: '5px solid aqua' }}
             >
               <Typography variant="subtitle2">
                 {yours ? '' : datum.moreData.userName} {datum.createdOn.hour}:
-                {datum.createdOn.minute}
+                {datum.createdOn.minute < 10 ? `0${datum.createdOn.minute}` : datum.createdOn.minute}
               </Typography>
               <ChatBubble message={datum.message} yours={yours} />
             </section>
