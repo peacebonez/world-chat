@@ -83,8 +83,7 @@ const InviteIn = ({ invite, handleApproveOrReject }) => {
 
 InviteIn.propTypes = {
   invite: PropTypes.object.isRequired,
-  handleApproveRequest: PropTypes.func.isRequired,
-  handleRejectRequest: PropTypes.func.isRequired,
+  handleApproveOrReject: PropTypes.func.isRequired,
 };
 
 export default InviteIn;

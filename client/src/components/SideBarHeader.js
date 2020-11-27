@@ -1,20 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
-import { useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import tempAvatar from '../assets/temp-avatar.jpg';
-import {
-  Typography,
-  Menu,
-  MenuItem,
-  Button,
-  Snackbar,
-} from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
+import { Typography, Menu, MenuItem, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 
 import { UserContext } from '../contexts/userContext';
+import AppAlert from './AppAlert';
 
 const useStyles = makeStyles((theme) => ({
   sideBarHeader: {
@@ -89,14 +83,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SideBarHeader = () => {
-  const { userState } = useContext(UserContext);
-  const history = useHistory();
+  const { userState, userActions } = useContext(UserContext);
   const classes = useStyles();
 
   const [userAvatar, setUserAvatar] = useState(null);
-  const [uploading, setUploading] = useState(false);
-  const [errorAvatar, setErrorAvatar] = useState(false);
-  const [errorAvatarMsg, setErrorAvatarMsg] = useState('');
   const [isHover, setIsHover] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -109,63 +99,18 @@ const SideBarHeader = () => {
   };
 
   const handleUpload = async (e) => {
-    e.preventDefault();
-
-    const file = e.target.files[0];
-
-    const data = new FormData();
-    if (!data) {
-      setErrorAvatarMsg('Error uploading image');
-      setErrorAvatar(true);
-      setUploading(false);
-      return;
-    }
-
-    data.append('file', file, file.name);
-
-    try {
-      setUploading(true);
-      const res = await axios.post('/user/avatar', data);
-      if (res.status === 200) {
-        setUserAvatar(res.data.avatar.url);
-        setUploading(false);
-      } else {
-        setErrorAvatarMsg('Error uploading image');
-        setErrorAvatar(true);
-        setUploading(false);
-      }
-    } catch (err) {
-      console.log(err.message);
-      setErrorAvatarMsg('Error uploading image');
-      setErrorAvatar(true);
-      setUploading(false);
-    }
+    await userActions.avatarUpload(e);
+    window.location.reload();
   };
-
-  const handleLogout = async () => {
-    history.push('/');
-    await axios.get('/user/logout');
-    try {
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-
-  useEffect(() => {
-    let timer;
-    if (errorAvatar) {
-      timer = setTimeout(() => {
-        setErrorAvatar(false);
-      }, 5000);
-    }
-    return () => clearTimeout(timer);
-  });
 
   useEffect(() => {
     if (userState.user.avatar) {
       setUserAvatar(userState.user.avatar.url);
     }
-  }, [userState]);
+  }, [userState.user]);
+
+  //redirects after logout
+  if (!userState.user.name) return <Redirect to="/" />;
 
   return (
     <div className={classes.sideBarHeader}>
@@ -186,7 +131,7 @@ const SideBarHeader = () => {
             onMouseOut={() => setIsHover(false)}
           />
           <img
-            src={userAvatar || tempAvatar}
+            src={userAvatar ? userState.user.avatar.url : tempAvatar}
             alt="user-avatar"
             className={`${classes.sideBarImg} ${
               isHover && classes.sideBarImgHover
@@ -208,18 +153,10 @@ const SideBarHeader = () => {
         keepMounted
         onClose={handleClose}
       >
-        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        <MenuItem onClick={userActions.logout}>Logout</MenuItem>
       </Menu>
       {/* Error alerts */}
-      <Snackbar
-        open={errorAvatar}
-        autoHideDuration={5000}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert severity="error" variant="filled">
-          {errorAvatarMsg}
-        </Alert>
-      </Snackbar>
+      <AppAlert trigger={userState.errorMsg} />
     </div>
   );
 };
