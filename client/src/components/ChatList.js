@@ -11,10 +11,12 @@ const useStyles = makeStyles((theme) => ({
 
 const ChatList = () => {
   const { userState, userActions } = useContext(UserContext);
+  console.log('userState:', userState);
   const classes = useStyles();
 
   const testChats = [
     {
+      _id: '87263612836872387sddp',
       chatters: {
         user: { name: 'Mary', avatar: 'string' },
       },
@@ -24,22 +26,26 @@ const ChatList = () => {
           originalLanguage: 'English',
           text: 'Hey There!',
           createdAt: '11/28/2020',
+          isRead: true,
         },
         {
           fromUser: 'Mary',
           originalLanguage: 'English',
           text: 'Howdy',
           createdAt: '11/28/2020',
+          isRead: true,
         },
         {
           fromUser: userState.user.name,
           originalLanguage: 'English',
           text: 'How are you?',
           createdAt: '11/28/2020',
+          isRead: false,
         },
       ],
     },
     {
+      _id: '87263612836872387sddq',
       chatters: {
         user: { name: 'Mary', avatar: 'string' },
       },
@@ -49,22 +55,26 @@ const ChatList = () => {
           originalLanguage: 'English',
           text: 'Hey There!',
           createdAt: '11/28/2020',
+          isRead: true,
         },
         {
           fromUser: 'Mary',
           originalLanguage: 'English',
           text: 'Howdy',
           createdAt: '11/28/2020',
+          isRead: false,
         },
         {
           fromUser: userState.user.name,
           originalLanguage: 'English',
           text: 'How are you?',
           createdAt: '11/28/2020',
+          isRead: false,
         },
       ],
     },
     {
+      _id: '87263612836872387sddr',
       chatters: {
         user: { name: 'Mary', avatar: 'string' },
       },
@@ -74,22 +84,26 @@ const ChatList = () => {
           originalLanguage: 'English',
           text: 'Hey There!',
           createdAt: '11/28/2020',
+          isRead: true,
         },
         {
           fromUser: 'Mary',
           originalLanguage: 'English',
           text: 'Howdy',
           createdAt: '11/28/2020',
+          isRead: false,
         },
         {
           fromUser: userState.user.name,
           originalLanguage: 'English',
           text: 'How are you?',
           createdAt: '11/28/2020',
+          isRead: false,
         },
       ],
     },
     {
+      _id: '87263612836872387sdde',
       chatters: {
         user: { name: 'Mary', avatar: 'string' },
       },
@@ -99,22 +113,26 @@ const ChatList = () => {
           originalLanguage: 'English',
           text: 'Hey There!',
           createdAt: '11/28/2020',
+          isRead: true,
         },
         {
           fromUser: 'Mary',
           originalLanguage: 'English',
           text: 'Howdy',
           createdAt: '11/28/2020',
+          isRead: false,
         },
         {
           fromUser: userState.user.name,
           originalLanguage: 'English',
           text: 'How are you?',
           createdAt: '11/28/2020',
+          isRead: false,
         },
       ],
     },
     {
+      _id: '87263612836872387sddd',
       chatters: {
         user: { name: 'Mary', avatar: 'string' },
       },
@@ -124,22 +142,26 @@ const ChatList = () => {
           originalLanguage: 'English',
           text: 'Hey There!',
           createdAt: '11/28/2020',
+          isRead: true,
         },
         {
           fromUser: 'Mary',
           originalLanguage: 'English',
           text: 'Howdy',
           createdAt: '11/28/2020',
+          isRead: false,
         },
         {
           fromUser: userState.user.name,
           originalLanguage: 'English',
           text: 'How are you?',
           createdAt: '11/28/2020',
+          isRead: false,
         },
       ],
     },
     {
+      _id: '87263612836872387sddc',
       chatters: {
         user: { name: 'Mary', avatar: 'string' },
       },
@@ -149,22 +171,26 @@ const ChatList = () => {
           originalLanguage: 'English',
           text: 'Hey There!',
           createdAt: '11/28/2020',
+          isRead: true,
         },
         {
           fromUser: 'Mary',
           originalLanguage: 'English',
           text: 'Howdy',
           createdAt: '11/28/2020',
+          isRead: false,
         },
         {
           fromUser: userState.user.name,
           originalLanguage: 'English',
           text: 'How are you?',
           createdAt: '11/28/2020',
+          isRead: false,
         },
       ],
     },
     {
+      _id: '87263612836872387sddb',
       chatters: {
         user: { name: 'Mary', avatar: 'string' },
       },
@@ -174,18 +200,21 @@ const ChatList = () => {
           originalLanguage: 'English',
           text: 'Hey There!',
           createdAt: '11/28/2020',
+          isRead: true,
         },
         {
           fromUser: 'Mary',
           originalLanguage: 'English',
           text: 'Howdy',
           createdAt: '11/28/2020',
+          isRead: false,
         },
         {
           fromUser: userState.user.name,
           originalLanguage: 'English',
           text: 'How are you?',
           createdAt: '11/28/2020',
+          isRead: false,
         },
       ],
     },

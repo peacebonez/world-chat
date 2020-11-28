@@ -51,39 +51,15 @@ const useStyles = makeStyles((theme) => ({
   offlineIcon: { background: 'lightgray' },
 }));
 
-// const testChats = [
-//     {
-//       chatters: {
-//         user: { name: 'Mary', avatar: 'string' },
-//       },
-//       messages: [
-//         {
-//           fromUser: userState.user.name,
-//           originalLanguage: 'English',
-//           text: 'Hey There!',
-//           createdAt: '11/28/2020',
-//         },
-//         {
-//           fromUser: 'Mary',
-//           originalLanguage: 'English',
-//           text: 'Howdy',
-//           createdAt: '11/28/2020',
-//         },
-//         {
-//           fromUser: userState.user.name,
-//           originalLanguage: 'English',
-//           text: 'How are you?',
-//           createdAt: '11/28/2020',
-//         },
-//       ],
-//     },
-//   ];
-
 const ChatRoom = ({ chatRoom, i }) => {
   console.log('chatRoom:', chatRoom);
   //test isOnline hard code
   let isOnline = 'true';
   const classes = useStyles();
+
+  const numUnreadMsgs = () =>
+    chatRoom.messages.filter((chat) => chat.isRead === false).length;
+
   return (
     <div className={classes.contactWrapper}>
       <div>
@@ -109,7 +85,7 @@ const ChatRoom = ({ chatRoom, i }) => {
             {chatRoom.messages[chatRoom.messages.length - 1].text}
           </Typography>
         </div>
-        <span className={classes.msgNotification}>7</span>
+        <span className={classes.msgNotification}>{numUnreadMsgs()}</span>
       </div>
     </div>
   );

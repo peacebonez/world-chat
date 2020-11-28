@@ -23,6 +23,10 @@ const ConversationSchema = new Schema({
       text: {
         type: String,
       },
+      isRead: {
+        type: Boolean,
+        default: false,
+      },
       createdAt: {
         type: Date,
         default: Date.now,

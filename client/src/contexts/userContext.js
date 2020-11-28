@@ -9,6 +9,7 @@ import {
   USER_ERROR,
   USER_LOGOUT,
   CLEAR_ERRORS,
+  GET_CONVERSATIONS,
 } from '../reducers/userReducer';
 
 const serverURL = process.env.serverURL;
@@ -114,10 +115,10 @@ const UserProvider = (props) => {
       }
     },
     fetchConversations: async () => {
-      console.log('FETCH CONVERSATIONS EXECUTING');
       try {
         const res = await axios.get('/user/conversations');
-        console.log('res:', res);
+        const data = res.data;
+        dispatch({ type: GET_CONVERSATIONS, payload: data });
         return res;
       } catch (err) {
         dispatch({

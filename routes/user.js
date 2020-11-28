@@ -186,7 +186,7 @@ router.get('/conversations', auth, async (req, res) => {
       return res.status(204).json({ error: 'No conversations found' });
     }
 
-    return res.status(200).json({ conversations });
+    return res.status(200).json(conversations);
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ userId });
