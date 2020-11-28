@@ -11,7 +11,6 @@ const useStyles = makeStyles((theme) => ({
 
 const ChatList = () => {
   const { userState, userActions, socket } = useContext(UserContext);
-  console.log('userState:', userState);
   const classes = useStyles();
 
   const [activeIndex, setActiveIndex] = useState(null);
@@ -49,28 +48,28 @@ const ChatList = () => {
     {
       _id: '87263612836872387sddq',
       chatters: {
-        user: { name: 'Mary', avatar: 'string' },
+        user: { name: 'Sonny', avatar: 'string' },
       },
       messages: [
         {
           fromUser: userState.user.name,
           originalLanguage: 'English',
-          text: 'Hey There!',
-          createdOn: '11/28/2020',
+          text: 'SUP!',
+          createdOn: '11/29/2020',
           isRead: true,
         },
         {
-          fromUser: 'Mary',
+          fromUser: 'Sonny',
           originalLanguage: 'English',
-          text: 'Howdy',
-          createdOn: '11/28/2020',
+          text: 'Do you have COVID yet?',
+          createdOn: '11/29/2020',
           isRead: false,
         },
         {
           fromUser: userState.user.name,
           originalLanguage: 'English',
-          text: 'How are you?',
-          createdOn: '11/28/2020',
+          text: 'I dont think so',
+          createdOn: '11/29/2020',
           isRead: false,
         },
       ],
@@ -78,143 +77,27 @@ const ChatList = () => {
     {
       _id: '87263612836872387sddr',
       chatters: {
-        user: { name: 'Mary', avatar: 'string' },
+        user: { name: 'Mo', avatar: 'string' },
       },
       messages: [
         {
           fromUser: userState.user.name,
           originalLanguage: 'English',
-          text: 'Hey There!',
+          text: 'You up?',
           createdOn: '11/28/2020',
           isRead: true,
         },
         {
-          fromUser: 'Mary',
+          fromUser: 'Mo',
           originalLanguage: 'English',
-          text: 'Howdy',
+          text: 'wyd',
           createdOn: '11/28/2020',
           isRead: false,
         },
         {
           fromUser: userState.user.name,
           originalLanguage: 'English',
-          text: 'How are you?',
-          createdOn: '11/28/2020',
-          isRead: false,
-        },
-      ],
-    },
-    {
-      _id: '87263612836872387sdde',
-      chatters: {
-        user: { name: 'Mary', avatar: 'string' },
-      },
-      messages: [
-        {
-          fromUser: userState.user.name,
-          originalLanguage: 'English',
-          text: 'Hey There!',
-          createdOn: '11/28/2020',
-          isRead: true,
-        },
-        {
-          fromUser: 'Mary',
-          originalLanguage: 'English',
-          text: 'Howdy',
-          createdOn: '11/28/2020',
-          isRead: false,
-        },
-        {
-          fromUser: userState.user.name,
-          originalLanguage: 'English',
-          text: 'How are you?',
-          createdOn: '11/28/2020',
-          isRead: false,
-        },
-      ],
-    },
-    {
-      _id: '87263612836872387sddd',
-      chatters: {
-        user: { name: 'Mary', avatar: 'string' },
-      },
-      messages: [
-        {
-          fromUser: userState.user.name,
-          originalLanguage: 'English',
-          text: 'Hey There!',
-          createdOn: '11/28/2020',
-          isRead: true,
-        },
-        {
-          fromUser: 'Mary',
-          originalLanguage: 'English',
-          text: 'Howdy',
-          createdOn: '11/28/2020',
-          isRead: false,
-        },
-        {
-          fromUser: userState.user.name,
-          originalLanguage: 'English',
-          text: 'How are you?',
-          createdOn: '11/28/2020',
-          isRead: false,
-        },
-      ],
-    },
-    {
-      _id: '87263612836872387sddc',
-      chatters: {
-        user: { name: 'Mary', avatar: 'string' },
-      },
-      messages: [
-        {
-          fromUser: userState.user.name,
-          originalLanguage: 'English',
-          text: 'Hey There!',
-          createdOn: '11/28/2020',
-          isRead: true,
-        },
-        {
-          fromUser: 'Mary',
-          originalLanguage: 'English',
-          text: 'Howdy',
-          createdOn: '11/28/2020',
-          isRead: false,
-        },
-        {
-          fromUser: userState.user.name,
-          originalLanguage: 'English',
-          text: 'How are you?',
-          createdOn: '11/28/2020',
-          isRead: false,
-        },
-      ],
-    },
-    {
-      _id: '87263612836872387sddb',
-      chatters: {
-        user: { name: 'Mary', avatar: 'string' },
-      },
-      messages: [
-        {
-          fromUser: userState.user.name,
-          originalLanguage: 'English',
-          text: 'Hey There!',
-          createdOn: '11/28/2020',
-          isRead: true,
-        },
-        {
-          fromUser: 'Mary',
-          originalLanguage: 'English',
-          text: 'Howdy',
-          createdOn: '11/28/2020',
-          isRead: false,
-        },
-        {
-          fromUser: userState.user.name,
-          originalLanguage: 'English',
-          text: 'How are you?',
+          text: 'I dunno, wbu',
           createdOn: '11/28/2020',
           isRead: false,
         },
@@ -224,13 +107,8 @@ const ChatList = () => {
 
   const handleFetch = async () => await userActions.fetchConversations();
 
-  // const [isActive, setIsActive] = useState(false);
-
   const handleActive = (index, chatRoom) => {
-    if (activeIndex) testChats[activeIndex].isActive = false;
     setActiveIndex(index);
-    // testChats.forEach((chat) => (chat.isActive = false));
-    chatRoom.isActive = true;
     userActions.switchConversation(chatRoom);
     console.log('chatRoom:', chatRoom);
   };
