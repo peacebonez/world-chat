@@ -1,7 +1,7 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ChatRoom from './ChatRoom';
-
+import AppAlert from './AppAlert';
 import { UserContext } from '../contexts/userContext';
 
 const useStyles = makeStyles((theme) => ({
@@ -13,6 +13,8 @@ const ChatList = () => {
   const { userState, userActions } = useContext(UserContext);
   console.log('userState:', userState);
   const classes = useStyles();
+
+  const [activeIndex, setActiveIndex] = useState(null);
 
   const testChats = [
     {
@@ -222,6 +224,15 @@ const ChatList = () => {
 
   const handleFetch = async () => await userActions.fetchConversations();
 
+  // const [isActive, setIsActive] = useState(false);
+
+  const handleActive = (index, chatRoom) => {
+    setActiveIndex(index);
+    testChats.forEach((chat) => (chat.isActive = false));
+    chatRoom.isActive = true;
+    console.log('chatRoom:', chatRoom);
+  };
+
   useEffect(() => {
     //Fetch all user conversations on load
     handleFetch();
@@ -230,10 +241,18 @@ const ChatList = () => {
   return (
     <div className={classes.chatListContainer}>
       <ul className={classes.chatList}>
-        {testChats.map((chat, i) => {
-          return <ChatRoom chatRoom={chat} index={i} />;
+        {testChats.map((chat, index) => {
+          return (
+            <ChatRoom
+              chatRoom={chat}
+              index={index}
+              handleActive={handleActive}
+              activeIndex={activeIndex}
+            />
+          );
         })}
       </ul>
+      <AppAlert trigger={userState.errorMsg} />
     </div>
   );
 };

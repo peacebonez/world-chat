@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
@@ -49,9 +49,10 @@ const useStyles = makeStyles((theme) => ({
   },
   onlineIcon: { background: '#4DED84' },
   offlineIcon: { background: 'lightgray' },
+  chatActive: { border: 'solid 1px red' },
 }));
 
-const ChatRoom = ({ chatRoom, i }) => {
+const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
   console.log('chatRoom:', chatRoom);
   //test isOnline hard code
   let isOnline = 'true';
@@ -61,7 +62,12 @@ const ChatRoom = ({ chatRoom, i }) => {
     chatRoom.messages.filter((chat) => chat.isRead === false).length;
 
   return (
-    <div className={classes.contactWrapper}>
+    <div
+      className={`${classes.contactWrapper} ${
+        activeIndex === index ? classes.chatActive : ''
+      }`}
+      onClick={() => handleActive(index, chatRoom)}
+    >
       <div>
         <div className={classes.sideBarImgWrapper}>
           <img
