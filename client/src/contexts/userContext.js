@@ -91,7 +91,7 @@ const UserProvider = (props) => {
     },
     fetchPendingInvites: async () => {
       try {
-        const res = await axios.get(`user/invitations/pending`);
+        const res = await axios.get('user/invitations/pending');
 
         //if response is ok or user has no invites
         if (res.status === 200 || res.status === 204) {
@@ -110,6 +110,19 @@ const UserProvider = (props) => {
         dispatch({
           type: USER_ERROR,
           payload: 'Error fetching invites',
+        });
+      }
+    },
+    fetchConversations: async () => {
+      console.log('FETCH CONVERSATIONS EXECUTING');
+      try {
+        const res = await axios.get('/user/conversations');
+        console.log('res:', res);
+        return res;
+      } catch (err) {
+        dispatch({
+          type: USER_ERROR,
+          payload: 'Error fetching chats',
         });
       }
     },

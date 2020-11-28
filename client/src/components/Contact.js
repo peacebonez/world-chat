@@ -5,13 +5,14 @@ import PropTypes from 'prop-types';
 import tempAvatar from '../assets/temp-avatar.jpg';
 
 const useStyles = makeStyles((theme) => ({
-  sideBarHeader: {
+  contactWrapper: {
     height: 100,
     width: '85%',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottom: 'solid 1px #ddd',
+    cursor: 'pointer',
     '& div': {
       display: 'flex',
       alignItems: 'center',
@@ -44,7 +45,7 @@ const Contact = ({ contact }) => {
   let isOnline = 'true';
   const classes = useStyles();
   return (
-    <li className={classes.sideBarHeader}>
+    <li className={classes.contactWrapper}>
       <div>
         <div className={classes.sideBarImgWrapper}>
           <img

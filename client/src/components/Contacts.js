@@ -26,6 +26,7 @@ const Contacts = () => {
           return <Contact contact={contact} key={contact.email} />;
         })}
       </ul>
+      <Invitation />
     </div>
   );
 };

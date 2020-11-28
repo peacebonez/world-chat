@@ -13,24 +13,25 @@ const ConversationSchema = new Schema({
   ],
   messages: [
     {
-      messageBody: {
-        fromUser: {
-          type: Schema.Types.ObjectId,
-          ref: 'users', //references the users model
-        },
-        originalLanguage: {
-          type: String,
-        },
-        text: {
-          type: String,
-        },
-        createdAt: {
-          type: Date,
-          default: Date.now,
-        },
+      fromUser: {
+        type: Schema.Types.ObjectId,
+        ref: 'users', //references the users model
+      },
+      originalLanguage: {
+        type: String,
+      },
+      text: {
+        type: String,
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
       },
     },
   ],
 });
 
-module.exports = User = mongoose.model('conversation', ConversationSchema);
+module.exports = Conversation = mongoose.model(
+  'conversation',
+  ConversationSchema,
+);

@@ -20,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.between('xs', 'sm')]: {
       width: '100%',
     },
+    [theme.breakpoints.only('md')]: {
+      width: '40%',
+    },
   },
   listContainer: {
     width: '85%',
@@ -40,8 +43,8 @@ const Sidebar = () => {
   //get converstations from user
   //map out both to their respective components
   useEffect(() => {
-    console.log("cookie: ", document.cookie)
-  }, [])
+    console.log('cookie: ', document.cookie);
+  }, []);
   const handleChatsShow = () => {
     setChatsShown(true);
     setContactsShown(false);

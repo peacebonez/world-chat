@@ -157,19 +157,6 @@ router.get(
 );
 
 router.get(
-  '/:id',
-  runAsyncWrapper(async function (req, res) {
-    const user = await User.findById(req.params.id);
-
-    if (!user) {
-      return res.status(400).json({ error: 'User not found' });
-    } else {
-      return res.status(200).json(user);
-    }
-  }),
-);
-
-router.get(
   '/get_all',
   runAsyncWrapper(async function (req, res) {
     const users = await User.find();
@@ -183,14 +170,17 @@ router.get('/conversations', auth, async (req, res) => {
 
   try {
     const user = await User.findById(userId);
+    console.log('user:', user);
 
     if (!user) {
       return res.status(400).json({ error: 'User not found' });
     }
 
     const conversations = await Conversation.find({
-      members: { _id: userId },
+      members: { _id: userId.toString() },
     });
+
+    console.log('conversations:', conversations);
 
     if (conversations.length < 1) {
       return res.status(204).json({ error: 'No conversations found' });
@@ -199,7 +189,7 @@ router.get('/conversations', auth, async (req, res) => {
     return res.status(200).json({ conversations });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ userId });
   }
 });
 
