@@ -39,6 +39,4 @@ const Messenger = (props) => {
   );
 };
 
-Messenger.propTypes = {};
-
 export default Messenger;

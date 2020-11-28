@@ -5,12 +5,8 @@ import ChatRoom from './ChatRoom';
 import { UserContext } from '../contexts/userContext';
 
 const useStyles = makeStyles((theme) => ({
-  chatListContainer: {
-    width: '80%',
-  },
-  chatList: {
-    paddingLeft: 0,
-  },
+  chatListContainer: {},
+  chatList: {},
 }));
 
 const ChatList = () => {

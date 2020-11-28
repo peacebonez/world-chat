@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'flex-start',
     width: '100%',
     overflowX: 'hidden',
+    direction: 'ltr',
   },
   inviteSelector: {
     border: 'none',
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 28,
   },
   invitesWrapper: {
-    width: '100%',
+    width: '90%',
   },
   inviteUl: {
     paddingLeft: 0,

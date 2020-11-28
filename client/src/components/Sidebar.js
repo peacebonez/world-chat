@@ -9,6 +9,7 @@ import Invites from './Invites';
 
 const useStyles = makeStyles((theme) => ({
   sideBar: {
+    direction: 'rtl',
     width: '33.33%',
     background: theme.palette.primary.gray,
     position: 'absolute',
@@ -25,7 +26,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   listContainer: {
-    width: '85%',
+    width: '100%',
+    paddingLeft: theme.spacing(5),
     maxHeight: '100vh',
     overflowY: 'scroll',
   },

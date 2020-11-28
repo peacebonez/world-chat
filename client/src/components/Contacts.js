@@ -6,10 +6,10 @@ import { UserContext } from '../contexts/userContext';
 
 const useStyles = makeStyles((theme) => ({
   contactsContainer: {
-    width: '80%',
+    width: '100%',
   },
   contactList: {
-    paddingLeft: 0,
+    listStyle: 'none',
   },
 }));
 
@@ -26,7 +26,6 @@ const Contacts = () => {
           return <Contact contact={contact} key={contact.email} />;
         })}
       </ul>
-      <Invitation />
     </div>
   );
 };

@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    direction: 'ltr',
     '& div': {
       display: 'flex',
       alignItems: 'center',

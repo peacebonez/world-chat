@@ -6,12 +6,12 @@ import tempAvatar from '../assets/temp-avatar.jpg';
 const useStyles = makeStyles((theme) => ({
   contactWrapper: {
     height: 100,
-    width: '85%',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottom: 'solid 1px #ddd',
     cursor: 'pointer',
+    direction: 'ltr',
     '& div': {
       display: 'flex',
     },
