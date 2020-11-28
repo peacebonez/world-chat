@@ -19,12 +19,13 @@ const useStyles = makeStyles((theme) => ({
 
 const ChatWindow = () => {
   const classes = useStyles();
-  const { socket } = useContext(UserContext);
-  const [chat, setChat] = useState([]); // an array of "data's"
+  const { socket, userState } = useContext(UserContext);
+  console.log('socket:', socket);
+  const [chat, setChat] = useState(null); // current conversation object
 
   useEffect(() => {
     socket.on('connect', () => {
-      socket.emit('join', '123' ); // replace 123 with conversation id
+      socket.emit('join', '123'); // replace 123 with conversation id
     });
 
     socket.on('roomJoined', (room) => {
@@ -40,11 +41,12 @@ const ChatWindow = () => {
   return (
     <div className={classes.chatWindow}>
       <ul>
-        {chat.map((datum) => (
-          <li key={datum.createdOn}>
-            {datum.message} by {datum.email} on {datum.createdOn}
-          </li>
-        ))}
+        {chat &&
+          chat.messages.map((datum) => (
+            <li key={datum.createdAt}>
+              {datum.text} by {datum.fromUser} on {datum.createdAt}
+            </li>
+          ))}
       </ul>
       <ChatInput />
     </div>

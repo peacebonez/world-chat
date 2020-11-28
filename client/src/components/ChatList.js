@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ChatList = () => {
-  const { userState, userActions } = useContext(UserContext);
+  const { userState, userActions, socket } = useContext(UserContext);
   console.log('userState:', userState);
   const classes = useStyles();
 
@@ -227,8 +227,9 @@ const ChatList = () => {
   // const [isActive, setIsActive] = useState(false);
 
   const handleActive = (index, chatRoom) => {
+    if (activeIndex) testChats[activeIndex].isActive = false;
     setActiveIndex(index);
-    testChats.forEach((chat) => (chat.isActive = false));
+    // testChats.forEach((chat) => (chat.isActive = false));
     chatRoom.isActive = true;
     console.log('chatRoom:', chatRoom);
   };

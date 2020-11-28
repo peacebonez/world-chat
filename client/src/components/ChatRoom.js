@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
   onlineIcon: { background: '#4DED84' },
   offlineIcon: { background: 'lightgray' },
-  chatActive: { border: 'solid 1px red' },
+  chatActive: { background: theme.palette.secondary.main },
 }));
 
 const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
