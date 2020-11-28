@@ -3,6 +3,7 @@ export const USER_ERROR = 'USER_ERROR';
 export const USER_LOGOUT = 'USER_LOGOUT';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const GET_CONVERSATIONS = 'GET_CONVERSATIONS';
+export const SWITCH_CONVERSATION = 'SWITCH_CONVERSATION';
 
 export const userReducer = (state, action) => {
   const { type, payload } = action;
@@ -21,6 +22,8 @@ export const userReducer = (state, action) => {
           primaryLanguage: '',
         },
       };
+    case SWITCH_CONVERSATION:
+      return { ...state, user: { ...state.user, activeRoom: payload } };
     case USER_ERROR:
       return { ...state, errorMsg: payload };
     case CLEAR_ERRORS:

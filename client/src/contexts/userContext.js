@@ -10,6 +10,7 @@ import {
   USER_LOGOUT,
   CLEAR_ERRORS,
   GET_CONVERSATIONS,
+  SWITCH_CONVERSATION,
 } from '../reducers/userReducer';
 
 const serverURL = process.env.serverURL;
@@ -141,6 +142,12 @@ const UserProvider = (props) => {
     },
     clearErrors: () => {
       dispatch({ type: CLEAR_ERRORS });
+    },
+    switchConversation: (room) => {
+      dispatch({
+        type: SWITCH_CONVERSATION,
+        payload: room,
+      });
     },
   };
 

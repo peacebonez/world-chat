@@ -27,7 +27,7 @@ const ConversationSchema = new Schema({
         type: Boolean,
         default: false,
       },
-      createdAt: {
+      createdOn: {
         type: Date,
         default: Date.now,
       },

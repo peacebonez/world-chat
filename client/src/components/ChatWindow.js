@@ -22,8 +22,10 @@ const ChatWindow = () => {
   const { socket, userState } = useContext(UserContext);
   console.log('socket:', socket);
   const [chat, setChat] = useState(null); // current conversation object
+  const [room, setRoom] = useState(null);
 
   useEffect(() => {
+    if (userState.user.activeRoom) setRoom(userState.user.activeRoom);
     socket.on('connect', () => {
       socket.emit('join', '123'); // replace 123 with conversation id
     });
