@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ChatList = () => {
   const { userState, userActions, socket } = useContext(UserContext);
+  console.log('userState:', userState);
   const classes = useStyles();
 
   const [activeIndex, setActiveIndex] = useState(null);
@@ -119,8 +120,11 @@ const ChatList = () => {
 
     handleFetch();
     setChats(userState.user.conversations);
-  }, [userState.user.conversations]);
 
+    //on load set active chat as most recent chat
+    if (chats) userActions.switchConversation(chats[0]);
+  }, [userState.user.conversations]);
+  console.log('chats:', chats);
   return (
     <div className={classes.chatListContainer}>
       <ul className={classes.chatList}>

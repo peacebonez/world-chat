@@ -166,7 +166,6 @@ const UserProvider = (props) => {
       try {
         const res = await axios.get('/user/conversations');
         const data = res.data;
-        console.log('fetch data:', data);
         dispatch({ type: GET_CONVERSATIONS, payload: data });
         return data;
       } catch (err) {
@@ -179,6 +178,7 @@ const UserProvider = (props) => {
     messagesRead: (conversationId) => {
       try {
         const res = axios.put(`/conversation/read/${conversationId}`);
+        //TODO
         const data = res.data;
         // dispatch({ type: UPDATE_MESSAGES, payload: data });
         if (res.status !== 200)

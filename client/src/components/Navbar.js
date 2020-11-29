@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { UserContext } from '../contexts/userContext';
 
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import testFlag from '../assets/testflag.jpg';
@@ -42,15 +43,24 @@ const useStyles = makeStyles((theme) => ({
 
 const Navbar = (props) => {
   const classes = useStyles();
+  const { userState } = useContext(UserContext);
+  console.log('userState.user:', userState.user);
+  console.log('userState.user.activeRoom:', userState.user.activeRoom);
 
   return (
     <div className={classes.navBar}>
       <div>
         <div className={classes.flexCenter}>
-          <img src={testFlag} />
-          <Typography variant="h5">
-            {props.groupchat ? 'Group Chat' : 'Santiago'}
-          </Typography>
+          {userState.user.activeRoom &&
+          userState.user.activeRoom.members.length > 2 ? (
+            <Typography variant="h5">Group Chat</Typography>
+          ) : (
+            <>
+              <img src={testFlag} />
+              <Typography variant="h5">Santiago</Typography>
+            </>
+          )}
+
           {/* background will depend on online status */}
           <span
             className={`${classes.statusIcon} ${classes.onlineIcon}`}
