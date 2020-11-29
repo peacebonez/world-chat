@@ -4,6 +4,7 @@ import { UserContext } from '../contexts/userContext';
 
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import testFlag from '../assets/testflag.jpg';
+import tempAvatar from '../assets/temp-avatar.jpg';
 import { Typography, Switch } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -20,9 +21,13 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     '& img': {
-      width: '10%',
+      width: '50px',
+      height: '50px',
       borderRadius: '50%',
     },
+  },
+  chatterName: {
+    margin: theme.spacing(2),
   },
   dotMenu: {
     cursor: 'pointer',
@@ -44,8 +49,12 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = (props) => {
   const classes = useStyles();
   const { userState } = useContext(UserContext);
-  console.log('userState.user:', userState.user);
-  console.log('userState.user.activeRoom:', userState.user.activeRoom);
+
+  const friend =
+    userState.user.activeRoom &&
+    userState.user.activeRoom.members.filter(
+      (member) => member._id !== userState.user.id,
+    )[0];
 
   return (
     <div className={classes.navBar}>
@@ -53,11 +62,18 @@ const Navbar = (props) => {
         <div className={classes.flexCenter}>
           {userState.user.activeRoom &&
           userState.user.activeRoom.members.length > 2 ? (
-            <Typography variant="h5">Group Chat</Typography>
+            <Typography variant="h5" className={classes.chatterName}>
+              Group Chat
+            </Typography>
           ) : (
             <>
-              <img src={testFlag} />
-              <Typography variant="h5">Santiago</Typography>
+              <img
+                src={(friend && friend.avatar) || tempAvatar}
+                alt="friend avatar"
+              />
+              <Typography variant="h5" className={classes.chatterName}>
+                {friend && friend.name}
+              </Typography>
             </>
           )}
 
