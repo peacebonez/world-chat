@@ -40,8 +40,8 @@ const Sidebar = () => {
   //get converstations from user
   //map out both to their respective components
   useEffect(() => {
-    console.log("cookie: ", document.cookie)
-  }, [])
+    console.log('cookie: ', document.cookie);
+  }, []);
   const handleChatsShow = () => {
     setChatsShown(true);
     setContactsShown(false);
