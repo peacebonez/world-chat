@@ -45,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
     width: 30,
     height: 30,
     background: theme.palette.primary.blue,
+    color: '#fff',
     borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
@@ -118,7 +119,9 @@ const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
               : ''}
           </Typography>
         </div>
-        <span className={classes.msgNotification}>{numUnreadMsgs()}</span>
+        {numUnreadMsgs() > 0 && (
+          <span className={classes.msgNotification}>{numUnreadMsgs()}</span>
+        )}
       </div>
     </div>
   );
