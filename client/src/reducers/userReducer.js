@@ -4,6 +4,7 @@ export const USER_LOGOUT = 'USER_LOGOUT';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const GET_CONVERSATIONS = 'GET_CONVERSATIONS';
 export const SWITCH_CONVERSATION = 'SWITCH_CONVERSATION';
+export const UPDATE_MESSAGES = 'UPDATE_MESSAGES';
 
 export const userReducer = (state, action) => {
   const { type, payload } = action;

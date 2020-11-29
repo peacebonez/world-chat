@@ -15,7 +15,16 @@ const ConversationSchema = new Schema({
     {
       fromUser: {
         type: Schema.Types.ObjectId,
-        ref: 'users', //references the users model
+        ref: 'users',
+        name: {
+          type: String,
+        },
+        email: {
+          type: String,
+        },
+        avatar: {
+          type: String,
+        },
       },
       originalLanguage: {
         type: String,

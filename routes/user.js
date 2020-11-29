@@ -170,7 +170,6 @@ router.get('/conversations', auth, async (req, res) => {
 
   try {
     const user = await User.findById(userId);
-    console.log('user:', user);
 
     if (!user) {
       return res.status(400).json({ error: 'User not found' });
@@ -179,8 +178,6 @@ router.get('/conversations', auth, async (req, res) => {
     const conversations = await Conversation.find({
       members: { _id: userId.toString() },
     });
-
-    console.log('conversations:', conversations);
 
     if (conversations.length < 1) {
       return res.status(204).json({ error: 'No conversations found' });

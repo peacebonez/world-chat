@@ -70,23 +70,28 @@ const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
     >
       <div>
         <div className={classes.sideBarImgWrapper}>
-          <img
-            src={
-              chatRoom.chatters.user.avatar
-                ? chatRoom.chatters.user.avatar
-                : tempAvatar
-            }
-            alt="user avatar"
-            className={classes.sideBarImg}
-          />
-          <span
-            className={`${classes.statusIcon} ${
-              isOnline ? classes.onlineIcon : classes.offlineIcon
-            }`}
-          ></span>
+          {chatRoom.members.map((member) => (
+            <>
+              <img
+                key={member._id}
+                src={member.avatar ? member.avatar : tempAvatar}
+                alt="user avatar"
+                className={classes.sideBarImg}
+              />
+              <span
+                className={`${classes.statusIcon} ${
+                  isOnline ? classes.onlineIcon : classes.offlineIcon
+                }`}
+              ></span>
+            </>
+          ))}
         </div>
         <div className={classes.textWrapper}>
-          <Typography variant="h6">{chatRoom.chatters.user.name}</Typography>
+          {chatRoom.members.map((member) => (
+            <Typography variant="h6" key={member._id}>
+              {member.name}
+            </Typography>
+          ))}
           <Typography variant="subtitle1">
             {chatRoom.messages[chatRoom.messages.length - 1].text}
           </Typography>

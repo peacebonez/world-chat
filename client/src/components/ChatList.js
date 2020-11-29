@@ -14,11 +14,12 @@ const ChatList = () => {
   const classes = useStyles();
 
   const [activeIndex, setActiveIndex] = useState(null);
+  const [chats, setChats] = useState(null);
 
   const testChats = [
     {
       _id: '87263612836872387sddp',
-      chatters: {
+      members: {
         user: { name: 'Mary', avatar: 'string' },
       },
       messages: [
@@ -47,7 +48,7 @@ const ChatList = () => {
     },
     {
       _id: '87263612836872387sddq',
-      chatters: {
+      members: {
         user: { name: 'Sonny', avatar: 'string' },
       },
       messages: [
@@ -76,7 +77,7 @@ const ChatList = () => {
     },
     {
       _id: '87263612836872387sddr',
-      chatters: {
+      members: {
         user: { name: 'Mo', avatar: 'string' },
       },
       messages: [
@@ -107,8 +108,9 @@ const ChatList = () => {
 
   const handleFetch = async () => await userActions.fetchConversations();
 
-  const handleActive = (index, chatRoom) => {
+  const handleActive = async (index, chatRoom) => {
     setActiveIndex(index);
+    await userActions.messagesRead(chatRoom._id);
     userActions.switchConversation(chatRoom);
     console.log('chatRoom:', chatRoom);
   };
@@ -116,21 +118,24 @@ const ChatList = () => {
   useEffect(() => {
     //Fetch all user conversations on load
     handleFetch();
+    setChats(userState.user.conversations);
   }, []);
 
+  console.log('chats:', chats);
   return (
     <div className={classes.chatListContainer}>
       <ul className={classes.chatList}>
-        {testChats.map((chat, index) => {
-          return (
-            <ChatRoom
-              chatRoom={chat}
-              index={index}
-              handleActive={handleActive}
-              activeIndex={activeIndex}
-            />
-          );
-        })}
+        {chats &&
+          chats.map((chatRoom, index) => {
+            return (
+              <ChatRoom
+                chatRoom={chatRoom}
+                index={index}
+                handleActive={handleActive}
+                activeIndex={activeIndex}
+              />
+            );
+          })}
       </ul>
       <AppAlert trigger={userState.errorMsg} />
     </div>

@@ -11,6 +11,7 @@ import {
   CLEAR_ERRORS,
   GET_CONVERSATIONS,
   SWITCH_CONVERSATION,
+  UPDATE_MESSAGES,
 } from '../reducers/userReducer';
 
 const serverURL = process.env.serverURL;
@@ -45,7 +46,6 @@ const UserProvider = (props) => {
             payload: 'User already exists.',
           });
         }
-
         if (err.message.includes('500')) {
           dispatch({
             type: USER_ERROR,
@@ -115,16 +115,44 @@ const UserProvider = (props) => {
         });
       }
     },
+    addConversation: async (members) => {
+      try {
+        const res = axios.post('/conversation/add', { members });
+      } catch (err) {}
+    },
     fetchConversations: async () => {
       try {
         const res = await axios.get('/user/conversations');
         const data = res.data;
         dispatch({ type: GET_CONVERSATIONS, payload: data });
-        return res;
+        return data;
       } catch (err) {
         dispatch({
           type: USER_ERROR,
           payload: 'Error fetching chats',
+        });
+      }
+    },
+    switchConversation: (room) => {
+      dispatch({
+        type: SWITCH_CONVERSATION,
+        payload: room,
+      });
+    },
+    messagesRead: (conversationId) => {
+      try {
+        const res = axios.put(`/conversation/read/${conversationId}`);
+        const data = res.data;
+        // dispatch({ type: UPDATE_MESSAGES, payload: data });
+        if (res.status !== 200)
+          dispatch({
+            type: USER_ERROR,
+            payload: 'Error updating messages',
+          });
+      } catch (err) {
+        dispatch({
+          type: USER_ERROR,
+          payload: 'Error updating messages',
         });
       }
     },
@@ -142,12 +170,6 @@ const UserProvider = (props) => {
     },
     clearErrors: () => {
       dispatch({ type: CLEAR_ERRORS });
-    },
-    switchConversation: (room) => {
-      dispatch({
-        type: SWITCH_CONVERSATION,
-        payload: room,
-      });
     },
   };
 

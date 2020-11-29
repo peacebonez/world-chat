@@ -20,8 +20,6 @@ const useStyles = makeStyles((theme) => ({
 const ChatWindow = () => {
   const classes = useStyles();
   const { socket, userState } = useContext(UserContext);
-  console.log('userState.user:', userState.user);
-  console.log('socket:', socket);
   const [chat, setChat] = useState(null); // current conversation object
   const [room, setRoom] = useState(null);
 
@@ -44,15 +42,14 @@ const ChatWindow = () => {
     if (userState.user.activeRoom) setRoom(userState.user.activeRoom);
   }, [userState.user]);
 
-  console.log('room:', room);
-
   return (
     <div className={classes.chatWindow}>
       <ul>
         {room &&
+          room.messages.length > 0 &&
           room.messages.map((msg) => (
-            <li key={msg.createdAt}>
-              {msg.text} by {msg.fromUser} on {msg.createdOn}
+            <li key={msg.createdOn}>
+              {msg.text} by {msg.fromUser.name} on {msg.createdOn}
             </li>
           ))}
       </ul>

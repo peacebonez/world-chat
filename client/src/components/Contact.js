@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import tempAvatar from '../assets/temp-avatar.jpg';
+import { UserContext } from '../contexts/userContext';
 
 const useStyles = makeStyles((theme) => ({
   contactWrapper: {
@@ -43,6 +44,22 @@ const Contact = ({ contact }) => {
   //test isOnline hard code
   let isOnline = 'true';
   const classes = useStyles();
+  const { userActions, userState } = useContext(UserContext);
+  console.log('userState:', userState);
+
+  const handleCreateChat = async () => {
+    const members = [
+      {
+        _id: userState.user.id,
+        name: userState.user.name,
+        avatar: userState.user.avatar.url,
+      },
+      { _id: contact._id, name: contact.name, avatar: contact.avatar },
+    ];
+    userActions.addConversation(members);
+    //set newly created conversation as active conversation
+  };
+
   return (
     <li className={classes.contactWrapper}>
       <div>
