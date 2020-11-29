@@ -11,6 +11,7 @@ import {
   CLEAR_ERRORS,
   GET_CONVERSATIONS,
   SWITCH_CONVERSATION,
+  ADD_CONVERSATION,
   UPDATE_MESSAGES,
 } from '../reducers/userReducer';
 
@@ -98,8 +99,7 @@ const UserProvider = (props) => {
         //if response is ok or user has no invites
         if (res.status === 200 || res.status === 204) {
           return res.data;
-        }
-        if (res.status === 404 || res.status === 500) {
+        } else {
           //user not found
           dispatch({
             type: USER_ERROR,
@@ -117,13 +117,29 @@ const UserProvider = (props) => {
     },
     addConversation: async (members) => {
       try {
-        const res = axios.post('/conversation/add', { members });
-      } catch (err) {}
+        const res = axios.post('/conversation/add', members);
+        if (res.status !== 200)
+          return dispatch({
+            type: USER_ERROR,
+            payload: 'Error creating conversation',
+          });
+
+        const data = res.data;
+        console.log('data:', data);
+        dispatch({ type: ADD_CONVERSATION, payload: data });
+        return data;
+      } catch (err) {
+        dispatch({
+          type: USER_ERROR,
+          payload: 'Error creating conversation',
+        });
+      }
     },
     fetchConversations: async () => {
       try {
         const res = await axios.get('/user/conversations');
         const data = res.data;
+        console.log('fetch data:', data);
         dispatch({ type: GET_CONVERSATIONS, payload: data });
         return data;
       } catch (err) {

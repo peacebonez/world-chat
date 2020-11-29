@@ -176,7 +176,7 @@ router.get('/conversations', auth, async (req, res) => {
     }
 
     const conversations = await Conversation.find({
-      members: { _id: userId.toString() },
+      'members._id': { $in: userId.toString() },
     });
 
     if (conversations.length < 1) {

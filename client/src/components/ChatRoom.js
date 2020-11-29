@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import tempAvatar from '../assets/temp-avatar.jpg';
+
+import { UserContext } from '../contexts/userContext';
+
 const useStyles = makeStyles((theme) => ({
   contactWrapper: {
     height: 100,
@@ -16,16 +19,11 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
     },
   },
-  sideBarImgWrapper: {
-    '& span': {
-      position: 'relative',
-      transform: 'translate(-200%,180%)',
-    },
-  },
   sideBarImg: {
     borderRadius: '100%',
     overflow: 'hidden',
     width: '70px',
+    height: '70px',
     marginRight: theme.spacing(1),
   },
   textWrapper: {
@@ -36,6 +34,12 @@ const useStyles = makeStyles((theme) => ({
     height: 12,
     border: 'solid white 1px',
     borderRadius: '50%',
+    position: 'relative',
+    transform: 'translate(-200%,380%)',
+  },
+  msgPreview: {
+    color: 'gray',
+    width: '150px',
   },
   msgNotification: {
     width: 30,
@@ -57,9 +61,22 @@ const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
   //test isOnline hard code
   let isOnline = 'true';
   const classes = useStyles();
+  const { userState } = useContext(UserContext);
 
   const numUnreadMsgs = () =>
     chatRoom.messages.filter((chat) => chat.isRead === false).length;
+
+  const chatMembersExcludingUser = chatRoom.members.filter((member) => {
+    return member._id !== userState.user.id;
+  });
+
+  console.log('chatMembersExcludingUser:', chatMembersExcludingUser);
+
+  const truncateMsgPreview = (text, limit) => {
+    if (!text) return '';
+    if (text.length > limit) return text.substr(0, limit) + '...';
+    return text;
+  };
 
   return (
     <div
@@ -70,7 +87,7 @@ const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
     >
       <div>
         <div className={classes.sideBarImgWrapper}>
-          {chatRoom.members.map((member) => (
+          {chatMembersExcludingUser.map((member) => (
             <>
               <img
                 key={member._id}
@@ -87,13 +104,18 @@ const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
           ))}
         </div>
         <div className={classes.textWrapper}>
-          {chatRoom.members.map((member) => (
+          {chatMembersExcludingUser.map((member) => (
             <Typography variant="h6" key={member._id}>
               {member.name}
             </Typography>
           ))}
-          <Typography variant="subtitle1">
-            {chatRoom.messages[chatRoom.messages.length - 1].text}
+          <Typography variant="subtitle1" className={classes.msgPreview}>
+            {chatRoom.messages.length > 0
+              ? truncateMsgPreview(
+                  chatRoom.messages[chatRoom.messages.length - 1].text,
+                  20,
+                )
+              : ''}
           </Typography>
         </div>
         <span className={classes.msgNotification}>{numUnreadMsgs()}</span>

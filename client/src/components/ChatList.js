@@ -119,7 +119,7 @@ const ChatList = () => {
     //Fetch all user conversations on load
     handleFetch();
     setChats(userState.user.conversations);
-  }, []);
+  }, [userState.user]);
 
   console.log('chats:', chats);
   return (

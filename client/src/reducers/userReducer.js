@@ -5,6 +5,7 @@ export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const GET_CONVERSATIONS = 'GET_CONVERSATIONS';
 export const SWITCH_CONVERSATION = 'SWITCH_CONVERSATION';
 export const UPDATE_MESSAGES = 'UPDATE_MESSAGES';
+export const ADD_CONVERSATION = 'ADD_CONVERSATION';
 
 export const userReducer = (state, action) => {
   const { type, payload } = action;
@@ -21,6 +22,14 @@ export const userReducer = (state, action) => {
           avatar: '',
           contacts: [],
           primaryLanguage: '',
+        },
+      };
+    case ADD_CONVERSATION:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          conversations: { ...state.user.conversations, payload },
         },
       };
     case SWITCH_CONVERSATION:

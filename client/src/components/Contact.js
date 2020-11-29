@@ -8,7 +8,6 @@ import { UserContext } from '../contexts/userContext';
 const useStyles = makeStyles((theme) => ({
   contactWrapper: {
     height: 100,
-    width: '95%',
     display: 'flex',
     borderBottom: 'solid 1px #ddd',
     cursor: 'pointer',
@@ -28,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '100%',
     overflow: 'hidden',
     width: '70px',
+    height: '70px',
     marginRight: theme.spacing(1),
   },
   statusIcon: {
@@ -45,27 +45,30 @@ const Contact = ({ contact }) => {
   let isOnline = 'true';
   const classes = useStyles();
   const { userActions, userState } = useContext(UserContext);
-  console.log('userState:', userState);
 
   const handleCreateChat = async () => {
+    const userAvatar = userState.user.avatar.url || tempAvatar;
+    const contactAvatar = contact.avatar.url ? contact.avatar.url : tempAvatar;
     const members = [
       {
         _id: userState.user.id,
         name: userState.user.name,
-        avatar: userState.user.avatar.url,
+        avatar: userAvatar,
       },
-      { _id: contact._id, name: contact.name, avatar: contact.avatar },
+      { _id: contact.id, name: contact.name, avatar: contactAvatar },
     ];
-    userActions.addConversation(members);
+    const newConversation = await userActions.addConversation(members);
     //set newly created conversation as active conversation
+    userActions.switchConversation(newConversation);
+    // userState.activeConvo = convo ?
   };
-
+  console.log('userState:', userState);
   return (
-    <li className={classes.contactWrapper}>
+    <li className={classes.contactWrapper} onClick={handleCreateChat}>
       <div>
         <div className={classes.sideBarImgWrapper}>
           <img
-            src={contact.avatar ? contact.avatar : tempAvatar}
+            src={contact.avatar ? contact.avatar.url : tempAvatar}
             alt="user avatar"
             className={classes.sideBarImg}
           />
