@@ -58,8 +58,9 @@ const Contact = ({ contact }) => {
       { _id: contact.id, name: contact.name, avatar: contactAvatar },
     ];
     const newConversation = await userActions.addConversation(members);
-    console.log('newConversation:', newConversation);
 
+    //if in mobile mode screen shifts to chat
+    userActions.appChatView();
     //if conversation already exists, fetch that conversation and set it as active
     if (!newConversation) {
       const existingConversation = await userActions.fetchSingleConversation(

@@ -6,6 +6,8 @@ export const GET_CONVERSATIONS = 'GET_CONVERSATIONS';
 export const SWITCH_CONVERSATION = 'SWITCH_CONVERSATION';
 export const UPDATE_MESSAGES = 'UPDATE_MESSAGES';
 export const ADD_CONVERSATION = 'ADD_CONVERSATION';
+export const CHANGE_USER_VIEW = 'CHANGE_USER_VIEW';
+export const MOBILE_MODE = 'MOBILE_MODE';
 
 export const userReducer = (state, action) => {
   const { type, payload } = action;
@@ -38,6 +40,10 @@ export const userReducer = (state, action) => {
       return { ...state, errorMsg: payload };
     case CLEAR_ERRORS:
       return { ...state, errorMsg: '' };
+    case CHANGE_USER_VIEW:
+      return { ...state, isChatView: payload };
+    case MOBILE_MODE:
+      return { ...state, isMobileMode: payload };
     default:
       return state;
   }

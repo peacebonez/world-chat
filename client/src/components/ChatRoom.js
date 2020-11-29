@@ -65,7 +65,7 @@ const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
   //test isOnline hard code
   let isOnline = 'true';
   const classes = useStyles();
-  const { userState } = useContext(UserContext);
+  const { userState, userActions } = useContext(UserContext);
 
   const numUnreadMsgs = () =>
     chatRoom.messages.filter((msg) => msg.isRead === false).length;
@@ -85,7 +85,10 @@ const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
       className={`${classes.contactWrapper} ${
         activeIndex === index ? classes.chatActive : ''
       }`}
-      onClick={() => handleActive(index, chatRoom)}
+      onClick={() => {
+        handleActive(index, chatRoom);
+        userActions.appChatView();
+      }}
     >
       <div>
         <div className={classes.sideBarImgWrapper}>

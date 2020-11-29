@@ -13,6 +13,8 @@ import {
   SWITCH_CONVERSATION,
   ADD_CONVERSATION,
   UPDATE_MESSAGES,
+  CHANGE_USER_VIEW,
+  MOBILE_MODE,
 } from '../reducers/userReducer';
 
 const serverURL = process.env.serverURL;
@@ -207,6 +209,18 @@ const UserProvider = (props) => {
     },
     clearErrors: () => {
       dispatch({ type: CLEAR_ERRORS });
+    },
+    appMobileMode: () => {
+      dispatch({ type: MOBILE_MODE, payload: true });
+    },
+    appBigScreenMode: () => {
+      dispatch({ type: MOBILE_MODE, payload: false });
+    },
+    appChatView: () => {
+      dispatch({ type: CHANGE_USER_VIEW, payload: true });
+    },
+    appSideBarView: () => {
+      dispatch({ type: CHANGE_USER_VIEW, payload: false });
     },
   };
 

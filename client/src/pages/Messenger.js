@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Messenger = (props) => {
-  const { userState } = useContext(UserContext);
+  const { userState, userActions } = useContext(UserContext);
 
   const classes = useStyles();
 
@@ -27,6 +27,12 @@ const Messenger = (props) => {
     // Every time the user changes, because this component is one of the main components
     // you'll be able to track it here for now
     // You don't need to include it here if you don't need it in the future
+
+    if (window.innerWidth < 501) {
+      userActions.appMobileMode();
+    } else {
+      userActions.appBigScreenMode();
+    }
   }, [userState.user]);
 
   return (

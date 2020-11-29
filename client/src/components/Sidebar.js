@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import SideBarHeader from './SideBarHeader';
@@ -6,6 +6,8 @@ import SideBarSearch from './SideBarSearch';
 import Contacts from './Contacts';
 import ChatList from './ChatList';
 import Invites from './Invites';
+
+import { UserContext } from '../contexts/userContext';
 
 const useStyles = makeStyles((theme) => ({
   sideBar: {
@@ -20,10 +22,15 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
     [theme.breakpoints.between('xs', 'sm')]: {
       width: '100%',
+      overflow: 'hidden',
     },
     [theme.breakpoints.only('md')]: {
       width: '40%',
     },
+  },
+  sideBarHidden: {
+    transform: 'translateX(-100%)',
+    transition: 'transform .4s',
   },
   listContainer: {
     width: '100%',
@@ -34,10 +41,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sidebar = () => {
+  const classes = useStyles();
+  const { userState } = useContext(UserContext);
+
   const [chatsShown, setChatsShown] = useState(true);
   const [contactsShown, setContactsShown] = useState(false);
   const [invitesShown, setInvitesShown] = useState(false);
-  const classes = useStyles();
 
   //TODOS
   //Fetch user
@@ -64,7 +73,13 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={classes.sideBar}>
+    <div
+      className={`${classes.sideBar} ${
+        userState.isMobileMode && userState.isChatView
+          ? classes.sideBarHidden
+          : ''
+      }`}
+    >
       <SideBarHeader />
       <SideBarSearch
         chatsShown={chatsShown}
