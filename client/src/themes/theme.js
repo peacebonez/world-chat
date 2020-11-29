@@ -21,4 +21,13 @@ export const theme = createMuiTheme({
     primary: { main: '#3C8FFF', gray: '#F5F7FB', blue: '#4097E8' },
     secondary: { main: '#E9EEF9', green: '#4DED84' },
   },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 500,
+      md: 767,
+      lg: 1280,
+      xl: 1920,
+    },
+  },
 });

@@ -3,26 +3,20 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const Conversation = require('../models/Conversation');
 
+//POST a new conversation
 router.post('/add', auth, async (req, res) => {
   const members = req.body;
-  console.log('members:', members);
 
   const memberIDs = members.map((member) => member._id);
-  console.log('memberIDs:', memberIDs);
 
   try {
     //check to see if conversation exists
-    let conversation = await Conversation.find({
+    let conversation = await Conversation.findOne({
       'members._id': { $all: memberIDs },
     });
-    console.log('conversation:', conversation);
 
     //if conversation already exists
-    if (
-      conversation.length > 0
-      //   && conversation.members.length === members.length
-    )
-      return res.status(400).send('Conversation already exists');
+    if (conversation) return res.status(409).json(conversation);
 
     conversation = new Conversation({
       members,
@@ -35,19 +29,28 @@ router.post('/add', auth, async (req, res) => {
     console.error(err);
     res.status(500).send('Server error');
   }
-
-  //   for (const conversation of conversations) {
-  //     const updatedConversations = conversation.members.map(async (member) => {
-  //       if (member._id.toString() !== userId) {
-  //         const guest = await User.findById(member._id);
-  //         member.name = guest.name;
-  //         member.email = guest.email;
-  //         if (member.avatar) member.avatar = guest.avatar.url;
-  //       }
-  //     });
-  //   }
 });
 
+//GET a single conversation
+router.get('/room/:memberIDs', auth, async (req, res) => {
+  const memberIDsRaw = req.params.memberIDs;
+  const memberIDs = memberIDsRaw.split('&');
+
+  try {
+    //check to see if conversation exists
+    let conversation = await Conversation.findOne({
+      'members._id': { $all: memberIDs },
+    });
+    if (!conversation) return res.status(404).send('Conversation not found');
+
+    return res.status(200).json(conversation);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
+
+//UPDATE a conversation's messages to read status
 router.put('/read/:id', auth, async (req, res) => {
   const conversationId = req.params.id;
 

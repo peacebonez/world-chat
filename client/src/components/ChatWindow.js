@@ -49,7 +49,7 @@ const ChatWindow = () => {
           room.messages.length > 0 &&
           room.messages.map((msg) => (
             <li key={msg.createdOn}>
-              {msg.text} by {msg.fromUser.name} on {msg.createdOn}
+              {msg.text} by {msg.fromUser} on {msg.createdOn}
             </li>
           ))}
       </ul>

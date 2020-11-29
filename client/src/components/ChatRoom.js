@@ -41,6 +41,10 @@ const useStyles = makeStyles((theme) => ({
     color: 'gray',
     width: '150px',
   },
+  unreadMsg: {
+    color: '#000',
+    fontWeight: 'bold',
+  },
   msgNotification: {
     width: 30,
     height: 30,
@@ -58,20 +62,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
-  console.log('chatRoom:', chatRoom);
   //test isOnline hard code
   let isOnline = 'true';
   const classes = useStyles();
   const { userState } = useContext(UserContext);
 
   const numUnreadMsgs = () =>
-    chatRoom.messages.filter((chat) => chat.isRead === false).length;
+    chatRoom.messages.filter((msg) => msg.isRead === false).length;
 
   const chatMembersExcludingUser = chatRoom.members.filter((member) => {
     return member._id !== userState.user.id;
   });
-
-  console.log('chatMembersExcludingUser:', chatMembersExcludingUser);
 
   const truncateMsgPreview = (text, limit) => {
     if (!text) return '';
@@ -110,7 +111,12 @@ const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
               {member.name}
             </Typography>
           ))}
-          <Typography variant="subtitle1" className={classes.msgPreview}>
+          <Typography
+            variant="subtitle1"
+            className={`${classes.msgPreview} ${
+              numUnreadMsgs() > 0 ? classes.unreadMsg : ''
+            }`}
+          >
             {chatRoom.messages.length > 0
               ? truncateMsgPreview(
                   chatRoom.messages[chatRoom.messages.length - 1].text,

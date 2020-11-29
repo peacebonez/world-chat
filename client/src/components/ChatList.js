@@ -112,16 +112,15 @@ const ChatList = () => {
     setActiveIndex(index);
     await userActions.messagesRead(chatRoom._id);
     userActions.switchConversation(chatRoom);
-    console.log('chatRoom:', chatRoom);
   };
 
   useEffect(() => {
     //Fetch all user conversations on load
+
     handleFetch();
     setChats(userState.user.conversations);
-  }, [userState.user]);
+  }, [userState.user.conversations]);
 
-  console.log('chats:', chats);
   return (
     <div className={classes.chatListContainer}>
       <ul className={classes.chatList}>

@@ -46,9 +46,9 @@ const Contact = ({ contact }) => {
   const classes = useStyles();
   const { userActions, userState } = useContext(UserContext);
 
-  const handleCreateChat = async () => {
+  const handleClickContact = async () => {
     const userAvatar = userState.user.avatar.url || tempAvatar;
-    const contactAvatar = contact.avatar.url ? contact.avatar.url : tempAvatar;
+    const contactAvatar = contact.avatar ? contact.avatar.url : tempAvatar;
     const members = [
       {
         _id: userState.user.id,
@@ -58,13 +58,22 @@ const Contact = ({ contact }) => {
       { _id: contact.id, name: contact.name, avatar: contactAvatar },
     ];
     const newConversation = await userActions.addConversation(members);
+    console.log('newConversation:', newConversation);
+
+    //if conversation already exists, fetch that conversation and set it as active
+    if (!newConversation) {
+      const existingConversation = await userActions.fetchSingleConversation(
+        members,
+      );
+      return userActions.switchConversation(existingConversation);
+    }
+
     //set newly created conversation as active conversation
     userActions.switchConversation(newConversation);
-    // userState.activeConvo = convo ?
   };
-  console.log('userState:', userState);
+
   return (
-    <li className={classes.contactWrapper} onClick={handleCreateChat}>
+    <li className={classes.contactWrapper} onClick={handleClickContact}>
       <div>
         <div className={classes.sideBarImgWrapper}>
           <img

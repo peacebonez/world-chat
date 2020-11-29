@@ -135,6 +135,33 @@ const UserProvider = (props) => {
         });
       }
     },
+    fetchSingleConversation: async (members) => {
+      const membersArr = members.map((member) => member._id);
+      const memberIDs = membersArr.join('&');
+      console.log('memberIDs:', memberIDs);
+      try {
+        const res = await axios.get(`/conversation/room/${memberIDs}`);
+        if (res.status !== 200)
+          return dispatch({
+            type: USER_ERROR,
+            payload: 'Error getting conversation',
+          });
+
+        const data = res.data;
+        return data;
+      } catch (err) {
+        return dispatch({
+          type: USER_ERROR,
+          payload: 'Error getting conversation',
+        });
+      }
+    },
+    switchConversation: (room) => {
+      dispatch({
+        type: SWITCH_CONVERSATION,
+        payload: room,
+      });
+    },
     fetchConversations: async () => {
       try {
         const res = await axios.get('/user/conversations');
@@ -148,12 +175,6 @@ const UserProvider = (props) => {
           payload: 'Error fetching chats',
         });
       }
-    },
-    switchConversation: (room) => {
-      dispatch({
-        type: SWITCH_CONVERSATION,
-        payload: room,
-      });
     },
     messagesRead: (conversationId) => {
       try {
