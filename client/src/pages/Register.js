@@ -59,53 +59,43 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [primaryLanguage, setPrimaryLanguage] = useState('');
 
   const [errorName, setErrorName] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
-  const [errorConfirmPassword, setErrorConfirmPassword] = useState(false);
   const [errorLanguage, setErrorLanguage] = useState(false);
 
   const isEmail = (email) => /^\S+@\S+$/.test(email);
-  //const isName = (name) => /^[A-Z]+$/i.test(name);
+  const isName = (name) => /^[A-Z]+$/i.test(name);
 
-  const isErrorFree = () => {
-    //if (!isName(name)) return false;
-    if (!name) return false;
-    if (!isEmail(email)) return false;
-    if (password.length <= 5) return false;
-    if (!primaryLanguage) return false;
-    if (password !== confirmPassword) return false;
-    if (!userState.user.errorMsg === '') return false;
-
-    return true;
+  const errors = () => {
+    return (
+      errorName ||
+      errorEmail ||
+      errorPassword ||
+      errorLanguage ||
+      !userState.user.errorMsg === ''
+    );
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!isEmail(email)) setErrorEmail(true);
-    //if (!isName(name)) setErrorName(true);
-    if (!name) setErrorName(true);
+    if (!isName(name)) setErrorName(true);
     if (!password) setErrorPassword(true);
     if (!primaryLanguage) setErrorLanguage(true);
-    if (password !== confirmPassword) {
-      setErrorConfirmPassword(true);
-    }
 
-    if (isErrorFree()) {
+    if (!errors()) {
       userActions.signUpUser(name, email, password, primaryLanguage);
     }
   };
 
   useEffect(() => {
-    //if (isName(name)) setErrorName(false);
-    if (name) setErrorName(true);
+    if (isName(name)) setErrorName(false);
     if (isEmail(email)) setErrorEmail(false);
     if (password.length > 5) setErrorPassword(false);
     if (primaryLanguage) setErrorLanguage(false);
-    if (password === confirmPassword) setErrorConfirmPassword(false);
-  }, [name, email, password.length, primaryLanguage, confirmPassword]);
+  }, [name, email, password.length, primaryLanguage]);
 
   return (
     <Box display="flex">
@@ -174,16 +164,6 @@ export default function Register() {
             helperText={
               errorPassword ? 'Password must be at least 6 characters.' : ''
             }
-          />
-          <Typography variant="h6" className={classes.errors}></Typography>
-          <TextField
-            label="Confirm Password"
-            type="password"
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            className={classes.marginBottom5}
-            required
-            error={errorConfirmPassword}
-            helperText={errorConfirmPassword ? 'Passwords must match.' : ''}
           />
           <Typography variant="h6" className={classes.errors}></Typography>
           <FormControl className={classes.marginBottom20}>

@@ -113,9 +113,6 @@ export default function Login() {
             required
             error={errorEmail}
             helperText={errorEmail && 'Invalid email.'}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') handleClick();
-            }}
           />
           <TextField
             label="Password"
@@ -128,9 +125,6 @@ export default function Login() {
             helperText={
               errorPassword && 'Password must be at least 6 characters.'
             }
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') handleClick();
-            }}
           />
           <Button
             variant="contained"
