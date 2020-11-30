@@ -15,19 +15,16 @@ const useStyles = makeStyles((theme) => ({
     width: '66.66%',
     position: 'absolute',
     right: 0,
-    [theme.breakpoints.down('sm')]: {
-      transform: 'translateX(200%)',
-    },
   },
   conversationFullScreen: {
-    transform: 'translateX(-250%)',
+    overflow: 'hidden',
     width: '100%',
   },
 }));
 
 const Conversation = () => {
   const classes = useStyles();
-  const { userState, userActions } = useContext(UserContext);
+  const { userState } = useContext(UserContext);
 
   return (
     <div

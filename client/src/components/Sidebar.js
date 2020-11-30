@@ -20,8 +20,10 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     height: '100vh',
+    transition: 'transform .4s',
     [theme.breakpoints.between('xs', 'sm')]: {
       width: '100%',
+      zIndex: 1,
       overflow: 'hidden',
     },
     [theme.breakpoints.only('md')]: {

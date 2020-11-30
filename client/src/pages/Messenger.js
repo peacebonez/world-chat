@@ -27,20 +27,18 @@ const Messenger = (props) => {
     // Every time the user changes, because this component is one of the main components
     // you'll be able to track it here for now
     // You don't need to include it here if you don't need it in the future
-
-    if (window.innerWidth < 501) {
+    console.log('window.screen.width:', window.screen.width);
+    if (window.screen.width < 501) {
       userActions.appMobileMode();
     } else {
       userActions.appBigScreenMode();
     }
-  }, [userState.user]);
+  }, [window.screen.width]);
 
   return (
     <Container className={classes.messengerContainer}>
       <Sidebar />
-      <Hidden smDown>
-        <Conversation />
-      </Hidden>
+      <Conversation />
     </Container>
   );
 };

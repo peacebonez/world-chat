@@ -48,13 +48,15 @@ const useStyles = makeStyles((theme) => ({
 
 const Navbar = (props) => {
   const classes = useStyles();
-  const { userState } = useContext(UserContext);
+  const { userState, userActions } = useContext(UserContext);
 
   const friend =
     userState.user.activeRoom &&
     userState.user.activeRoom.members.filter(
       (member) => member._id !== userState.user.id,
     )[0];
+
+  const handleSideBarView = () => userActions.appSideBarView();
 
   return (
     <div className={classes.navBar}>
@@ -70,6 +72,7 @@ const Navbar = (props) => {
               <img
                 src={(friend && friend.avatar) || tempAvatar}
                 alt="friend avatar"
+                onClick={handleSideBarView}
               />
               <Typography variant="h5" className={classes.chatterName}>
                 {friend && friend.name}

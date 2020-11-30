@@ -33,8 +33,7 @@ const ChatList = () => {
 
     //on load set active chat as most recent chat
     if (chats) userActions.switchConversation(chats[0]);
-  }, [userState.user.conversations]);
-  console.log('chats:', chats);
+  }, []);
   return (
     <div className={classes.chatListContainer}>
       <ul className={classes.chatList}>
