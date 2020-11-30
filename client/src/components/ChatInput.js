@@ -32,9 +32,9 @@ const ChatInput = () => {
     const data = {
       email: userState.user.email,
       message,
-      room: '123'
+      room: '123',
     };
-    console.log(data.message)
+    console.log(data.message);
     socket.emit('messageToClient', data);
     setMessage('');
   };

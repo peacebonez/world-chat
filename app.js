@@ -7,7 +7,7 @@ const logger = require('morgan');
 require('dotenv').config();
 
 const mongoose = require('mongoose');
-const uuid = require("uuid");
+const uuid = require('uuid');
 
 const Conversation = require('./models/Conversation');
 const User = require('./models/User')
@@ -88,7 +88,7 @@ io.on('connection', (socket) => {
 
   socket.on('messageToClient', async (data) => {
     // TODO: you might want to pass in more useful info such as name and avatar pic
-    const { room, email, message} = data;
+    const { room, email, message, chatRoomName } = data;
     const now = new Date();
     const createdOn = {
       year: now.getFullYear(),
@@ -102,7 +102,7 @@ io.on('connection', (socket) => {
       userName: user.name
     }
     // TODO: Save the message
-    
+
     // const conversations = await Conversation.findAll({
     //   where: { name: chatRoomName },
     // });
