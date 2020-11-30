@@ -77,6 +77,7 @@ export default function Register() {
       errorEmail ||
       errorPassword ||
       errorLanguage ||
+      errorConfirmPassword ||
       !userState.user.errorMsg === ''
     );
   };
@@ -86,9 +87,17 @@ export default function Register() {
     if (!isName(name)) setErrorName(true);
     if (!password) setErrorPassword(true);
     if (!primaryLanguage) setErrorLanguage(true);
-    if (password !== confirmPassword) setErrorConfirmPassword(true);
+    if (password !== confirmPassword) {
+      alert(`${password} === ${confirmPassword}`);
+      setErrorConfirmPassword(true);
+    }
 
     if (!errors()) {
+      alert(errorName);
+      alert(errorEmail);
+      alert(errorPassword);
+      alert(errorLanguage);
+      alert(errorConfirmPassword);
       userActions.signUpUser(name, email, password, primaryLanguage);
     }
   };
@@ -176,8 +185,8 @@ export default function Register() {
             onChange={(event) => setConfirmPassword(event.target.value)}
             className={classes.marginBottom5}
             required
-            error={errorPassword}
-            helperText={errorPassword ? 'Passwords must match.' : ''}
+            error={errorConfirmPassword}
+            helperText={errorConfirmPassword ? 'Passwords must match.' : ''}
           />
           <Typography variant="h6" className={classes.errors}></Typography>
           <FormControl className={classes.marginBottom20}>
