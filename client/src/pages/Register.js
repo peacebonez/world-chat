@@ -59,11 +59,13 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [primaryLanguage, setPrimaryLanguage] = useState('');
 
   const [errorName, setErrorName] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
+  const [errorConfirmPassword, setErrorConfirmPassword] = useState(false);
   const [errorLanguage, setErrorLanguage] = useState(false);
 
   const isEmail = (email) => /^\S+@\S+$/.test(email);
@@ -84,6 +86,7 @@ export default function Register() {
     if (!isName(name)) setErrorName(true);
     if (!password) setErrorPassword(true);
     if (!primaryLanguage) setErrorLanguage(true);
+    if (password !== confirmPassword) setErrorConfirmPassword(true);
 
     if (!errors()) {
       userActions.signUpUser(name, email, password, primaryLanguage);
@@ -95,7 +98,8 @@ export default function Register() {
     if (isEmail(email)) setErrorEmail(false);
     if (password.length > 5) setErrorPassword(false);
     if (primaryLanguage) setErrorLanguage(false);
-  }, [name, email, password.length, primaryLanguage]);
+    if (password === confirmPassword) setErrorConfirmPassword(false);
+  }, [name, email, password.length, primaryLanguage, confirmPassword]);
 
   return (
     <Box display="flex">
@@ -164,6 +168,16 @@ export default function Register() {
             helperText={
               errorPassword ? 'Password must be at least 6 characters.' : ''
             }
+          />
+          <Typography variant="h6" className={classes.errors}></Typography>
+          <TextField
+            label="Confirm Password"
+            type="password"
+            onChange={(event) => setConfirmPassword(event.target.value)}
+            className={classes.marginBottom5}
+            required
+            error={errorPassword}
+            helperText={errorPassword ? 'Passwords must match.' : ''}
           />
           <Typography variant="h6" className={classes.errors}></Typography>
           <FormControl className={classes.marginBottom20}>
