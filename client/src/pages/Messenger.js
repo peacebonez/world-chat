@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100vw',
     height: '100vh',
     overflow: 'hidden',
-  },
+  }
 }));
 
 const Messenger = (props) => {
@@ -34,7 +34,7 @@ const Messenger = (props) => {
     <Container className={classes.messengerContainer}>
       <Sidebar />
       <Hidden smDown>
-        <Conversation />
+        <Conversation  />
       </Hidden>
       <Invitation />
     </Container>
