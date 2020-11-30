@@ -4,6 +4,8 @@ const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
+const multer = require('multer');
+const AWS = require('aws-sdk');
 require('dotenv').config({ path: '../.env' });
 
 const sgMail = require('@sendgrid/mail');
@@ -416,7 +418,7 @@ router.post(
 router.get('/contacts', auth, async (req, res) => {
   const userId = req.user.id;
   try {
-    const user = await User.findById(userId).select('-password');
+    const user = await User.findById(userId);
 
     if (!user) {
       res.status(404).send('User not found');
@@ -427,6 +429,62 @@ router.get('/contacts', auth, async (req, res) => {
     }
 
     res.json(user.contacts);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+router.post('/avatar', auth, upload.single('file'), async (req, res) => {
+  const file = req.file;
+  if (!file) {
+    return res.status(404).send('File not found');
+  }
+  const userId = req.user.id;
+  const s3FileUrl = process.env.AWS_S3_FILE_URL;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    let s3bucket = new AWS.S3({
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      region: process.env.AWS_REGION,
+    });
+
+    const params = {
+      Bucket: process.env.AWS_BUCKET,
+      Key: user.email,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+      ACL: 'public-read',
+    };
+
+    s3bucket.upload(params, async (err, data) => {
+      if (err) {
+        return res.status(500).json('S3 upload error');
+      } else {
+        const newFileUploaded = {
+          name: file.originalname,
+          url: `${s3FileUrl}${user.email}`,
+        };
+
+        if (user.avatar) delete user.avatar;
+
+        user.avatar = newFileUploaded;
+        console.log('user.avatar:', user.avatar);
+
+        await user.save();
+        res.status(200).json(user);
+      }
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

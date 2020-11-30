@@ -27,13 +27,13 @@ const ChatInput = () => {
 
   const sendMessage = (e) => {
     e.preventDefault();
-    console.log(userState)
+    console.log(userState);
     const data = {
       email: userState.user.email,
       message,
-      room: '123'
+      room: '123',
     };
-    console.log(data.message)
+    console.log(data.message);
     socket.emit('messageToClient', data);
     setMessage('');
   };
@@ -49,12 +49,10 @@ const ChatInput = () => {
           InputProps={{
             endAdornment: [<Smiley key={1} />, <PhotosIcon key={2} />],
           }}
+          onChange={(e) => setMessage(e.target.value)}
+          value={message}
         />
-        <Button 
-          variant="outlined" 
-          color="primary"
-          onClick={sendMessage}
-        >
+        <Button variant="outlined" color="primary" onClick={sendMessage}>
           <ChevronRightIcon />
         </Button>
       </form>
