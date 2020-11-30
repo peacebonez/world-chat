@@ -116,7 +116,7 @@ const Invites = () => {
         {showSent && (
           <ul className={classes.inviteUl}>
             {invites &&
-              invites.pendingInvitesOut.length > 0 &&
+              invites.pendingInvitesOut.length &&
               invites.pendingInvitesOut.map((invite) => (
                 <InviteOut key={invite._id} invite={invite} />
               ))}

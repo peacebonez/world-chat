@@ -11,7 +11,6 @@ const useStyles = makeStyles((theme) => ({
 
 const ChatList = () => {
   const { userState, userActions, socket } = useContext(UserContext);
-  console.log('userState:', userState);
   const classes = useStyles();
 
   const [activeIndex, setActiveIndex] = useState(null);

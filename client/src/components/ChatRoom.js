@@ -120,7 +120,7 @@ const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
               numUnreadMsgs() > 0 ? classes.unreadMsg : ''
             }`}
           >
-            {chatRoom.messages.length > 0
+            {chatRoom.messages.length
               ? truncateMsgPreview(
                   chatRoom.messages[chatRoom.messages.length - 1].text,
                   20,

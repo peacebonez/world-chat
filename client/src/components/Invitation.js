@@ -223,7 +223,7 @@ export default function FormDialog() {
           color="primary"
           className={classes.margin}
           onClick={submitInvite}
-          disabled={emailList.length < 1}
+          disabled={!emailList.length}
         >
           Send Invitations
         </Button>

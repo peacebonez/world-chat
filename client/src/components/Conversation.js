@@ -6,8 +6,6 @@ import ChatWindow from './ChatWindow';
 import Navbar from './Navbar';
 import { UserContext } from '../contexts/userContext';
 
-console.log('window.innerWidth:', window.innerWidth);
-
 const useStyles = makeStyles((theme) => ({
   conversation: {
     background: theme.palette.primary.gray,

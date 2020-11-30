@@ -179,7 +179,7 @@ router.get('/conversations', auth, async (req, res) => {
       'members._id': { $in: userId.toString() },
     });
 
-    if (conversations.length < 1) {
+    if (!conversations.length) {
       return res.status(204).json({ error: 'No conversations found' });
     }
 
@@ -196,7 +196,7 @@ router.get('/invitations/out', auth, async (req, res) => {
   try {
     const invites = await Invitation.find({ referrer: userId });
 
-    if (invites.length < 1) {
+    if (!invites.length) {
       res.status(404).send('No invitations found.');
     }
 
@@ -219,7 +219,7 @@ router.get('/invitations/in', auth, async (req, res) => {
 
     const invites = await Invitation.find({ toEmail: user.email });
 
-    if (invites.length < 1) {
+    if (!invites.length) {
       res.status(204).send('No invitations found.');
     }
 
@@ -259,7 +259,7 @@ router.get('/invitations/pending', auth, async (req, res) => {
       pendingInvitesOut,
     };
 
-    if (invites.pendingInvitesIn.length < 1 && invites.pendingInvitesOut < 1) {
+    if (!invites.pendingInvitesIn.length && !invites.pendingInvitesOut) {
       return res.status(204).json(invites);
     }
 
@@ -409,7 +409,7 @@ router.get('/contacts', auth, async (req, res) => {
       res.status(404).send('User not found');
     }
 
-    if (user.contacts.length < 1) {
+    if (!user.contacts.length) {
       return res.status(204).json({ msg: 'No contacts found.' });
     }
 
