@@ -69,23 +69,35 @@ export default function Register() {
   const [errorLanguage, setErrorLanguage] = useState(false);
 
   const isEmail = (email) => /^\S+@\S+$/.test(email);
-  //const isName = (name) => /^[A-Z]+$/i.test(name);
 
   const isErrorFree = () => {
-    //if (!isName(name)) return false;
-    if (!name) return false;
-    if (!isEmail(email)) return false;
-    if (password.length <= 5) return false;
-    if (!primaryLanguage) return false;
-    if (password !== confirmPassword) return false;
+    if (!name) {
+      setErrorName(true);
+      return false;
+    }
+    if (!isEmail(email)) {
+      setErrorEmail(true);
+      return false;
+    }
+    if (password.length <= 5){
+      setErrorPassword(true)
+      return false;
+    }
+    if (!primaryLanguage){
+      setErrorLanguage(true)
+      return false
+    }
+    if (password !== confirmPassword){
+      setErrorConfirmPassword(true)
+      return false
+    }
     if (!userState.user.errorMsg === '') return false;
 
     return true;
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!isEmail(email)) setErrorEmail(true);
-    //if (!isName(name)) setErrorName(true);
     if (!name) setErrorName(true);
     if (!password) setErrorPassword(true);
     if (!primaryLanguage) setErrorLanguage(true);
@@ -99,13 +111,12 @@ export default function Register() {
   };
 
   useEffect(() => {
-    //if (isName(name)) setErrorName(false);
     if (name) setErrorName(true);
     if (isEmail(email)) setErrorEmail(false);
     if (password.length > 5) setErrorPassword(false);
     if (primaryLanguage) setErrorLanguage(false);
     if (password === confirmPassword) setErrorConfirmPassword(false);
-  }, [name, email, password.length, primaryLanguage, confirmPassword]);
+  }, [name, email, password, primaryLanguage, confirmPassword]);
 
   return (
     <Box display="flex">
