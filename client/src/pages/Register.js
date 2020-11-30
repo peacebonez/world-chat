@@ -69,41 +69,38 @@ export default function Register() {
   const [errorLanguage, setErrorLanguage] = useState(false);
 
   const isEmail = (email) => /^\S+@\S+$/.test(email);
-  const isName = (name) => /^[A-Z]+$/i.test(name);
+  //const isName = (name) => /^[A-Z]+$/i.test(name);
 
-  const errors = () => {
-    return (
-      errorName ||
-      errorEmail ||
-      errorPassword ||
-      errorLanguage ||
-      errorConfirmPassword ||
-      !userState.user.errorMsg === ''
-    );
+  const isErrorFree = () => {
+    //if (!isName(name)) return false;
+    if (!name) return false;
+    if (!isEmail(email)) return false;
+    if (password.length <= 5) return false;
+    if (!primaryLanguage) return false;
+    if (password !== confirmPassword) return false;
+    if (!userState.user.errorMsg === '') return false;
+
+    return true;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!isEmail(email)) setErrorEmail(true);
-    if (!isName(name)) setErrorName(true);
+    //if (!isName(name)) setErrorName(true);
+    if (!name) setErrorName(true);
     if (!password) setErrorPassword(true);
     if (!primaryLanguage) setErrorLanguage(true);
     if (password !== confirmPassword) {
-      alert(`${password} === ${confirmPassword}`);
       setErrorConfirmPassword(true);
     }
 
-    if (!errors()) {
-      alert(errorName);
-      alert(errorEmail);
-      alert(errorPassword);
-      alert(errorLanguage);
-      alert(errorConfirmPassword);
+    if (isErrorFree()) {
       userActions.signUpUser(name, email, password, primaryLanguage);
     }
   };
 
   useEffect(() => {
-    if (isName(name)) setErrorName(false);
+    //if (isName(name)) setErrorName(false);
+    if (name) setErrorName(true);
     if (isEmail(email)) setErrorEmail(false);
     if (password.length > 5) setErrorPassword(false);
     if (primaryLanguage) setErrorLanguage(false);
