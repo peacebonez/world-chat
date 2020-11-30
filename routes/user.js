@@ -476,7 +476,10 @@ router.post('/avatar', auth, upload.single('file'), async (req, res) => {
           url: `${s3FileUrl}${user.email}`,
         };
 
+        if (user.avatar) delete user.avatar;
+
         user.avatar = newFileUploaded;
+        console.log('user.avatar:', user.avatar);
 
         await user.save();
         res.status(200).json(user);

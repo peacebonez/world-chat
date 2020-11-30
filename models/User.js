@@ -26,6 +26,7 @@ const UserSchema = new Schema(
       },
       url: {
         type: String,
+        unique: true,
       },
     },
     primaryLanguage: {
