@@ -15,12 +15,16 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  msgAvatar: {
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%',
+  },
 }));
 
 const ChatWindow = () => {
   const classes = useStyles();
   const { socket, userState } = useContext(UserContext);
-  const [chat, setChat] = useState(null); // current conversation object
   const [room, setRoom] = useState(null);
 
   useEffect(() => {
@@ -47,11 +51,23 @@ const ChatWindow = () => {
       <ul>
         {room &&
           room.messages.length > 0 &&
-          room.messages.map((msg) => (
-            <li key={msg.createdOn}>
-              {msg.text} by {msg.fromUser} on {msg.createdOn}
-            </li>
-          ))}
+          room.messages.map((msg) => {
+            const indexOfSender = room.members.findIndex(
+              (member) => member._id === msg.fromUser,
+            );
+
+            return (
+              <li key={msg.createdOn}>
+                <img
+                  src={room.members[indexOfSender].avatar}
+                  className={classes.msgAvatar}
+                />
+                <div>
+                  {msg.text} by {msg.fromUser} on {msg.createdOn}
+                </div>
+              </li>
+            );
+          })}
       </ul>
       <ChatInput />
     </div>

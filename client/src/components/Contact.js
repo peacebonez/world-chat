@@ -56,7 +56,13 @@ const Contact = ({ contact }) => {
         name: userState.user.name,
         avatar: userAvatar,
       },
-      { _id: contact.id, name: contact.name, avatar: contactAvatar },
+      {
+        _id: contact.id,
+        name: contact.name,
+        email: contact.email,
+        primaryLanguage: contact.primaryLanguage,
+        avatar: contactAvatar,
+      },
     ];
     const newConversation = await userActions.addConversation(members);
 

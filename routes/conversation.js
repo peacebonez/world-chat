@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const Conversation = require('../models/Conversation');
+const User = require('../models/User');
 
 //POST a new conversation
 router.post('/add', auth, async (req, res) => {
@@ -32,9 +33,8 @@ router.post('/add', auth, async (req, res) => {
 });
 
 //GET a single conversation
-router.get('/room/:memberIDs', auth, async (req, res) => {
-  const memberIDsRaw = req.params.memberIDs;
-  const memberIDs = memberIDsRaw.split('&');
+router.get('/', auth, async (req, res) => {
+  const memberIDs = req.query.members.split(',');
 
   try {
     //check to see if conversation exists
@@ -43,6 +43,16 @@ router.get('/room/:memberIDs', auth, async (req, res) => {
     });
     if (!conversation) return res.status(404).send('Conversation not found');
 
+    for (const member of conversation.members) {
+      const memberData = await User.findById(member._id);
+
+      member.name = memberData.name;
+      member.email = memberData.email;
+      member.avatar = memberData.avatar.url;
+      member.primaryLanguage = memberData.primaryLanguage;
+    }
+
+    await conversation.save();
     return res.status(200).json(conversation);
   } catch (err) {
     console.error(err);

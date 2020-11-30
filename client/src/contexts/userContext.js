@@ -175,11 +175,9 @@ const UserProvider = (props) => {
       }
     },
     fetchSingleConversation: async (members) => {
-      const membersArr = members.map((member) => member._id);
-      const memberIDs = membersArr.join('&');
-      console.log('memberIDs:', memberIDs);
+      const memberIDs = members.map((member) => member._id);
       try {
-        const res = await axios.get(`/conversation/room/${memberIDs}`);
+        const res = await axios.get(`/conversation/?members=${memberIDs}`);
         if (res.status !== 200)
           return dispatch({
             type: USER_ERROR,

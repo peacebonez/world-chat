@@ -5,11 +5,6 @@ const Schema = mongoose.Schema;
 const ConversationSchema = new Schema({
   members: [
     {
-      // user: {
-      //   type: Schema.Types.ObjectId,
-      //   ref: 'users', //references the users model
-      // },
-
       _id: {
         type: Schema.Types.ObjectId,
         ref: 'users',
@@ -17,7 +12,13 @@ const ConversationSchema = new Schema({
       name: {
         type: String,
       },
+      email: {
+        type: String,
+      },
       avatar: {
+        type: String,
+      },
+      primaryLanguage: {
         type: String,
       },
     },
