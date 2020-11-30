@@ -10,9 +10,11 @@ const mongoose = require('mongoose');
 const uuid = require('uuid');
 
 const Conversation = require('./models/Conversation');
-const User = require('./models/User')
+const User = require('./models/User');
 
 const { json, urlencoded } = express;
+
+const generateTimestamp = require('./functions/generateTimestamp');
 
 //Routes
 
@@ -89,18 +91,11 @@ io.on('connection', (socket) => {
   socket.on('messageToClient', async (data) => {
     // TODO: you might want to pass in more useful info such as name and avatar pic
     const { room, email, message, chatRoomName } = data;
-    const now = new Date();
-    const createdOn = {
-      year: now.getFullYear(),
-      month: now.getMonth(),
-      date: now.getDate(),
-      hour: now.getHours(),
-      minute: now.getMinutes()
-    };
-    const user = await User.findOne({email: email});
+    const createdOn = generateTimestamp();
+    const user = await User.findOne({ email: email });
     const moreData = {
-      userName: user.name
-    }
+      userName: user.name,
+    };
     // TODO: Save the message
 
     // const conversations = await Conversation.findAll({
@@ -112,7 +107,9 @@ io.on('connection', (socket) => {
     //   author,
     //   message: message,
     // });
-    socket.to('123').emit('messageFromServer', { ...data, moreData, createdOn }); // other person's message
+    socket
+      .to('123')
+      .emit('messageFromServer', { ...data, moreData, createdOn }); // other person's message
     socket.emit('messageFromServer', { ...data, moreData, createdOn }); // your message
   });
 });
