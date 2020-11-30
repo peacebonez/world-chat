@@ -46,7 +46,7 @@ const ChatWindow = () => {
     <div className={classes.chatWindow}>
       <ul>
         {room &&
-          room.messages.length &&
+          room.messages.length > 0 &&
           room.messages.map((msg) => (
             <li key={msg.createdOn}>
               {msg.text} by {msg.fromUser} on {msg.createdOn}
