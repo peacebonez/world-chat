@@ -76,11 +76,12 @@ const UserProvider = (props) => {
     login: async (email, password) => {
       try {
         const res = await axios.post('/user/login', { email, password });
+        const data = res.data;
         if (res && (res.status === 200 || res.status === 201)) {
           await actions.fetchUser();
           history.push('/messenger');
         }
-
+        dispatch({ type: UPDATE_USER, payload: data });
         return res;
       } catch (err) {
         let errorMsg;
@@ -91,6 +92,42 @@ const UserProvider = (props) => {
         dispatch({
           type: USER_ERROR,
           payload: errorMsg,
+        });
+      }
+    },
+    avatarUpload: async (e) => {
+      e.preventDefault();
+
+      const file = e.target.files[0];
+
+      const data = new FormData();
+      if (!data) {
+        dispatch({
+          type: USER_ERROR,
+          payload: 'Error uploading image',
+        });
+        return;
+      }
+
+      data.append('file', file, file.name);
+
+      try {
+        const res = await axios.post('/user/avatar', data);
+
+        if (res.status === 200) {
+          dispatch({ type: UPDATE_USER, payload: res.data });
+          return res.data;
+        } else {
+          dispatch({
+            type: USER_ERROR,
+            payload: 'Error uploading image',
+          });
+        }
+      } catch (err) {
+        console.log(err.message);
+        dispatch({
+          type: USER_ERROR,
+          payload: 'Error uploading image',
         });
       }
     },

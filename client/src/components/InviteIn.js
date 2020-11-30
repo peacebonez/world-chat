@@ -49,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const InviteIn = ({ invite, handleApproveOrReject }) => {
+  console.log('invite:', invite);
   const classes = useStyles();
 
   return (
@@ -56,7 +57,7 @@ const InviteIn = ({ invite, handleApproveOrReject }) => {
       <div>
         <div className={classes.sideBarImgWrapper}>
           <img
-            src={tempAvatar}
+            src={'https://worldchat1.s3.amazonaws.com/' + invite.referrerEmail}
             alt="user avatar"
             className={classes.sideBarImg}
           />

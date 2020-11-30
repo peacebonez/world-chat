@@ -50,6 +50,7 @@ const ChatInput = () => {
             endAdornment: [<Smiley key={1} />, <PhotosIcon key={2} />],
           }}
           onChange={(e) => setMessage(e.target.value)}
+          value={message}
         />
         <Button variant="outlined" color="primary" onClick={sendMessage}>
           <ChevronRightIcon />

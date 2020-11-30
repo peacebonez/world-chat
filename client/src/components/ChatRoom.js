@@ -62,10 +62,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
+  console.log('chatRoom:', chatRoom);
   //test isOnline hard code
   let isOnline = 'true';
   const classes = useStyles();
   const { userState, userActions } = useContext(UserContext);
+  console.log('userState:', userState);
 
   const numUnreadMsgs = () =>
     chatRoom.messages.filter((msg) => msg.isRead === false).length;

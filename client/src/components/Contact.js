@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Contact = ({ contact }) => {
+  console.log('contact:', contact);
   //test isOnline hard code
   let isOnline = 'true';
   const classes = useStyles();
