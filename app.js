@@ -16,6 +16,15 @@ const { json, urlencoded } = express;
 
 const generateTimestamp = require('./functions/generateTimestamp');
 
+const translate = require('./functions/translate');
+const testTranslate = async () => {
+  let translatedText = translate(
+    'I want to eat burritos, but I am broke',
+    'es',
+  );
+  console.log(translatedText);
+};
+
 //Routes
 
 var app = express();

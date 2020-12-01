@@ -1,4 +1,6 @@
-const projectId = "calm-inkwell-296922";
+require('dotenv').config();
+
+const projectId = process.env.GOOGLE_PROJECT_ID;
 
 const { Translate } = require('@google-cloud/translate').v2;
 const translate = new Translate({ projectId });
