@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { Container, Hidden } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { UserContext } from '../contexts/userContext';
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Messenger = (props) => {
-  const { userState, userActions } = useContext(UserContext);
+  const { userActions } = useContext(UserContext);
 
   const classes = useStyles();
 

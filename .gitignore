@@ -24,3 +24,6 @@ yarn-error.log*
 #TODO add .env to your gitignore
 
 client/debug.log
+
+#gcp 
+gcp-keys.json
