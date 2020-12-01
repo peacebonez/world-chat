@@ -44,7 +44,7 @@ const Contact = ({ contact }) => {
   //test isOnline hard code
   let isOnline = 'true';
   const classes = useStyles();
-  const { userActions, userState } = useContext(UserContext);
+  const { userActions, userState, socket } = useContext(UserContext);
 
   const handleClickContact = async () => {
     //if in mobile mode screen shifts to chat
@@ -75,9 +75,11 @@ const Contact = ({ contact }) => {
     if (!existingConversation) {
       const newConversation = await userActions.addConversation(members);
       return userActions.switchConversation(newConversation);
+      //emit room change conversation
     }
 
     //if conversation already exists, fetch that conversation and set it as active
+    //emit room change conversation
     return userActions.switchConversation(existingConversation);
   };
 

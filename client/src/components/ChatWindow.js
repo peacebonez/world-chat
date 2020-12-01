@@ -3,6 +3,7 @@ import ChatInput from './ChatInput';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../contexts/userContext';
 import { Typography } from '@material-ui/core';
+import moment from 'moment';
 
 require('dotenv').config();
 const useStyles = makeStyles((theme) => ({
@@ -91,7 +92,12 @@ const ChatWindow = () => {
     socket.on('messageFromServer', async (msgData) => {
       console.log('new message coming in', msgData);
 
-      // setChat((prevChat) => [...prevChat, data]);
+      setRoom((prevRoom) => {
+        return {
+          ...prevRoom,
+          messages: [...prevRoom.messages, msgData],
+        };
+      });
     });
   }, []);
 
@@ -102,11 +108,11 @@ const ChatWindow = () => {
           room.messages.length > 0 &&
           room.messages.map((msg, index) => {
             console.log('msg:', msg);
-            console.log('room:', room);
+            // console.log('room:', room);
 
             const yours = msg.fromUser === userState.user.email;
             const indexOfContact = room.members.findIndex(
-              (member) => member.email !== msg.fromUser,
+              (member) => member.email !== userState.user.email,
             );
             return (
               <section
@@ -126,14 +132,14 @@ const ChatWindow = () => {
                       yours ? classes.msgHeaderYours : ''
                     }`}
                   >
-                    {yours ? '' : room.members[indexOfContact].name}{' '}
-                    {msg.createdOn}
-                    {/* {msg.createdOn.hour}:
-                    {msg.createdOn.minute < 10
-                      ? `0${msg.createdOn.minute}`
-                      : msg.createdOn.minute} */}
+                    {/* {yours
+                      ? moment(msg.createdOn).calendar()
+                      : room.members[indexOfContact].name +
+                        ' ' +
+                        moment(msg.createdOn).calendar()} */}
+                    {moment(msg.createdOn).calendar()}
                   </Typography>
-                  <ChatBubble message={msg.text} yours={yours} />
+                  {msg.text && <ChatBubble message={msg.text} yours={yours} />}
                 </div>
               </section>
             );

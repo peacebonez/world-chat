@@ -68,8 +68,11 @@ const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
   const classes = useStyles();
   const { userState, userActions } = useContext(UserContext);
 
-  const numUnreadMsgs = () =>
-    chatRoom.messages.filter((msg) => msg.isRead === false).length;
+  const numUnreadMsgs = () => {
+    return chatRoom.messages.filter(
+      (msg) => msg.isRead === false && msg.fromUser !== userState.user.email,
+    ).length;
+  };
 
   const chatMembersExcludingUser = chatRoom.members.filter((member) => {
     return member._id !== userState.user.id;
