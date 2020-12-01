@@ -16,6 +16,11 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  msgAvatar: {
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%',
+  },
   sectionChat: {
     width: '100%',
     display: 'inlineBlock',
@@ -59,11 +64,16 @@ const useStyles = makeStyles((theme) => ({
 const ChatWindow = () => {
   const classes = useStyles();
   const { socket, userState } = useContext(UserContext);
-  const [chat, setChat] = useState([]); // an array of "data's"
+  const [room, setRoom] = useState(null);
+
+  useEffect(() => {
+    if (userState.user.activeRoom) setRoom(userState.user.activeRoom);
+  }, [userState.user]);
 
   useEffect(() => {
     socket.on('connect', () => {
-      socket.emit('join', '123'); // replace 123 with conversation id
+      const roomId = room ? room._id : '123';
+      socket.emit('join', roomId); // replace 123 with conversation id
     });
 
     socket.on('roomJoined', (room) => {
@@ -72,29 +82,45 @@ const ChatWindow = () => {
 
     socket.on('messageFromServer', (data) => {
       console.log('new message coming in', data);
-      setChat((prevChat) => [...prevChat, data]);
+      // setChat((prevChat) => [...prevChat, data]);
     });
   }, []);
 
   return (
     <div className={classes.chatWindow}>
       <div className={classes.sectionChat}>
-        {chat.map((datum, index) => {
-          console.log(datum);
-          let yours = datum.email === userState.user.email;
-          return (
-            <section
-              key={index}
-              className={yours ? classes.chatUnitYours : classes.chatUnit}
-            >
-              <Typography variant="subtitle2">
-                {yours ? '' : datum.moreData.userName} {datum.createdOn.hour}:
-                {datum.createdOn.minute < 10 ? `0${datum.createdOn.minute}` : datum.createdOn.minute}
-              </Typography>
-              <ChatBubble message={datum.message} yours={yours} />
-            </section>
-          );
-        })}
+        {room &&
+          room.messages.length > 0 &&
+          room.messages.map((msg, index) => {
+            console.log('msg:', msg);
+            const yours = msg.fromUser === userState.user.id;
+            const indexOfSender = room.members.findIndex(
+              (member) => member._id === msg.fromUser,
+            );
+
+            return (
+              <section
+                key={index}
+                className={yours ? classes.chatUnitYours : classes.chatUnit}
+              >
+                <img
+                  src={room.members[indexOfSender].avatar}
+                  className={classes.msgAvatar}
+                />
+
+                <Typography variant="subtitle2">
+                  {yours
+                    ? userState.user.name
+                    : room.members[indexOfSender].name}{' '}
+                  {msg.createdOn.hour}:
+                  {msg.createdOn.minute < 10
+                    ? `0${msg.createdOn.minute}`
+                    : msg.createdOn.minute}
+                </Typography>
+                <ChatBubble message={msg.text} yours={yours} />
+              </section>
+            );
+          })}
       </div>
       <ChatInput />
     </div>

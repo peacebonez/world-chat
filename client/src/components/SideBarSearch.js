@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     marginLeft: theme.spacing(5),
+    direction: 'ltr',
   },
   searchInput: {
     width: '80%',

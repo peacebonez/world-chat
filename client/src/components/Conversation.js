@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 
 import ChatWindow from './ChatWindow';
-
 import Navbar from './Navbar';
+import { UserContext } from '../contexts/userContext';
 
 const useStyles = makeStyles((theme) => ({
   conversation: {
@@ -14,13 +14,24 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     right: 0,
   },
+  conversationFullScreen: {
+    overflow: 'hidden',
+    width: '100%',
+  },
 }));
 
 const Conversation = () => {
   const classes = useStyles();
+  const { userState } = useContext(UserContext);
 
   return (
-    <div className={classes.conversation}>
+    <div
+      className={`${classes.conversation} ${
+        userState.isMobileMode && userState.isChatView
+          ? classes.conversationFullScreen
+          : ''
+      }`}
+    >
       <Navbar />
       <ChatWindow />
     </div>
