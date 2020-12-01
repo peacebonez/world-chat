@@ -27,10 +27,13 @@ const ConversationSchema = new Schema({
   messages: [
     {
       fromUser: {
-        type: Schema.Types.ObjectId,
-        ref: 'users',
+        type: String,
       },
-      originalLanguage: {
+      // fromUser: {
+      //   type: Schema.Types.ObjectId,
+      //   ref: 'users',
+      // },
+      primaryLanguage: {
         type: String,
       },
       text: {

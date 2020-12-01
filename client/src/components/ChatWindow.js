@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import ChatInput from './ChatInput';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../contexts/userContext';
@@ -80,7 +80,7 @@ const ChatWindow = () => {
 
   useEffect(() => {
     socket.on('connect', () => {
-      const roomId = room ? room._id : '123';
+      const roomId = room ? room._id : null;
       socket.emit('join', roomId); // replace 123 with conversation id
     });
 
@@ -88,8 +88,9 @@ const ChatWindow = () => {
       console.log('successfully joined', room);
     });
 
-    socket.on('messageFromServer', (data) => {
-      console.log('new message coming in', data);
+    socket.on('messageFromServer', async (msgData) => {
+      console.log('new message coming in', msgData);
+
       // setChat((prevChat) => [...prevChat, data]);
     });
   }, []);
@@ -101,11 +102,12 @@ const ChatWindow = () => {
           room.messages.length > 0 &&
           room.messages.map((msg, index) => {
             console.log('msg:', msg);
-            const yours = msg.fromUser === userState.user.id;
-            const indexOfSender = room.members.findIndex(
-              (member) => member._id === msg.fromUser,
-            );
+            console.log('room:', room);
 
+            const yours = msg.fromUser === userState.user.email;
+            const indexOfContact = room.members.findIndex(
+              (member) => member.email !== msg.fromUser,
+            );
             return (
               <section
                 key={index}
@@ -113,7 +115,7 @@ const ChatWindow = () => {
               >
                 {!yours && (
                   <img
-                    src={room.members[indexOfSender].avatar}
+                    src={room.members[indexOfContact].avatar}
                     className={classes.msgAvatar}
                   />
                 )}
@@ -124,11 +126,12 @@ const ChatWindow = () => {
                       yours ? classes.msgHeaderYours : ''
                     }`}
                   >
-                    {yours ? '' : room.members[indexOfSender].name}{' '}
-                    {msg.createdOn.hour}:
+                    {yours ? '' : room.members[indexOfContact].name}{' '}
+                    {msg.createdOn}
+                    {/* {msg.createdOn.hour}:
                     {msg.createdOn.minute < 10
                       ? `0${msg.createdOn.minute}`
-                      : msg.createdOn.minute}
+                      : msg.createdOn.minute} */}
                   </Typography>
                   <ChatBubble message={msg.text} yours={yours} />
                 </div>

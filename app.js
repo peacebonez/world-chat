@@ -87,29 +87,13 @@ io.on('connection', (socket) => {
   //   console.log('new message', data);
   // });
 
-  socket.on('messageToClient', async (data) => {
-    // TODO: you might want to pass in more useful info such as name and avatar pic
-    const { room, email, message, chatRoomName } = data;
-    const createdOn = generateTimestamp();
-    const user = await User.findOne({ email: email });
-    const moreData = {
-      userName: user.name,
-    };
-    // TODO: Save the message
+  socket.on('messageToClient', async (msgData) => {
+    console.log('msgData:', msgData);
 
-    // const conversations = await Conversation.findAll({
-    //   where: { name: chatRoomName },
-    // });
-    // const chatRoomId = conversations[0].id;
-    // const chatMessage = await models.ChatMessage.create({
-    //   chatRoomId,
-    //   author,
-    //   message: message,
-    // });
-    socket
-      .to('123')
-      .emit('messageFromServer', { ...data, moreData, createdOn }); // other person's message
-    socket.emit('messageFromServer', { ...data, moreData, createdOn }); // your message
+    const { room, email, name, message } = msgData;
+    const createdOn = generateTimestamp();
+    socket.to(room).emit('messageFromServer', { ...msgData, createdOn }); // other person's message
+    socket.emit('messageFromServer', { ...msgData, createdOn }); // your message
   });
 });
 

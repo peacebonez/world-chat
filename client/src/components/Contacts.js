@@ -22,9 +22,11 @@ const Contacts = () => {
     <div className={classes.contactsContainer}>
       <Invitation />
       <ul className={classes.contactList}>
-        {userState.user.contacts.map((contact) => {
-          return <Contact contact={contact} key={contact.email} />;
-        })}
+        {userState.user.name &&
+          userState.user.contacts.length > 0 &&
+          userState.user.contacts.map((contact) => {
+            return <Contact contact={contact} key={contact.email} />;
+          })}
       </ul>
     </div>
   );

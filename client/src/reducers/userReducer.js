@@ -5,6 +5,7 @@ export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const GET_CONVERSATIONS = 'GET_CONVERSATIONS';
 export const SWITCH_CONVERSATION = 'SWITCH_CONVERSATION';
 export const UPDATE_MESSAGES = 'UPDATE_MESSAGES';
+export const MESSAGE_SENT = 'MESSAGE_SENT';
 export const ADD_CONVERSATION = 'ADD_CONVERSATION';
 export const CHANGE_USER_VIEW = 'CHANGE_USER_VIEW';
 export const MOBILE_MODE = 'MOBILE_MODE';
@@ -36,6 +37,18 @@ export const userReducer = (state, action) => {
       };
     case SWITCH_CONVERSATION:
       return { ...state, user: { ...state.user, activeRoom: payload } };
+    case MESSAGE_SENT:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          activeRoom: {
+            ...state.user.activeRoom,
+            messages: [...state.user.activeRoom.messages, payload],
+          },
+        },
+      };
+      return state;
     case USER_ERROR:
       return { ...state, errorMsg: payload };
     case CLEAR_ERRORS:

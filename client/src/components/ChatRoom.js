@@ -67,7 +67,6 @@ const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
   let isOnline = 'true';
   const classes = useStyles();
   const { userState, userActions } = useContext(UserContext);
-  console.log('userState:', userState);
 
   const numUnreadMsgs = () =>
     chatRoom.messages.filter((msg) => msg.isRead === false).length;
@@ -119,7 +118,11 @@ const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
           <Typography
             variant="subtitle1"
             className={`${classes.msgPreview} ${
-              numUnreadMsgs() > 0 ? classes.unreadMsg : ''
+              numUnreadMsgs() > 0 &&
+              chatRoom.messages[chatRoom.messages.length - 1].fromUser !==
+                userState.user.email
+                ? classes.unreadMsg
+                : ''
             }`}
           >
             {chatRoom.messages.length

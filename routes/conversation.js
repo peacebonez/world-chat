@@ -60,6 +60,32 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
+//POST create a new message
+
+router.post('/message', auth, async (req, res) => {
+  const msgData = req.body;
+  try {
+    const conversation = await Conversation.findById(msgData.room);
+
+    if (!conversation) return res.status(404).send('Conversation not found');
+
+    const savedMsg = {
+      fromUser: msgData.email,
+      text: msgData.message,
+      primaryLanguage: msgData.primaryLanguage,
+      createdOn: msgData.createdOn,
+    };
+
+    console.log('savedMsg:', savedMsg);
+    conversation.messages.push(savedMsg);
+    await conversation.save();
+    return res.status(200).json(savedMsg);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
+
 //UPDATE a conversation's messages to read status
 router.put('/read/:id', auth, async (req, res) => {
   const conversationId = req.params.id;

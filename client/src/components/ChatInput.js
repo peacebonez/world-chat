@@ -21,21 +21,25 @@ const useStyles = makeStyles((theme) => ({
 
 const ChatInput = () => {
   const classes = useStyles();
-  const { socket, userState } = useContext(UserContext);
+  const { socket, userState, userActions } = useContext(UserContext);
 
   const [message, setMessage] = useState('');
 
-  const sendMessage = (e) => {
+  const sendMessage = async (e) => {
     e.preventDefault();
     if (message === '') return;
 
-    const data = {
+    const sendingMsgData = {
+      name: userState.user.name,
       email: userState.user.email,
+      primaryLanguage: userState.user.primaryLanguage,
       message,
-      room: '123',
+      room: userState.user.activeRoom._id,
+      createdOn: Date.now(),
     };
-    console.log(data.message);
-    socket.emit('messageToClient', data);
+
+    await userActions.storeMessage(sendingMsgData);
+    socket.emit('messageToClient', sendingMsgData);
     setMessage('');
   };
 
@@ -50,7 +54,7 @@ const ChatInput = () => {
           InputProps={{
             endAdornment: [<Smiley key={1} />, <PhotosIcon key={2} />],
           }}
-          value={message} // b/c of setMessage(''), clears input field upon submit
+          value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
         {/* <Button 
