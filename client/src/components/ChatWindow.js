@@ -16,11 +16,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  msgAvatar: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-  },
   sectionChat: {
     width: '100%',
     display: 'inlineBlock',
@@ -30,12 +25,25 @@ const useStyles = makeStyles((theme) => ({
     float: 'left',
     marginBottom: '1rem',
     width: '50%',
+    display: 'flex',
+    marginLeft: theme.spacing(2),
   },
   chatUnitYours: {
     float: 'right',
     marginBottom: '1rem',
     width: '50%',
     marginRight: theme.spacing(2),
+  },
+  msgAvatar: {
+    width: '30px',
+    height: '30px',
+    borderRadius: '50%',
+  },
+  msgHeader: {
+    color: 'gray',
+  },
+  msgHeaderYours: {
+    textAlign: 'right',
   },
   bubble: {
     background:
@@ -103,21 +111,27 @@ const ChatWindow = () => {
                 key={index}
                 className={yours ? classes.chatUnitYours : classes.chatUnit}
               >
-                <img
-                  src={room.members[indexOfSender].avatar}
-                  className={classes.msgAvatar}
-                />
-
-                <Typography variant="subtitle2">
-                  {yours
-                    ? userState.user.name
-                    : room.members[indexOfSender].name}{' '}
-                  {msg.createdOn.hour}:
-                  {msg.createdOn.minute < 10
-                    ? `0${msg.createdOn.minute}`
-                    : msg.createdOn.minute}
-                </Typography>
-                <ChatBubble message={msg.text} yours={yours} />
+                {!yours && (
+                  <img
+                    src={room.members[indexOfSender].avatar}
+                    className={classes.msgAvatar}
+                  />
+                )}
+                <div>
+                  <Typography
+                    variant="subtitle2"
+                    className={`${classes.msgHeader} ${
+                      yours ? classes.msgHeaderYours : ''
+                    }`}
+                  >
+                    {yours ? '' : room.members[indexOfSender].name}{' '}
+                    {msg.createdOn.hour}:
+                    {msg.createdOn.minute < 10
+                      ? `0${msg.createdOn.minute}`
+                      : msg.createdOn.minute}
+                  </Typography>
+                  <ChatBubble message={msg.text} yours={yours} />
+                </div>
               </section>
             );
           })}
