@@ -1,11 +1,10 @@
 import React, { useContext, useEffect } from 'react';
-import { Container, Hidden } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { UserContext } from '../contexts/userContext';
 import Sidebar from '../components/Sidebar';
 import Conversation from '../components/Conversation';
-import Invitation from '../components/Invitation';
 
 const useStyles = makeStyles((theme) => ({
   messengerContainer: {
@@ -20,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Messenger = (props) => {
-  const { userState } = useContext(UserContext);
+  const { userActions } = useContext(UserContext);
 
   const classes = useStyles();
 
@@ -28,19 +27,21 @@ const Messenger = (props) => {
     // Every time the user changes, because this component is one of the main components
     // you'll be able to track it here for now
     // You don't need to include it here if you don't need it in the future
-  }, [userState.user]);
+
+    //adjusts state of the app to present in mobileMode or bigScreenMode
+    if (window.screen.width < 501) {
+      userActions.appMobileMode();
+    } else {
+      userActions.appBigScreenMode();
+    }
+  }, [window.screen.width]);
 
   return (
     <Container className={classes.messengerContainer}>
       <Sidebar />
-      <Hidden smDown>
-        <Conversation />
-      </Hidden>
-      <Invitation />
+      <Conversation />
     </Container>
   );
 };
-
-Messenger.propTypes = {};
 
 export default Messenger;

@@ -9,6 +9,12 @@ import {
   USER_ERROR,
   USER_LOGOUT,
   CLEAR_ERRORS,
+  GET_CONVERSATIONS,
+  SWITCH_CONVERSATION,
+  ADD_CONVERSATION,
+  UPDATE_MESSAGES,
+  CHANGE_USER_VIEW,
+  MOBILE_MODE,
 } from '../reducers/userReducer';
 
 const serverURL = process.env.serverURL;
@@ -43,7 +49,6 @@ const UserProvider = (props) => {
             payload: 'User already exists.',
           });
         }
-
         if (err.message.includes('500')) {
           dispatch({
             type: USER_ERROR,
@@ -128,13 +133,12 @@ const UserProvider = (props) => {
     },
     fetchPendingInvites: async () => {
       try {
-        const res = await axios.get(`user/invitations/pending`);
+        const res = await axios.get('user/invitations/pending');
 
         //if response is ok or user has no invites
         if (res.status === 200 || res.status === 204) {
           return res.data;
-        }
-        if (res.status === 404 || res.status === 500) {
+        } else {
           //user not found
           dispatch({
             type: USER_ERROR,
@@ -147,6 +151,82 @@ const UserProvider = (props) => {
         dispatch({
           type: USER_ERROR,
           payload: 'Error fetching invites',
+        });
+      }
+    },
+    addConversation: async (members) => {
+      try {
+        const res = axios.post('/conversation/add', members);
+        if (res.status !== 200)
+          return dispatch({
+            type: USER_ERROR,
+            payload: 'Error creating conversation',
+          });
+
+        const data = res.data;
+        console.log('data:', data);
+        dispatch({ type: ADD_CONVERSATION, payload: data });
+        return data;
+      } catch (err) {
+        dispatch({
+          type: USER_ERROR,
+          payload: 'Error creating conversation',
+        });
+      }
+    },
+    fetchSingleConversation: async (members) => {
+      const memberIDs = members.map((member) => member._id);
+      try {
+        const res = await axios.get(`/conversation/?members=${memberIDs}`);
+        if (res.status !== 200)
+          return dispatch({
+            type: USER_ERROR,
+            payload: 'Error getting conversation',
+          });
+
+        const data = res.data;
+        return data;
+      } catch (err) {
+        return dispatch({
+          type: USER_ERROR,
+          payload: 'Error getting conversation',
+        });
+      }
+    },
+    switchConversation: (room) => {
+      dispatch({
+        type: SWITCH_CONVERSATION,
+        payload: room,
+      });
+    },
+    fetchConversations: async () => {
+      try {
+        const res = await axios.get('/user/conversations');
+        const data = res.data;
+        dispatch({ type: GET_CONVERSATIONS, payload: data });
+        return data;
+      } catch (err) {
+        dispatch({
+          type: USER_ERROR,
+          payload: 'Error fetching chats',
+        });
+      }
+    },
+    messagesRead: (conversationId) => {
+      try {
+        const res = axios.put(`/conversation/read/${conversationId}`);
+        //TODO
+        const data = res.data;
+        // dispatch({ type: UPDATE_MESSAGES, payload: data });
+        if (res.status !== 200)
+          dispatch({
+            type: USER_ERROR,
+            payload: 'Error updating messages',
+          });
+      } catch (err) {
+        dispatch({
+          type: USER_ERROR,
+          payload: 'Error updating messages',
         });
       }
     },
@@ -164,6 +244,18 @@ const UserProvider = (props) => {
     },
     clearErrors: () => {
       dispatch({ type: CLEAR_ERRORS });
+    },
+    appMobileMode: () => {
+      dispatch({ type: MOBILE_MODE, payload: true });
+    },
+    appBigScreenMode: () => {
+      dispatch({ type: MOBILE_MODE, payload: false });
+    },
+    appChatView: () => {
+      dispatch({ type: CHANGE_USER_VIEW, payload: true });
+    },
+    appSideBarView: () => {
+      dispatch({ type: CHANGE_USER_VIEW, payload: false });
     },
   };
 

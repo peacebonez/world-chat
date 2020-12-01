@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(3),
   },
+  inviteWrapper: {
+    direction: 'ltr',
+  },
   extendedIcon: {
     marginRight: theme.spacing(1),
   },
@@ -162,7 +165,7 @@ export default function FormDialog() {
     }
   };
   return (
-    <div>
+    <div className={classes.inviteWrapper}>
       <button className={classes.inviteBtn} onClick={handleClickOpen}>
         <AddIcon /> Invite Friends
       </button>
@@ -220,7 +223,7 @@ export default function FormDialog() {
           color="primary"
           className={classes.margin}
           onClick={submitInvite}
-          disabled={emailList.length < 1}
+          disabled={!emailList.length}
         >
           Send Invitations
         </Button>

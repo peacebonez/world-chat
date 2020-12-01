@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'flex-start',
     width: '100%',
     overflowX: 'hidden',
+    direction: 'ltr',
   },
   inviteSelector: {
     border: 'none',
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 28,
   },
   invitesWrapper: {
-    width: '100%',
+    width: '90%',
   },
   inviteUl: {
     paddingLeft: 0,
@@ -115,7 +116,7 @@ const Invites = () => {
         {showSent && (
           <ul className={classes.inviteUl}>
             {invites &&
-              invites.pendingInvitesOut.length > 0 &&
+              invites.pendingInvitesOut.length &&
               invites.pendingInvitesOut.map((invite) => (
                 <InviteOut key={invite._id} invite={invite} />
               ))}

@@ -159,19 +159,6 @@ router.get(
 );
 
 router.get(
-  '/:id',
-  runAsyncWrapper(async function (req, res) {
-    const user = await User.findById(req.params.id);
-
-    if (!user) {
-      return res.status(400).json({ error: 'User not found' });
-    } else {
-      return res.status(200).json(user);
-    }
-  }),
-);
-
-router.get(
   '/get_all',
   runAsyncWrapper(async function (req, res) {
     const users = await User.find();
@@ -191,17 +178,17 @@ router.get('/conversations', auth, async (req, res) => {
     }
 
     const conversations = await Conversation.find({
-      members: { _id: userId },
+      'members._id': { $in: userId.toString() },
     });
 
-    if (conversations.length < 1) {
+    if (!conversations.length) {
       return res.status(204).json({ error: 'No conversations found' });
     }
 
-    return res.status(200).json({ conversations });
+    return res.status(200).json(conversations);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ userId });
   }
 });
 
@@ -211,7 +198,7 @@ router.get('/invitations/out', auth, async (req, res) => {
   try {
     const invites = await Invitation.find({ referrer: userId });
 
-    if (invites.length < 1) {
+    if (!invites.length) {
       res.status(404).send('No invitations found.');
     }
 
@@ -234,7 +221,7 @@ router.get('/invitations/in', auth, async (req, res) => {
 
     const invites = await Invitation.find({ toEmail: user.email });
 
-    if (invites.length < 1) {
+    if (!invites.length) {
       res.status(204).send('No invitations found.');
     }
 
@@ -274,7 +261,7 @@ router.get('/invitations/pending', auth, async (req, res) => {
       pendingInvitesOut,
     };
 
-    if (invites.pendingInvitesIn.length < 1 && invites.pendingInvitesOut < 1) {
+    if (!invites.pendingInvitesIn.length && !invites.pendingInvitesOut) {
       return res.status(204).json(invites);
     }
 
@@ -424,7 +411,7 @@ router.get('/contacts', auth, async (req, res) => {
       res.status(404).send('User not found');
     }
 
-    if (user.contacts.length < 1) {
+    if (!user.contacts.length) {
       return res.status(204).json({ msg: 'No contacts found.' });
     }
 

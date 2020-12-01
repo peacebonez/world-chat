@@ -2,9 +2,6 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-//TODO's
-//create key for user avatar
-
 const UserSchema = new Schema(
   {
     name: {

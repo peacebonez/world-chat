@@ -1,36 +1,54 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
+const generateTimeStamp = require('../functions/generateTimestamp');
 
 const ConversationSchema = new Schema({
   members: [
     {
-      user: {
+      _id: {
         type: Schema.Types.ObjectId,
-        ref: 'users', //references the users model
+        ref: 'users',
+      },
+      name: {
+        type: String,
+      },
+      email: {
+        type: String,
+      },
+      avatar: {
+        type: String,
+      },
+      primaryLanguage: {
+        type: String,
       },
     },
   ],
   messages: [
     {
-      messageBody: {
-        fromUser: {
-          type: Schema.Types.ObjectId,
-          ref: 'users', //references the users model
-        },
-        originalLanguage: {
-          type: String,
-        },
-        text: {
-          type: String,
-        },
-        createdAt: {
-          type: Date,
-          default: Date.now,
-        },
+      fromUser: {
+        type: Schema.Types.ObjectId,
+        ref: 'users',
+      },
+      originalLanguage: {
+        type: String,
+      },
+      text: {
+        type: String,
+      },
+      isRead: {
+        type: Boolean,
+        default: false,
+      },
+      createdOn: {
+        type: Date,
+        default: Date.now,
       },
     },
   ],
 });
 
-module.exports = User = mongoose.model('conversation', ConversationSchema);
+module.exports = Conversation = mongoose.model(
+  'conversation',
+  ConversationSchema,
+);
