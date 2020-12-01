@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Typography, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -48,6 +48,8 @@ const SideBarSearch = ({
   handleInvitesShow,
   handleContactsShow,
   handleChatsShow,
+  // change state
+  onSearchTextChange,
 }) => {
   const classes = useStyles();
   return (
@@ -88,22 +90,21 @@ const SideBarSearch = ({
         </button>
       </div>
       <div>
-        <form noValidate autoComplete="off">
-          <DebounceInput
-            element={TextField}
-            debounceTimeout={300}
-            className={classes.searchInput}
-            variant="outlined"
-            fullWidth
-            autoFocus
-            placeholder="Search"
-            InputProps={{
-              startAdornment: (
-                <SearchOutlinedIcon className={classes.noStyleBtn} />
-              ),
-            }}
-          />
-        </form>
+        <DebounceInput
+          element={TextField}
+          debounceTimeout={300}
+          className={classes.searchInput}
+          variant="outlined"
+          fullWidth
+          autoFocus
+          placeholder="Search"
+          InputProps={{
+            startAdornment: (
+              <SearchOutlinedIcon className={classes.noStyleBtn} />
+            ),
+          }}
+          onChange={(e) => onSearchTextChange(e.target.value)}
+        />
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Contacts = () => {
+const Contacts = ({searchText}) => {
   const { userState } = useContext(UserContext);
 
   const classes = useStyles();
@@ -22,9 +22,16 @@ const Contacts = () => {
     <div className={classes.contactsContainer}>
       <Invitation />
       <ul className={classes.contactList}>
-        {userState.user.contacts.map((contact) => {
-          return <Contact contact={contact} key={contact.email} />;
-        })}
+        {userState.user.contacts.reduce((filteredResult, contact) => {
+          //return <Contact contact={contact} key={contact.email} />;
+          // to lower case: we want to ignore capitalization in search
+          if (contact.name.toLowerCase().includes(searchText.toLowerCase())) { 
+            filteredResult.push(
+              <Contact contact={contact} key={contact.email} />
+            );
+          }
+          return filteredResult;
+        }, [])}
       </ul>
     </div>
   );
