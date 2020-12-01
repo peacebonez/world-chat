@@ -13,6 +13,7 @@
     "heroku-postbuild": "npm run install-client && npm run build"
   },
   "dependencies": {
+    "@google-cloud/translate": "^6.0.4",
     "@sendgrid/mail": "^7.4.0",
     "aws-sdk": "^2.799.0",
     "bcrypt": "^5.0.0",

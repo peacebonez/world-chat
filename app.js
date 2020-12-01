@@ -15,7 +15,6 @@ const User = require('./models/User');
 const { json, urlencoded } = express;
 
 const generateTimestamp = require('./functions/generateTimestamp');
-
 //Routes
 
 var app = express();

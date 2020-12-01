@@ -25,5 +25,5 @@ yarn-error.log*
 
 client/debug.log
 
-#gcp 
+# GCP private keys and stuff
 gcp-keys.json
