@@ -48,7 +48,14 @@ export const userReducer = (state, action) => {
           },
         },
       };
-      return state;
+    case UPDATE_MESSAGES:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          activeRoom: { ...state.user.activeRoom, messages: payload },
+        },
+      };
     case USER_ERROR:
       return { ...state, errorMsg: payload };
     case CLEAR_ERRORS:

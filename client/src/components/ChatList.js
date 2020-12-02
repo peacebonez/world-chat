@@ -20,8 +20,10 @@ const ChatList = () => {
 
   const handleActive = async (index, chatRoom) => {
     setActiveIndex(index);
-    await userActions.messagesRead(chatRoom._id);
     userActions.switchConversation(chatRoom);
+    userActions.appChatView();
+    socket.emit('join', chatRoom._id);
+    await userActions.messagesRead(chatRoom._id);
   };
 
   useEffect(() => {

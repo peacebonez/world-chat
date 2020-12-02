@@ -218,7 +218,7 @@ const UserProvider = (props) => {
     storeMessage: async (msg) => {
       try {
         const res = await axios.post('/conversation/message', msg);
-        console.log('res:', res);
+
         const data = res.data;
         dispatch({ type: MESSAGE_SENT, payload: data });
       } catch (err) {
@@ -228,12 +228,12 @@ const UserProvider = (props) => {
         });
       }
     },
-    messagesRead: (conversationId) => {
+    messagesRead: async (conversationId) => {
       try {
-        const res = axios.put(`/conversation/read/${conversationId}`);
-        //TODO
+        const res = await axios.put(`/conversation/read/${conversationId}`);
         const data = res.data;
-        // dispatch({ type: UPDATE_MESSAGES, payload: data });
+        const readMessages = data.messages;
+        dispatch({ type: UPDATE_MESSAGES, payload: readMessages });
         if (res.status !== 200)
           dispatch({
             type: USER_ERROR,

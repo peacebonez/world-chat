@@ -68,14 +68,14 @@ app.use(function (err, req, res, next) {
   res.json({ error: err.message });
 });
 
+//SOCKET.IO CODE
 io.on('connection', (socket) => {
   /* socket object may be used to send specific messages to the new connected client */
   console.log('new client connected');
   socket.emit('connection', null);
 
-  socket.on('join', async (room) => {
-    // The room is likely going to be a Conversation ID
-    // TODO: If the conversation ID does not exist yet, create on before joining in
+  socket.on('join', (room) => {
+    if (room) console.log(`Joining room ${room}`);
     if (!room) {
       room = uuid.v4();
     }
@@ -87,13 +87,11 @@ io.on('connection', (socket) => {
   //   console.log('new message', data);
   // });
 
-  socket.on('messageToClient', async (msgData) => {
+  socket.on('messageToClient', (msgData) => {
     console.log('msgData:', msgData);
 
-    const { room, email, name, message } = msgData;
-    const createdOn = generateTimestamp();
-    socket.to(room).emit('messageFromServer', { ...msgData, createdOn }); // other person's message
-    socket.emit('messageFromServer', { ...msgData, createdOn }); // your message
+    socket.to(msgData.room).emit('messageFromServer', msgData); // other person's message
+    socket.emit('messageFromServer', msgData); // your message
   });
 });
 

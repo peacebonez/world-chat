@@ -74,13 +74,12 @@ const Contact = ({ contact }) => {
     //if no conversation exists, create a new conversation and set it as active
     if (!existingConversation) {
       const newConversation = await userActions.addConversation(members);
-      return userActions.switchConversation(newConversation);
-      //emit room change conversation
+      userActions.switchConversation(newConversation);
+      return socket.emit('join', newConversation._id);
     }
-
     //if conversation already exists, fetch that conversation and set it as active
-    //emit room change conversation
-    return userActions.switchConversation(existingConversation);
+    userActions.switchConversation(existingConversation);
+    return socket.emit('join', existingConversation._id);
   };
 
   return (

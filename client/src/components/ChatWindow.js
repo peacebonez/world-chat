@@ -19,8 +19,8 @@ const useStyles = makeStyles((theme) => ({
   },
   sectionChat: {
     width: '100%',
-    display: 'inlineBlock',
-    overflow: 'auto',
+    overflowY: 'scroll',
+    overflowX: 'hidden',
   },
   chatUnit: {
     float: 'left',
@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'gray',
   },
   msgHeaderYours: {
+    color: 'gray',
     textAlign: 'right',
   },
   bubble: {
@@ -72,26 +73,18 @@ const useStyles = makeStyles((theme) => ({
 
 const ChatWindow = () => {
   const classes = useStyles();
-  const { socket, userState } = useContext(UserContext);
+  const { socket, userState, userActions } = useContext(UserContext);
   const [room, setRoom] = useState(null);
 
   useEffect(() => {
-    if (userState.user.activeRoom) setRoom(userState.user.activeRoom);
+    if (userState.user.activeRoom) {
+      setRoom(userState.user.activeRoom);
+    }
   }, [userState.user]);
 
   useEffect(() => {
-    socket.on('connect', () => {
-      const roomId = room ? room._id : null;
-      socket.emit('join', roomId); // replace 123 with conversation id
-    });
-
-    socket.on('roomJoined', (room) => {
-      console.log('successfully joined', room);
-    });
-
-    socket.on('messageFromServer', async (msgData) => {
+    socket.on('messageFromServer', (msgData) => {
       console.log('new message coming in', msgData);
-
       setRoom((prevRoom) => {
         return {
           ...prevRoom,
@@ -99,7 +92,9 @@ const ChatWindow = () => {
         };
       });
     });
-  }, []);
+  }, [userState.user.activeRoom]);
+
+  console.log('room:', room);
 
   return (
     <div className={classes.chatWindow}>
@@ -107,42 +102,51 @@ const ChatWindow = () => {
         {room &&
           room.messages.length > 0 &&
           room.messages.map((msg, index) => {
-            console.log('msg:', msg);
+            // console.log('msg:', msg);
             // console.log('room:', room);
 
             const yours = msg.fromUser === userState.user.email;
             const indexOfContact = room.members.findIndex(
               (member) => member.email !== userState.user.email,
             );
-            return (
-              <section
-                key={index}
-                className={yours ? classes.chatUnitYours : classes.chatUnit}
-              >
-                {!yours && (
+
+            const MessageItemYours = () => {
+              return (
+                <section key={index} className={classes.chatUnitYours}>
+                  <div>
+                    <Typography
+                      variant="subtitle2"
+                      className={classes.msgHeaderYours}
+                    >
+                      {moment(msg.createdOn).calendar()}
+                    </Typography>
+                    <ChatBubble message={msg.text} yours={true} />
+                  </div>
+                </section>
+              );
+            };
+            const MessageItemTheirs = () => {
+              return (
+                <section key={index} className={classes.chatUnit}>
                   <img
                     src={room.members[indexOfContact].avatar}
                     className={classes.msgAvatar}
                   />
-                )}
-                <div>
-                  <Typography
-                    variant="subtitle2"
-                    className={`${classes.msgHeader} ${
-                      yours ? classes.msgHeaderYours : ''
-                    }`}
-                  >
-                    {/* {yours
-                      ? moment(msg.createdOn).calendar()
-                      : room.members[indexOfContact].name +
-                        ' ' +
-                        moment(msg.createdOn).calendar()} */}
-                    {moment(msg.createdOn).calendar()}
-                  </Typography>
-                  {msg.text && <ChatBubble message={msg.text} yours={yours} />}
-                </div>
-              </section>
-            );
+                  <div>
+                    <Typography
+                      variant="subtitle2"
+                      className={classes.msgHeader}
+                    >
+                      {moment(msg.createdOn).calendar()}
+                    </Typography>
+                    <ChatBubble message={msg.text} yours={false} />
+                  </div>
+                </section>
+              );
+            };
+            {
+              return yours ? <MessageItemYours /> : <MessageItemTheirs />;
+            }
           })}
       </div>
       <ChatInput />

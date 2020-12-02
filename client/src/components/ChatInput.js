@@ -9,8 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   chatInput: {
-    width: '90%',
-    marginBottom: theme.spacing(4),
+    width: '100%',
     textAlign: 'center',
     background: theme.palette.primary.gray,
     '& input': {
@@ -38,8 +37,8 @@ const ChatInput = () => {
       createdOn: Date.now(),
     };
 
-    await userActions.storeMessage(sendingMsgData);
     socket.emit('messageToClient', sendingMsgData);
+    await userActions.storeMessage(sendingMsgData);
     setMessage('');
   };
 

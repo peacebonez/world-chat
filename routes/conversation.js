@@ -76,7 +76,6 @@ router.post('/message', auth, async (req, res) => {
       createdOn: msgData.createdOn,
     };
 
-    console.log('savedMsg:', savedMsg);
     conversation.messages.push(savedMsg);
     await conversation.save();
     return res.status(200).json(savedMsg);
@@ -102,6 +101,7 @@ router.put('/read/:id', auth, async (req, res) => {
 
     conversation.messages = messagesRead;
     await conversation.save();
+
     return res.status(200).json(conversation);
   } catch (err) {
     console.error(err);
