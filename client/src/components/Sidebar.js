@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import SideBarHeader from './SideBarHeader';
@@ -57,9 +57,6 @@ const Sidebar = () => {
   //get contacts from user
   //get converstations from user
   //map out both to their respective components
-  useEffect(() => {
-    console.log('cookie: ', document.cookie);
-  }, []);
   const handleChatsShow = () => {
     setChatsShown(true);
     setContactsShown(false);

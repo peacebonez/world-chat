@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import ChatInput from './ChatInput';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../contexts/userContext';
 import { Typography } from '@material-ui/core';
+import moment from 'moment';
 
 require('dotenv').config();
 const useStyles = makeStyles((theme) => ({
@@ -18,8 +19,10 @@ const useStyles = makeStyles((theme) => ({
   },
   sectionChat: {
     width: '100%',
-    display: 'inlineBlock',
-    overflow: 'auto',
+    minHeight: '93%',
+    boxShadow: '-1px -1px 50px lightgrey',
+    overflowY: 'scroll',
+    overflowX: 'hidden',
   },
   chatUnit: {
     float: 'left',
@@ -43,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'gray',
   },
   msgHeaderYours: {
+    color: 'gray',
     textAlign: 'right',
   },
   bubble: {
@@ -74,69 +78,81 @@ const ChatWindow = () => {
   const { socket, userState } = useContext(UserContext);
   const [room, setRoom] = useState(null);
 
+  const gotoBottom = (id) => {
+    // credit: https://stackoverflow.com/questions/11715646/scroll-automatically-to-the-bottom-of-the-page
+    var element = document.getElementById(id);
+    element.scrollTop = element.scrollHeight - element.clientHeight;
+  };
+
   useEffect(() => {
-    if (userState.user.activeRoom) setRoom(userState.user.activeRoom);
+    if (userState.user.activeRoom) {
+      setRoom(userState.user.activeRoom);
+      gotoBottom('section-chat');
+    }
   }, [userState.user]);
 
   useEffect(() => {
-    socket.on('connect', () => {
-      const roomId = room ? room._id : '123';
-      socket.emit('join', roomId); // replace 123 with conversation id
-    });
-
-    socket.on('roomJoined', (room) => {
-      console.log('successfully joined', room);
-    });
-
-    socket.on('messageFromServer', (data) => {
-      console.log('new message coming in', data);
-      // setChat((prevChat) => [...prevChat, data]);
+    socket.on('messageFromServer', (msgData) => {
+      setRoom((prevRoom) => {
+        return {
+          ...prevRoom,
+          messages: [...prevRoom.messages, msgData],
+        };
+      });
     });
   }, []);
 
   return (
     <div className={classes.chatWindow}>
-      <div className={classes.sectionChat}>
+      <div className={classes.sectionChat} id="section-chat">
         {room &&
           room.messages.length > 0 &&
           room.messages.map((msg, index) => {
-            console.log('msg:', msg);
-            const yours = msg.fromUser === userState.user.id;
-            const indexOfSender = room.members.findIndex(
-              (member) => member._id === msg.fromUser,
+            const yours = msg.fromUser === userState.user.email;
+            const indexOfContact = room.members.findIndex(
+              (member) => member.email !== userState.user.email,
             );
 
-            return (
-              <section
-                key={index}
-                className={yours ? classes.chatUnitYours : classes.chatUnit}
-              >
-                {!yours && (
+            const MessageItemYours = () => {
+              return (
+                <section key={index} className={classes.chatUnitYours}>
+                  <div>
+                    <Typography
+                      variant="subtitle2"
+                      className={classes.msgHeaderYours}
+                    >
+                      {moment(msg.createdOn).calendar()}
+                    </Typography>
+                    <ChatBubble message={msg.text} yours={true} />
+                  </div>
+                </section>
+              );
+            };
+            const MessageItemTheirs = () => {
+              return (
+                <section key={index} className={classes.chatUnit}>
                   <img
-                    src={room.members[indexOfSender].avatar}
+                    src={room.members[indexOfContact].avatar}
                     className={classes.msgAvatar}
                   />
-                )}
-                <div>
-                  <Typography
-                    variant="subtitle2"
-                    className={`${classes.msgHeader} ${
-                      yours ? classes.msgHeaderYours : ''
-                    }`}
-                  >
-                    {yours ? '' : room.members[indexOfSender].name}{' '}
-                    {msg.createdOn.hour}:
-                    {msg.createdOn.minute < 10
-                      ? `0${msg.createdOn.minute}`
-                      : msg.createdOn.minute}
-                  </Typography>
-                  <ChatBubble message={msg.text} yours={yours} />
-                </div>
-              </section>
-            );
+                  <div>
+                    <Typography
+                      variant="subtitle2"
+                      className={classes.msgHeader}
+                    >
+                      {moment(msg.createdOn).calendar()}
+                    </Typography>
+                    <ChatBubble message={msg.text} yours={false} />
+                  </div>
+                </section>
+              );
+            };
+            {
+              return yours ? <MessageItemYours /> : <MessageItemTheirs />;
+            }
           })}
       </div>
-      <ChatInput />
+      <ChatInput gotoBottom={gotoBottom} />
     </div>
   );
 };

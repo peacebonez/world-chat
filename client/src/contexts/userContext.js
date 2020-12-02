@@ -13,6 +13,7 @@ import {
   SWITCH_CONVERSATION,
   ADD_CONVERSATION,
   UPDATE_MESSAGES,
+  MESSAGE_SENT,
   CHANGE_USER_VIEW,
   MOBILE_MODE,
 } from '../reducers/userReducer';
@@ -81,6 +82,7 @@ const UserProvider = (props) => {
           await actions.fetchUser();
           history.push('/messenger');
         }
+
         dispatch({ type: UPDATE_USER, payload: data });
         return res;
       } catch (err) {
@@ -157,16 +159,17 @@ const UserProvider = (props) => {
     addConversation: async (members) => {
       try {
         const res = axios.post('/conversation/add', members);
-        if (res.status !== 200)
+        if (res.status === 409) return;
+        if (res.status === 200) {
+          const data = res.data;
+          dispatch({ type: ADD_CONVERSATION, payload: data });
+          return data;
+        } else {
           return dispatch({
             type: USER_ERROR,
             payload: 'Error creating conversation',
           });
-
-        const data = res.data;
-        console.log('data:', data);
-        dispatch({ type: ADD_CONVERSATION, payload: data });
-        return data;
+        }
       } catch (err) {
         dispatch({
           type: USER_ERROR,
@@ -212,12 +215,25 @@ const UserProvider = (props) => {
         });
       }
     },
-    messagesRead: (conversationId) => {
+    storeMessage: async (msg) => {
       try {
-        const res = axios.put(`/conversation/read/${conversationId}`);
-        //TODO
+        const res = await axios.post('/conversation/message', msg);
+
         const data = res.data;
-        // dispatch({ type: UPDATE_MESSAGES, payload: data });
+        dispatch({ type: MESSAGE_SENT, payload: data });
+      } catch (err) {
+        dispatch({
+          type: USER_ERROR,
+          payload: 'Error sending message',
+        });
+      }
+    },
+    messagesRead: async (conversationId) => {
+      try {
+        const res = await axios.put(`/conversation/read/${conversationId}`);
+        const data = res.data;
+        const readMessages = data.messages;
+        dispatch({ type: UPDATE_MESSAGES, payload: readMessages });
         if (res.status !== 200)
           dispatch({
             type: USER_ERROR,
@@ -270,9 +286,17 @@ const UserProvider = (props) => {
     actions.fetchUser();
 
     // TODO: probably want to check if user is successfully logged in before connecting
-    socket.on('connect', () => {
-      console.log('Connected, assigned:', socket.id, socket.connected);
+    if (userState.user.name) {
+      socket.on('connect', () => {
+        console.log('Connected, assigned:', socket.id, socket.connected);
+      });
+    }
+
+    socket.on('messageToClient', (msg) => {
+      console.log('msg in action:', msg);
+      dispatch({ type: 'MESSAGE_SENT', payload: msg });
     });
+
     // CLEAN UP THE EFFECT
     return () => socket.disconnect();
   }, []);
@@ -286,6 +310,8 @@ const UserProvider = (props) => {
     }
     return () => clearTimeout(timer);
   });
+
+  console.log('userState:', userState);
 
   return (
     <UserContext.Provider

@@ -10,6 +10,7 @@
     "axios": "^0.21.0",
     "email-validator": "^2.0.4",
     "js-cookie": "^2.2.1",
+    "moment": "^2.29.1",
     "react": "^16.14.0",
     "react-copy-to-clipboard": "^5.0.2",
     "react-debounce-input": "^3.2.3",

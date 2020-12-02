@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
-const generateTimeStamp = require('../functions/generateTimestamp');
 
 const ConversationSchema = new Schema({
   members: [
@@ -27,10 +26,9 @@ const ConversationSchema = new Schema({
   messages: [
     {
       fromUser: {
-        type: Schema.Types.ObjectId,
-        ref: 'users',
+        type: String,
       },
-      originalLanguage: {
+      primaryLanguage: {
         type: String,
       },
       text: {

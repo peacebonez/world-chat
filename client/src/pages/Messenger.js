@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Messenger = (props) => {
   const { userActions } = useContext(UserContext);
-
   const classes = useStyles();
 
   useEffect(() => {

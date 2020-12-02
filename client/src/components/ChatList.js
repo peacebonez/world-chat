@@ -20,8 +20,10 @@ const ChatList = () => {
 
   const handleActive = async (index, chatRoom) => {
     setActiveIndex(index);
-    await userActions.messagesRead(chatRoom._id);
     userActions.switchConversation(chatRoom);
+    userActions.appChatView();
+    socket.emit('join', chatRoom._id);
+    await userActions.messagesRead(chatRoom._id);
   };
 
   useEffect(() => {
@@ -31,7 +33,7 @@ const ChatList = () => {
     setChats(userState.user.conversations);
 
     //on load set active chat as most recent chat
-    if (chats) userActions.switchConversation(chats[0]);
+    if (chats) userActions.switchConversation(chats[chats[chats.length - 1]]);
   }, []);
   return (
     <div className={classes.chatListContainer}>

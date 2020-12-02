@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../contexts/userContext';
 
@@ -43,27 +43,30 @@ const useStyles = makeStyles((theme) => ({
   offlineIcon: { background: 'lightgray' },
 }));
 
-//TODOS
-//Will have 2 types of Navbars: group and one-on-one
-
-const Navbar = (props) => {
+const Navbar = () => {
   const classes = useStyles();
   const { userState, userActions } = useContext(UserContext);
-
-  const friend =
-    userState.user.activeRoom &&
-    userState.user.activeRoom.members.filter(
-      (member) => member._id !== userState.user.id,
-    )[0];
+  const [friend, setFriend] = useState(null);
+  const [currentRoom, setCurrentRoom] = useState(null);
 
   const handleSideBarView = () => userActions.appSideBarView();
+
+  useEffect(() => {
+    if (userState.user.activeRoom) {
+      const friendDisplayed = userState.user.activeRoom.members.find(
+        (member) => member.email !== userState.user.email,
+      );
+      setFriend(friendDisplayed);
+
+      setCurrentRoom(userState.user.activeRoom);
+    }
+  }, [userState.user]);
 
   return (
     <div className={classes.navBar}>
       <div>
         <div className={classes.flexCenter}>
-          {userState.user.activeRoom &&
-          userState.user.activeRoom.members.length > 2 ? (
+          {currentRoom && currentRoom.members.length > 2 ? (
             <Typography variant="h5" className={classes.chatterName}>
               Group Chat
             </Typography>

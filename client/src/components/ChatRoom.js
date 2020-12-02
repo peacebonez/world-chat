@@ -62,15 +62,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
-  console.log('chatRoom:', chatRoom);
   //test isOnline hard code
   let isOnline = 'true';
   const classes = useStyles();
-  const { userState, userActions } = useContext(UserContext);
-  console.log('userState:', userState);
+  const { userState } = useContext(UserContext);
 
-  const numUnreadMsgs = () =>
-    chatRoom.messages.filter((msg) => msg.isRead === false).length;
+  const numUnreadMsgs = () => {
+    return chatRoom.messages.filter(
+      (msg) => msg.isRead === false && msg.fromUser !== userState.user.email,
+    ).length;
+  };
 
   const chatMembersExcludingUser = chatRoom.members.filter((member) => {
     return member._id !== userState.user.id;
@@ -87,10 +88,7 @@ const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
       className={`${classes.contactWrapper} ${
         activeIndex === index ? classes.chatActive : ''
       }`}
-      onClick={() => {
-        handleActive(index, chatRoom);
-        userActions.appChatView();
-      }}
+      onClick={() => handleActive(index, chatRoom)}
     >
       <div>
         <div className={classes.sideBarImgWrapper}>
@@ -119,7 +117,11 @@ const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
           <Typography
             variant="subtitle1"
             className={`${classes.msgPreview} ${
-              numUnreadMsgs() > 0 ? classes.unreadMsg : ''
+              numUnreadMsgs() > 0 &&
+              chatRoom.messages[chatRoom.messages.length - 1].fromUser !==
+                userState.user.email
+                ? classes.unreadMsg
+                : ''
             }`}
           >
             {chatRoom.messages.length
