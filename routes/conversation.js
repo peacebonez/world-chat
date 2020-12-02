@@ -83,6 +83,10 @@ router.put('/read/:id', auth, async (req, res) => {
   }
 });
 
+router.get('/')
+
 router.delete('/delete/:id', (req, res) => {});
+
+
 
 module.exports = router;
