@@ -73,7 +73,7 @@ const Navbar = () => {
           ) : (
             <>
               <img
-                src={(friend && friend.avatar) || tempAvatar}
+                src={friend && friend.avatar ? friend.avatar : tempAvatar}
                 alt="friend avatar"
                 onClick={handleSideBarView}
               />

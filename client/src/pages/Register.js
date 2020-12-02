@@ -79,17 +79,17 @@ export default function Register() {
       setErrorEmail(true);
       return false;
     }
-    if (password.length <= 5){
-      setErrorPassword(true)
+    if (password.length <= 5) {
+      setErrorPassword(true);
       return false;
     }
-    if (!primaryLanguage){
-      setErrorLanguage(true)
-      return false
+    if (!primaryLanguage) {
+      setErrorLanguage(true);
+      return false;
     }
-    if (password !== confirmPassword){
-      setErrorConfirmPassword(true)
-      return false
+    if (password !== confirmPassword) {
+      setErrorConfirmPassword(true);
+      return false;
     }
     if (!userState.user.errorMsg === '') return false;
 
@@ -111,7 +111,7 @@ export default function Register() {
   };
 
   useEffect(() => {
-    if (name) setErrorName(true);
+    if (name) setErrorName(false);
     if (isEmail(email)) setErrorEmail(false);
     if (password.length > 5) setErrorPassword(false);
     if (primaryLanguage) setErrorLanguage(false);
