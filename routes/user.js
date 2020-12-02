@@ -176,14 +176,20 @@ router.get('/conversations', auth, async (req, res) => {
     if (!user) {
       return res.status(400).json({ error: 'User not found' });
     }
-
-    const conversations = await Conversation.find({
-      'members._id': { $in: userId.toString() },
-    });
-
-    if (!conversations.length) {
-      return res.status(204).json({ error: 'No conversations found' });
+    const search = req.query.searchterm;
+    if (!search) {
+      const conversations = await Conversation.find({
+        'members._id': { $in: userId.toString() },
+      });
+    } else {
+      const regex = new RegExp(search, 'i');
+      const conversations = await Conversation.find({
+        'members.name': { $regex: regex },
+        'members._id': user,
+      });
     }
+    if (!conversations.length) return res.json( [ ] ); // empty array: no conversations.
+    
 
     return res.status(200).json(conversations);
   } catch (err) {
