@@ -41,13 +41,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Contact = ({ contact }) => {
-  console.log('contact:', contact);
   //test isOnline hard code
   let isOnline = 'true';
   const classes = useStyles();
-  const { userActions, userState } = useContext(UserContext);
+  const { userActions, userState, socket } = useContext(UserContext);
 
   const handleClickContact = async () => {
+    //if in mobile mode screen shifts to chat
+    userActions.appChatView();
     const userAvatar = userState.user.avatar.url || tempAvatar;
     const contactAvatar = contact.avatar ? contact.avatar.url : tempAvatar;
     const members = [
@@ -64,20 +65,21 @@ const Contact = ({ contact }) => {
         avatar: contactAvatar,
       },
     ];
-    const newConversation = await userActions.addConversation(members);
 
-    //if in mobile mode screen shifts to chat
-    userActions.appChatView();
-    //if conversation already exists, fetch that conversation and set it as active
-    if (!newConversation) {
-      const existingConversation = await userActions.fetchSingleConversation(
-        members,
-      );
-      return userActions.switchConversation(existingConversation);
+    //check if converstation exists between user and contact
+    const existingConversation = await userActions.fetchSingleConversation(
+      members,
+    );
+
+    //if no conversation exists, create a new conversation and set it as active
+    if (!existingConversation) {
+      const newConversation = await userActions.addConversation(members);
+      userActions.switchConversation(newConversation);
+      return socket.emit('join', newConversation._id);
     }
-
-    //set newly created conversation as active conversation
-    userActions.switchConversation(newConversation);
+    //if conversation already exists, fetch that conversation and set it as active
+    userActions.switchConversation(existingConversation);
+    return socket.emit('join', existingConversation._id);
   };
 
   return (

@@ -6,7 +6,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Messenger from './pages/Messenger';
 import { UserProvider } from './contexts/userContext';
-//document.body.style.overflow = 'hidden';
+document.body.style.overflow = 'hidden';
 function App() {
   return (
     <MuiThemeProvider theme={theme}>

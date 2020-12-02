@@ -68,14 +68,14 @@ app.use(function (err, req, res, next) {
   res.json({ error: err.message });
 });
 
+//SOCKET.IO CODE
 io.on('connection', (socket) => {
   /* socket object may be used to send specific messages to the new connected client */
   console.log('new client connected');
   socket.emit('connection', null);
 
-  socket.on('join', async (room) => {
-    // The room is likely going to be a Conversation ID
-    // TODO: If the conversation ID does not exist yet, create on before joining in
+  socket.on('join', (room) => {
+    if (room) console.log(`Joining room ${room}`);
     if (!room) {
       room = uuid.v4();
     }
@@ -87,29 +87,11 @@ io.on('connection', (socket) => {
   //   console.log('new message', data);
   // });
 
-  socket.on('messageToClient', async (data) => {
-    // TODO: you might want to pass in more useful info such as name and avatar pic
-    const { room, email, message, chatRoomName } = data;
-    const createdOn = generateTimestamp();
-    const user = await User.findOne({ email: email });
-    const moreData = {
-      userName: user.name,
-    };
-    // TODO: Save the message
+  socket.on('messageToClient', (msgData) => {
+    console.log('msgData:', msgData);
 
-    // const conversations = await Conversation.findAll({
-    //   where: { name: chatRoomName },
-    // });
-    // const chatRoomId = conversations[0].id;
-    // const chatMessage = await models.ChatMessage.create({
-    //   chatRoomId,
-    //   author,
-    //   message: message,
-    // });
-    socket
-      .to('123')
-      .emit('messageFromServer', { ...data, moreData, createdOn }); // other person's message
-    socket.emit('messageFromServer', { ...data, moreData, createdOn }); // your message
+    socket.to(msgData.room).emit('messageFromServer', msgData); // other person's message
+    socket.emit('messageFromServer', msgData); // your message
   });
 });
 
