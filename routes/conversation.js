@@ -82,21 +82,19 @@ router.post('/message', auth, async (req, res) => {
     const primaryLanguages = conversation.members.map(
       (member) => member.primaryLanguage,
     );
-    console.log('primaryLanguages:', primaryLanguages);
 
+    //see if other members' primaryLanguage does not match users
     const foreignLanguages = primaryLanguages.filter(
       (lang) => lang !== savedMsg.primaryLanguage,
     );
 
-    console.log('foreignLanguages:', foreignLanguages);
-
-    for (const lang of foreignLanguages) {
-      translatedText = await translateText(savedMsg.text, lang);
-      savedMsg.translations[lang] = translatedText;
-      console.log('savedMsg:', savedMsg);
+    //if we encounter a foreign language for the user, translate
+    if (foreignLanguages.length) {
+      for (const lang of foreignLanguages) {
+        translatedText = await translateText(savedMsg.text, lang);
+        savedMsg.translations[lang] = translatedText;
+      }
     }
-
-    console.log('savedMsg:', savedMsg);
 
     conversation.messages.push(savedMsg);
     await conversation.save();

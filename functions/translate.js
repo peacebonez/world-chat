@@ -13,10 +13,4 @@ const translateText = async (text, language) => {
   return translation;
 };
 
-async function tester() {
-  const translateTest = await translateText('hi', 'es');
-  console.log('translateTest:', translateTest);
-}
-tester();
-
 module.exports = translateText;
