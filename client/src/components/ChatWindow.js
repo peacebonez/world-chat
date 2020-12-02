@@ -92,7 +92,7 @@ const ChatWindow = () => {
         };
       });
     });
-  }, [userState.user.activeRoom]);
+  }, []);
 
   console.log('room:', room);
 

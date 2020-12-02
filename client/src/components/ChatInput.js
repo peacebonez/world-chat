@@ -32,7 +32,7 @@ const ChatInput = () => {
       name: userState.user.name,
       email: userState.user.email,
       primaryLanguage: userState.user.primaryLanguage,
-      message,
+      text: message,
       room: userState.user.activeRoom._id,
       createdOn: Date.now(),
     };

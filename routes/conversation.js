@@ -71,7 +71,7 @@ router.post('/message', auth, async (req, res) => {
 
     const savedMsg = {
       fromUser: msgData.email,
-      text: msgData.message,
+      text: msgData.text,
       primaryLanguage: msgData.primaryLanguage,
       createdOn: msgData.createdOn,
     };
