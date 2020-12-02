@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
-const generateTimeStamp = require('../functions/generateTimestamp');
 
 const ConversationSchema = new Schema({
   members: [
@@ -29,10 +28,6 @@ const ConversationSchema = new Schema({
       fromUser: {
         type: String,
       },
-      // fromUser: {
-      //   type: Schema.Types.ObjectId,
-      //   ref: 'users',
-      // },
       primaryLanguage: {
         type: String,
       },
