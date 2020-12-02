@@ -76,6 +76,18 @@ router.post('/message', auth, async (req, res) => {
       createdOn: msgData.createdOn,
     };
 
+    //refer to members' primary language to determine if translation is necessary
+    console.log('conversation:', conversation);
+    const primaryLanguages = conversation.members.map(
+      (member) => member.primaryLanguage,
+    );
+    console.log('primaryLanguages:', primaryLanguages);
+
+    const foreignLanguages = primaryLanguages.filter(
+      (lang) => lang !== savedMsg.primaryLanguage,
+    );
+    console.log('foreignLanguages:', foreignLanguages);
+
     conversation.messages.push(savedMsg);
     await conversation.save();
     return res.status(200).json(savedMsg);

@@ -34,6 +34,7 @@ const ConversationSchema = new Schema({
       text: {
         type: String,
       },
+      translations: {},
       isRead: {
         type: Boolean,
         default: false,
