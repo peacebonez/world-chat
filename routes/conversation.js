@@ -7,7 +7,6 @@ const User = require('../models/User');
 //POST a new conversation
 router.post('/add', auth, async (req, res) => {
   const members = req.body;
-
   const memberIDs = members.map((member) => member._id);
 
   try {
@@ -83,10 +82,26 @@ router.put('/read/:id', auth, async (req, res) => {
   }
 });
 
-router.get('/')
+// get all conversations. Given a search parameter (optional)
+router.get('/search/:searchterm', auth, async (req, res) => {
+  const search = req.params.searchterm;
+  const user = req.user.id;
+  try {
 
-router.delete('/delete/:id', (req, res) => {});
-
-
+    const regex = new RegExp(search, 'i');
+    let conversations = await Conversation.find({
+      'members.name': { $regex: regex },
+      'members._id': user,
+    });
+    if (!conversations) return res.status(404).send('No conversations found');
+    // let conversation = await Conversation.findOne({
+    //   'members._id': { $all: memberIDs },
+    // });
+    return res.status(200).json(conversations);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send('Server error');
+  }
+});
 
 module.exports = router;

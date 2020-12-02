@@ -15,7 +15,6 @@ const User = require('./models/User');
 const { json, urlencoded } = express;
 
 const generateTimestamp = require('./functions/generateTimestamp');
-//Routes
 
 var app = express();
 const http = require('http').createServer(app);
@@ -46,15 +45,15 @@ app.use(cors());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, 'public')));
-
+//Routes
 app.use('/conversation', require('./routes/conversation'));
 app.use('/user', require('./routes/user'));
 app.use('/invitation', require('./routes/invitation'));
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
-});
+// app.use(function (req, res, next) {
+//   next(createError(404));
+// });
 
 // error handler
 app.use(function (err, req, res, next) {
