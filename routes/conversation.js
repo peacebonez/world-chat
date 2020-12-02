@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const Conversation = require('../models/Conversation');
 const User = require('../models/User');
+const translateText = require('../functions/translate');
 
 //POST a new conversation
 router.post('/add', auth, async (req, res) => {
@@ -72,12 +73,12 @@ router.post('/message', auth, async (req, res) => {
     const savedMsg = {
       fromUser: msgData.email,
       text: msgData.text,
+      translations: {},
       primaryLanguage: msgData.primaryLanguage,
       createdOn: msgData.createdOn,
     };
 
     //refer to members' primary language to determine if translation is necessary
-    console.log('conversation:', conversation);
     const primaryLanguages = conversation.members.map(
       (member) => member.primaryLanguage,
     );
@@ -86,7 +87,16 @@ router.post('/message', auth, async (req, res) => {
     const foreignLanguages = primaryLanguages.filter(
       (lang) => lang !== savedMsg.primaryLanguage,
     );
+
     console.log('foreignLanguages:', foreignLanguages);
+
+    for (const lang of foreignLanguages) {
+      translatedText = await translateText(savedMsg.text, lang);
+      savedMsg.translations[lang] = translatedText;
+      console.log('savedMsg:', savedMsg);
+    }
+
+    console.log('savedMsg:', savedMsg);
 
     conversation.messages.push(savedMsg);
     await conversation.save();
