@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '100%',
     overflow: 'hidden',
     width: '40px',
+    height: '40px',
     marginRight: theme.spacing(1),
   },
   button: {
@@ -57,7 +58,7 @@ const InviteIn = ({ invite, handleApproveOrReject }) => {
       <div>
         <div className={classes.sideBarImgWrapper}>
           <img
-            src={'https://worldchat1.s3.amazonaws.com/' + invite.referrerEmail}
+            src={invite.avatar ? invite.avatar : tempAvatar}
             alt="user avatar"
             className={classes.sideBarImg}
           />
