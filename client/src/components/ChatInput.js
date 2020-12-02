@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ChatInput = () => {
+const ChatInput = ({ gotoBottom }) => {
   const classes = useStyles();
   const { socket, userState, userActions } = useContext(UserContext);
 
@@ -37,6 +37,7 @@ const ChatInput = () => {
       createdOn: Date.now(),
     };
 
+    gotoBottom('section-chat');
     socket.emit('messageToClient', sendingMsgData);
     await userActions.storeMessage(sendingMsgData);
     setMessage('');

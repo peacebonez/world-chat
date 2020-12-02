@@ -19,6 +19,8 @@ const useStyles = makeStyles((theme) => ({
   },
   sectionChat: {
     width: '100%',
+    minHeight: '93%',
+    boxShadow: '-1px -1px 50px lightgrey',
     overflowY: 'scroll',
     overflowX: 'hidden',
   },
@@ -73,18 +75,24 @@ const useStyles = makeStyles((theme) => ({
 
 const ChatWindow = () => {
   const classes = useStyles();
-  const { socket, userState, userActions } = useContext(UserContext);
+  const { socket, userState } = useContext(UserContext);
   const [room, setRoom] = useState(null);
+
+  const gotoBottom = (id) => {
+    // credit: https://stackoverflow.com/questions/11715646/scroll-automatically-to-the-bottom-of-the-page
+    var element = document.getElementById(id);
+    element.scrollTop = element.scrollHeight - element.clientHeight;
+  };
 
   useEffect(() => {
     if (userState.user.activeRoom) {
       setRoom(userState.user.activeRoom);
+      gotoBottom('section-chat');
     }
   }, [userState.user]);
 
   useEffect(() => {
     socket.on('messageFromServer', (msgData) => {
-      console.log('new message coming in', msgData);
       setRoom((prevRoom) => {
         return {
           ...prevRoom,
@@ -94,17 +102,12 @@ const ChatWindow = () => {
     });
   }, []);
 
-  console.log('room:', room);
-
   return (
     <div className={classes.chatWindow}>
-      <div className={classes.sectionChat}>
+      <div className={classes.sectionChat} id="section-chat">
         {room &&
           room.messages.length > 0 &&
           room.messages.map((msg, index) => {
-            // console.log('msg:', msg);
-            // console.log('room:', room);
-
             const yours = msg.fromUser === userState.user.email;
             const indexOfContact = room.members.findIndex(
               (member) => member.email !== userState.user.email,
@@ -149,7 +152,7 @@ const ChatWindow = () => {
             }
           })}
       </div>
-      <ChatInput />
+      <ChatInput gotoBottom={gotoBottom} />
     </div>
   );
 };
