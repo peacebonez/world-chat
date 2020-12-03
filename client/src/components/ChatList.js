@@ -31,9 +31,10 @@ const ChatList = () => {
     // if (userState.user.conversations) {
     handleFetch();
     setChats(userState.user.conversations);
+    console.log('chats:', chats);
     // }
   }, []);
-  console.log('chats:', chats);
+
   useEffect(() => {
     if (chats) {
       userActions.switchConversation(chats[0]);
@@ -46,6 +47,7 @@ const ChatList = () => {
           chats.map((chatRoom, index) => {
             return (
               <ChatRoom
+                key={chatRoom._id}
                 chatRoom={chatRoom}
                 index={index}
                 handleActive={handleActive}

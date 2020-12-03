@@ -115,7 +115,7 @@ const ChatWindow = () => {
 
             const MessageItemYours = () => {
               return (
-                <section key={index} className={classes.chatUnitYours}>
+                <section className={classes.chatUnitYours}>
                   <div>
                     <Typography
                       variant="subtitle2"
@@ -130,7 +130,7 @@ const ChatWindow = () => {
             };
             const MessageItemTheirs = () => {
               return (
-                <section key={index} className={classes.chatUnit}>
+                <section className={classes.chatUnit}>
                   <img
                     src={room.members[indexOfContact].avatar}
                     className={classes.msgAvatar}
@@ -160,7 +160,11 @@ const ChatWindow = () => {
               );
             };
             {
-              return yours ? <MessageItemYours /> : <MessageItemTheirs />;
+              return yours ? (
+                <MessageItemYours key={index} />
+              ) : (
+                <MessageItemTheirs key={index} />
+              );
             }
           })}
       </div>
