@@ -9,6 +9,7 @@ export const MESSAGE_SENT = 'MESSAGE_SENT';
 export const ADD_CONVERSATION = 'ADD_CONVERSATION';
 export const CHANGE_USER_VIEW = 'CHANGE_USER_VIEW';
 export const MOBILE_MODE = 'MOBILE_MODE';
+export const TOGGLE_TRANSLATION = 'TOGGLE_TRANSLATION';
 
 export const userReducer = (state, action) => {
   const { type, payload } = action;
@@ -54,6 +55,14 @@ export const userReducer = (state, action) => {
         user: {
           ...state.user,
           activeRoom: { ...state.user.activeRoom, messages: payload },
+        },
+      };
+    case TOGGLE_TRANSLATION:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          activeRoom: { ...state.user.activeRoom, displayTranslation: payload },
         },
       };
     case USER_ERROR:

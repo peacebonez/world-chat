@@ -65,6 +65,7 @@ router.get('/', auth, async (req, res) => {
 
 router.post('/message', auth, async (req, res) => {
   const msgData = req.body;
+
   try {
     const conversation = await Conversation.findById(msgData.room);
 
@@ -73,8 +74,8 @@ router.post('/message', auth, async (req, res) => {
     const savedMsg = {
       fromUser: msgData.email,
       text: msgData.text,
-      translations: {},
       primaryLanguage: msgData.primaryLanguage,
+      translations: {},
       createdOn: msgData.createdOn,
     };
 
@@ -93,9 +94,12 @@ router.post('/message', auth, async (req, res) => {
       for (const lang of foreignLanguages) {
         translatedText = await translateText(savedMsg.text, lang);
         savedMsg.translations[lang] = translatedText;
+
+        //TODO- set dynamic keys
+        // savedMsg.set(lang, translatedText);
       }
     }
-
+    console.log('savedMsg:', savedMsg);
     conversation.messages.push(savedMsg);
     await conversation.save();
     return res.status(200).json(savedMsg);

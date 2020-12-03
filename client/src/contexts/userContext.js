@@ -16,6 +16,7 @@ import {
   MESSAGE_SENT,
   CHANGE_USER_VIEW,
   MOBILE_MODE,
+  TOGGLE_TRANSLATION,
 } from '../reducers/userReducer';
 
 const serverURL = process.env.serverURL;
@@ -245,6 +246,9 @@ const UserProvider = (props) => {
           payload: 'Error updating messages',
         });
       }
+    },
+    toggleTranslation: (bool) => {
+      dispatch({ type: TOGGLE_TRANSLATION, payload: bool });
     },
     logout: async () => {
       try {

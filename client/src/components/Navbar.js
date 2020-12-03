@@ -48,8 +48,21 @@ const Navbar = () => {
   const { userState, userActions } = useContext(UserContext);
   const [friend, setFriend] = useState(null);
   const [currentRoom, setCurrentRoom] = useState(null);
+  const [isTranslated, setIsTranslated] = useState(false);
 
   const handleSideBarView = () => userActions.appSideBarView();
+
+  const toggleTranslate = (e) => {
+    if (e.target.checked) setIsTranslated(true);
+    else setIsTranslated(false);
+  };
+
+  //listens for change on isTranslated
+  useEffect(() => {
+    if (userState.user.activeRoom) {
+      userActions.toggleTranslation(isTranslated);
+    }
+  }, [isTranslated]);
 
   useEffect(() => {
     if (userState.user.activeRoom) {
@@ -91,8 +104,14 @@ const Navbar = () => {
         </div>
       </div>
       <div className={classes.flexCenter}>
-        <Typography variant="subtitle2">Original Language</Typography>
-        <Switch color="primary" name="language" />
+        <Typography variant="subtitle2">
+          {isTranslated ? 'Translated Text' : 'Original Language'}
+        </Typography>
+        <Switch
+          color="primary"
+          name="language"
+          onChange={(e) => toggleTranslate(e)}
+        />
         <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
       </div>
     </div>

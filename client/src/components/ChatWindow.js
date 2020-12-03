@@ -88,6 +88,10 @@ const ChatWindow = () => {
     if (userState.user.activeRoom) {
       setRoom(userState.user.activeRoom);
       gotoBottom('section-chat');
+      console.log(
+        'userState.user.activeRoom.displayTranslation:',
+        userState.user.activeRoom.displayTranslation,
+      );
     }
   }, [userState.user]);
 
@@ -142,7 +146,18 @@ const ChatWindow = () => {
                     >
                       {moment(msg.createdOn).calendar()}
                     </Typography>
-                    <ChatBubble message={msg.text} yours={false} />
+                    {/* handle displayTranslation state */}
+                    {userState.user.activeRoom.displayTranslation ? (
+                      <ChatBubble
+                        message={
+                          msg.translations[userState.user.primaryLanguage]
+                        }
+                        yours={false}
+                      />
+                    ) : (
+                      <ChatBubble message={msg.text} yours={false} />
+                    )}
+                    {/* <ChatBubble message={msg.text} yours={false} /> */}
                   </div>
                 </section>
               );
@@ -159,7 +174,6 @@ const ChatWindow = () => {
 
 const ChatBubble = (props) => {
   const classes = useStyles();
-
   return (
     <section className={props.yours ? classes.bubbleYours : classes.bubble}>
       <Typography variant="subtitle1" className={classes.textInBubble}>
