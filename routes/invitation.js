@@ -109,24 +109,4 @@ router.put('/:id/reject', auth, async (req, res) => {
   }
 });
 
-router.get('/search/:searchterm', auth, async (req, res) => {
-  const search = req.params.searchterm;
-  const user = req.user.id;
-  try {
-    const regex = new RegExp(search, 'i');
-    let invitations = await Invitation.find({
-      'members.name': { $regex: regex },
-      'members._id': user,
-    });
-    if (!invitations) return res.status(404).send('No invitations found');
-    // let conversation = await Conversation.findOne({
-    //   'members._id': { $all: memberIDs },
-    // });
-    return res.status(200).json(invitations);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send('Server error');
-  }
-});
-
 module.exports = router;

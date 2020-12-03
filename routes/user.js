@@ -188,8 +188,7 @@ router.get('/conversations', auth, async (req, res) => {
         'members._id': user,
       });
     }
-    if (!conversations.length) return res.json( [ ] ); // empty array: no conversations.
-    
+    if (!conversations.length) return res.json([]); // empty array: no conversations.
 
     return res.status(200).json(conversations);
   } catch (err) {
@@ -201,13 +200,18 @@ router.get('/conversations', auth, async (req, res) => {
 //GET all user outgoing invitations PRIVATE ROUTE
 router.get('/invitations/out', auth, async (req, res) => {
   const userId = req.user.id;
+  const search = req.query.searchterm;
   try {
-    const invites = await Invitation.find({ referrer: userId });
-
-    if (!invites.length) {
-      res.status(404).send('No invitations found.');
+    let invites;
+    if (!search) invites = await Invitation.find({ referrer: userId });
+    else {
+      const regex = new RegExp(search, 'i');
+      invites = await Invitation.find({
+        toEmail: { $regex: regex },
+      });
     }
 
+    if (!invites.length) return res.send([]);
     res.json(invites);
   } catch (err) {
     console.error(err.message);
@@ -218,19 +222,18 @@ router.get('/invitations/out', auth, async (req, res) => {
 //GET all user incoming invitations PRIVATE ROUTE
 router.get('/invitations/in', auth, async (req, res) => {
   const userId = req.user.id;
+  const search = req.query.searchterm;
   try {
-    const user = await User.findById(userId);
-
-    if (!user) {
-      res.status(404).send('User not found');
+    let invites;
+    if (!search) invites = await Invitation.find({ referrer: userId });
+    else {
+      const regex = new RegExp(search, 'i');
+      invites = await Invitation.find({
+        referrerEmail: { $regex: regex },
+      });
     }
 
-    const invites = await Invitation.find({ toEmail: user.email });
-
-    if (!invites.length) {
-      res.status(204).send('No invitations found.');
-    }
-
+    if (!invites.length) return res.send([]);
     res.json(invites);
   } catch (err) {
     console.error(err.message);
@@ -410,22 +413,41 @@ router.post(
 //GET user contacts PRIVATE ROUTE
 router.get('/contacts', auth, async (req, res) => {
   const userId = req.user.id;
+  const user = await User.findById(userId);
+  if (!user) res.status(404).send('User not found');
+  const search = req.query.searchterm.toLowerCase();
   try {
-    const user = await User.findById(userId);
-
-    if (!user) {
-      res.status(404).send('User not found');
+    let contacts;
+    if (!search) contacts = user.contacts;
+    else {
+      contacts = user.contacts.filter((c) =>
+        c.name.toLowerCase().includes(search),
+      );
     }
 
-    if (!user.contacts.length) {
-      return res.status(204).json({ msg: 'No contacts found.' });
-    }
-
-    res.json(user.contacts);
+    if (!contacts.length) return res.send([]);
+    return res.json(contacts);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
+  // const userId = req.user.id;
+  // try {
+  //   const user = await User.findById(userId);
+
+  //   if (!user) {
+  //     res.status(404).send('User not found');
+  //   }
+
+  //   if (!user.contacts.length) {
+  //     return res.status(204).json({ msg: 'No contacts found.' });
+  //   }
+
+  //   res.json(user.contacts);
+  // } catch (err) {
+  //   console.error(err.message);
+  //   res.status(500).send('Server Error');
+  // }
 });
 
 const storage = multer.memoryStorage();
