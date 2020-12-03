@@ -28,13 +28,17 @@ const ChatList = () => {
 
   useEffect(() => {
     //Fetch all user conversations on load
-
+    // if (userState.user.conversations) {
     handleFetch();
     setChats(userState.user.conversations);
-
-    //on load set active chat as most recent chat
-    if (chats) userActions.switchConversation(chats[chats[chats.length - 1]]);
+    // }
   }, []);
+  console.log('chats:', chats);
+  useEffect(() => {
+    if (chats) {
+      userActions.switchConversation(chats[0]);
+    }
+  }, [chats]);
   return (
     <div className={classes.chatListContainer}>
       <ul className={classes.chatList}>

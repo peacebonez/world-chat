@@ -253,6 +253,7 @@ const UserProvider = (props) => {
     logout: async () => {
       try {
         await axios.get('/user/logout');
+        history.push('/');
         dispatch({ type: USER_LOGOUT });
       } catch (err) {
         console.log(err.message);
@@ -314,8 +315,6 @@ const UserProvider = (props) => {
     }
     return () => clearTimeout(timer);
   });
-
-  console.log('userState:', userState);
 
   return (
     <UserContext.Provider

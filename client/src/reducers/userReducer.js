@@ -19,15 +19,8 @@ export const userReducer = (state, action) => {
     case GET_CONVERSATIONS:
       return { ...state, user: { ...state.user, conversations: payload } };
     case USER_LOGOUT:
-      return {
-        user: {
-          name: '',
-          email: '',
-          avatar: '',
-          contacts: [],
-          primaryLanguage: '',
-        },
-      };
+      state = { user: { name: '' } };
+      return state;
     case ADD_CONVERSATION:
       return {
         ...state,
