@@ -54,7 +54,9 @@ const Navbar = () => {
   useEffect(() => {
     if (userState.user.activeRoom) {
       const friendDisplayed = userState.user.activeRoom.members.find(
-        (member) => member.email !== userState.user.email,
+        (member) => {
+          return member.email !== userState.user.email;
+        },
       );
       setFriend(friendDisplayed);
 
