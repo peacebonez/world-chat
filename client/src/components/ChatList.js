@@ -14,32 +14,32 @@ const ChatList = () => {
   const classes = useStyles();
 
   const [activeIndex, setActiveIndex] = useState(null);
-  const [chats, setChats] = useState(null);
-
-  const handleFetch = async () => await userActions.fetchConversations();
 
   const handleActive = async (index, chatRoom) => {
     setActiveIndex(index);
     userActions.switchConversation(chatRoom);
     userActions.appChatView();
     socket.emit('join', chatRoom._id);
-    await userActions.messagesRead(chatRoom._id);
+    userActions.messagesRead(chatRoom._id);
   };
 
+  //Fetch all user conversations on load
   useEffect(() => {
-    //Fetch all user conversations on load
-
-    handleFetch();
-    setChats(userState.user.conversations);
-
-    //on load set active chat as most recent chat
-    if (chats) userActions.switchConversation(chats[chats[chats.length - 1]]);
+    userActions.fetchConversations();
   }, []);
+
+  //Load up an active chat. TODO- load chat with most recent message
+  useEffect(() => {
+    if (userState.user.conversations) {
+      userActions.switchConversation(userState.user.conversations[0]);
+    }
+  }, [userState.user.conversations]);
   return (
     <div className={classes.chatListContainer}>
       <ul className={classes.chatList}>
-        {chats &&
-          chats.map((chatRoom, index) => {
+        {userState.user.conversations &&
+          userState.user.conversations.length > 0 &&
+          userState.user.conversations.map((chatRoom, index) => {
             return (
               <ChatRoom
                 chatRoom={chatRoom}
