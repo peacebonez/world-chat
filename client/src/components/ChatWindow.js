@@ -85,9 +85,10 @@ const ChatWindow = () => {
   };
 
   useEffect(() => {
+    // works but then pushes to bottom on every translate toggle
+    gotoBottom('section-chat');
     if (userState.user.activeRoom) {
       setRoom(userState.user.activeRoom);
-      gotoBottom('section-chat');
     }
   }, [userState.user]);
 
@@ -100,6 +101,11 @@ const ChatWindow = () => {
         };
       });
     });
+  }, []);
+
+  useEffect(() => {
+    //Not sure why the chat doesn't scroll to bottom upon load.
+    gotoBottom('section-chat');
   }, []);
 
   return (

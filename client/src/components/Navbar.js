@@ -110,6 +110,7 @@ const Navbar = () => {
         <Switch
           color="primary"
           name="language"
+          checked={isTranslated}
           onChange={(e) => toggleTranslate(e)}
         />
         <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
