@@ -50,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const InviteIn = ({ invite, handleApproveOrReject }) => {
-  console.log('invite:', invite);
   const classes = useStyles();
 
   return (

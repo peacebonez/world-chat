@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { Typography } from '@material-ui/core';
 
 import InviteIn from './InviteIn';
 import InviteOut from './InviteOut';
@@ -35,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
   inviteUl: {
     paddingLeft: 0,
   },
+  empytyListHeader: {},
 }));
 
 const Invites = () => {
@@ -97,8 +99,7 @@ const Invites = () => {
         {/* display all pending invites sent TO user */}
         {showRequests && (
           <ul className={classes.inviteUl}>
-            {invites &&
-              invites.pendingInvitesIn.length > 0 &&
+            {invites && invites.pendingInvitesIn.length > 0 ? (
               invites.pendingInvitesIn.map((invite, index) => {
                 invite.index = index;
                 return (
@@ -109,17 +110,26 @@ const Invites = () => {
                     handleApproveOrReject={handleApproveOrReject}
                   />
                 );
-              })}
+              })
+            ) : (
+              <Typography variant="body1" className={classes.empytyListHeader}>
+                No requests 😐
+              </Typography>
+            )}
           </ul>
         )}
         {/* display all pending invites sent BY user */}
         {showSent && (
           <ul className={classes.inviteUl}>
-            {invites &&
-              invites.pendingInvitesOut.length &&
+            {invites && invites.pendingInvitesOut.length ? (
               invites.pendingInvitesOut.map((invite) => (
                 <InviteOut key={invite._id} invite={invite} />
-              ))}
+              ))
+            ) : (
+              <Typography variant="body1" className={classes.empytyListHeader}>
+                No pending invitations ✅
+              </Typography>
+            )}
           </ul>
         )}
       </div>
