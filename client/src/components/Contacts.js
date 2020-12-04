@@ -24,9 +24,13 @@ const Contacts = ({searchText}) => {
       <ul className={classes.contactList}>
         {userState.user.name &&
           userState.user.contacts.length > 0 &&
-          userState.user.contacts.map((contact) => {
-            return <Contact contact={contact} key={contact.email} />;
-          })}
+          userState.user.contacts.reduce((filtered, contact) => {
+            if (contact.name.toLowerCase().includes(searchText.toLowerCase())){
+              filtered.push(<Contact contact={contact} key={contact.email} />);
+            }
+            return filtered;
+          }, [])
+        }
       </ul>
     </div>
   );
