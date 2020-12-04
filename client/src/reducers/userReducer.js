@@ -9,6 +9,7 @@ export const MESSAGE_SENT = 'MESSAGE_SENT';
 export const ADD_CONVERSATION = 'ADD_CONVERSATION';
 export const CHANGE_USER_VIEW = 'CHANGE_USER_VIEW';
 export const MOBILE_MODE = 'MOBILE_MODE';
+export const TOGGLE_TRANSLATION = 'TOGGLE_TRANSLATION';
 
 export const userReducer = (state, action) => {
   const { type, payload } = action;
@@ -18,15 +19,8 @@ export const userReducer = (state, action) => {
     case GET_CONVERSATIONS:
       return { ...state, user: { ...state.user, conversations: payload } };
     case USER_LOGOUT:
-      return {
-        user: {
-          name: '',
-          email: '',
-          avatar: '',
-          contacts: [],
-          primaryLanguage: '',
-        },
-      };
+      state = { user: { name: '' } };
+      return state;
     case ADD_CONVERSATION:
       return {
         ...state,
@@ -54,6 +48,14 @@ export const userReducer = (state, action) => {
         user: {
           ...state.user,
           activeRoom: { ...state.user.activeRoom, messages: payload },
+        },
+      };
+    case TOGGLE_TRANSLATION:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          activeRoom: { ...state.user.activeRoom, displayTranslation: payload },
         },
       };
     case USER_ERROR:

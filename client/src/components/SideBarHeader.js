@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from 'react';
-import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import { Redirect } from 'react-router-dom';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';

@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const Conversation = require('../models/Conversation');
 const User = require('../models/User');
+const translateText = require('../functions/translate');
 
 //POST a new conversation
 router.post('/add', auth, async (req, res) => {
@@ -63,6 +64,7 @@ router.get('/', auth, async (req, res) => {
 
 router.post('/message', auth, async (req, res) => {
   const msgData = req.body;
+
   try {
     const conversation = await Conversation.findById(msgData.room);
 
@@ -72,9 +74,31 @@ router.post('/message', auth, async (req, res) => {
       fromUser: msgData.email,
       text: msgData.text,
       primaryLanguage: msgData.primaryLanguage,
+      translations: {},
       createdOn: msgData.createdOn,
     };
 
+    //refer to members' primary language to determine if translation is necessary
+    const primaryLanguages = conversation.members.map(
+      (member) => member.primaryLanguage,
+    );
+
+    //see if other members' primaryLanguage does not match users
+    const foreignLanguages = primaryLanguages.filter(
+      (lang) => lang !== savedMsg.primaryLanguage,
+    );
+
+    //if we encounter a foreign language for the user, translate
+    if (foreignLanguages.length) {
+      for (const lang of foreignLanguages) {
+        translatedText = await translateText(savedMsg.text, lang);
+        savedMsg.translations[lang] = translatedText;
+
+        //TODO- set dynamic keys
+        // savedMsg.set(lang, translatedText);
+      }
+    }
+    console.log('savedMsg:', savedMsg);
     conversation.messages.push(savedMsg);
     await conversation.save();
     return res.status(200).json(savedMsg);

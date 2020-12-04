@@ -42,6 +42,7 @@ const ChatList = () => {
           userState.user.conversations.map((chatRoom, index) => {
             return (
               <ChatRoom
+                key={chatRoom._id}
                 chatRoom={chatRoom}
                 index={index}
                 handleActive={handleActive}

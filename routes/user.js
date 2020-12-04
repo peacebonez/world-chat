@@ -279,6 +279,14 @@ router.get('/invitations/pending', auth, async (req, res) => {
       return res.status(204).json(invites);
     }
 
+    //add avatar to invite for better user experience
+    for (const invite of invites.pendingInvitesIn) {
+      const person = await User.findOne({ email: invite.referrerEmail });
+      if (person.avatar) {
+        invite.avatar = person.avatar.url;
+      }
+    }
+
     res.json(invites);
   } catch (err) {
     console.error(err.message);

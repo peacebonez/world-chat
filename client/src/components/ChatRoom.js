@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
@@ -92,10 +92,9 @@ const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
     >
       <div>
         <div className={classes.sideBarImgWrapper}>
-          {chatMembersExcludingUser.map((member) => (
-            <>
+          {chatMembersExcludingUser.map((member, index) => (
+            <div key={index}>
               <img
-                key={member._id}
                 src={member.avatar ? member.avatar : tempAvatar}
                 alt="user avatar"
                 className={classes.sideBarImg}
@@ -105,12 +104,12 @@ const ChatRoom = ({ chatRoom, index, handleActive, activeIndex }) => {
                   isOnline ? classes.onlineIcon : classes.offlineIcon
                 }`}
               ></span>
-            </>
+            </div>
           ))}
         </div>
         <div className={classes.textWrapper}>
-          {chatMembersExcludingUser.map((member) => (
-            <Typography variant="h6" key={member._id}>
+          {chatMembersExcludingUser.map((member, index) => (
+            <Typography variant="h6" key={index}>
               {member.name}
             </Typography>
           ))}

@@ -16,6 +16,7 @@ import {
   MESSAGE_SENT,
   CHANGE_USER_VIEW,
   MOBILE_MODE,
+  TOGGLE_TRANSLATION,
 } from '../reducers/userReducer';
 
 const serverURL = process.env.serverURL;
@@ -246,9 +247,13 @@ const UserProvider = (props) => {
         });
       }
     },
+    toggleTranslation: (bool) => {
+      dispatch({ type: TOGGLE_TRANSLATION, payload: bool });
+    },
     logout: async () => {
       try {
         await axios.get('/user/logout');
+        history.push('/');
         dispatch({ type: USER_LOGOUT });
       } catch (err) {
         console.log(err.message);
@@ -310,8 +315,6 @@ const UserProvider = (props) => {
     }
     return () => clearTimeout(timer);
   });
-
-  console.log('userState:', userState);
 
   return (
     <UserContext.Provider
