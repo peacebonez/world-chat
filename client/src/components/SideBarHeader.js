@@ -145,17 +145,22 @@ const SideBarHeader = () => {
         </div>
         <Typography variant="h5">{userState.user.name}</Typography>
       </div>
-      <Button className={classes.noStyleBtn} onClick={handleClick}>
-        <MoreHorizIcon className={classes.dotMenu}></MoreHorizIcon>
+      <Button
+        variant="contained"
+        color="secondary"
+        size="large"
+        onClick={userActions.logout}
+      >
+        Log Out
       </Button>
-      <Menu
+      {/* <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         keepMounted
         onClose={handleClose}
       >
         <MenuItem onClick={userActions.logout}>Logout</MenuItem>
-      </Menu>
+      </Menu> */}
       {/* Error alerts */}
       <AppAlert trigger={userState.errorMsg} />
     </div>
