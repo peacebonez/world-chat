@@ -180,13 +180,18 @@ router.get('/conversations', auth, async (req, res) => {
     if (!search) {
       const conversations = await Conversation.find({
         'members._id': { $in: userId.toString() },
-      });
+      }).sort({ 'messages.createdOn': -1 });
     } else {
       const regex = new RegExp(search, 'i');
       const conversations = await Conversation.find({
-        'members.name': { $regex: regex },
-        'members._id': user,
-      });
+        'members._id': { $in: userId.toString() },
+        'members.name': { $regex: regex}
+      }).sort({ 'messages.createdOn': -1 });
+    }
+    
+
+    if (!conversations.length) {
+      return res.status(204).json({ error: 'No conversations found' });
     }
     if (!conversations.length) return res.json([]); // empty array: no conversations.
 
@@ -492,7 +497,6 @@ router.post('/avatar', auth, upload.single('file'), async (req, res) => {
         };
 
         if (user.avatar) delete user.avatar;
-
         user.avatar = newFileUploaded;
         await user.save();
         res.status(200).json(user);
