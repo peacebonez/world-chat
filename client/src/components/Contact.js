@@ -74,7 +74,6 @@ const Contact = ({ contact }) => {
     //if no conversation exists, create a new conversation and set it as active
     if (!existingConversation) {
       const newConversation = await userActions.addConversation(members);
-      console.log('newConversation:', newConversation);
       userActions.switchConversation(newConversation);
       return socket.emit('join', newConversation._id);
     }
