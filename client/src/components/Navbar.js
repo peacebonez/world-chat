@@ -75,6 +75,8 @@ const Navbar = () => {
     }
   }, [userState.user]);
 
+  console.log('currentRoom:', currentRoom);
+
   return (
     <div className={classes.navBar}>
       <div>

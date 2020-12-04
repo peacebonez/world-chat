@@ -101,12 +101,14 @@ const ChatWindow = () => {
         };
       });
     });
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     //Not sure why the chat doesn't scroll to bottom upon load.
     gotoBottom('section-chat');
   }, []);
+
+  console.log('room:', room);
 
   return (
     <div className={classes.chatWindow}>
@@ -135,11 +137,16 @@ const ChatWindow = () => {
               );
             };
             const MessageItemTheirs = () => {
+              console.log(
+                'displayTranslation:',
+                userState.user.activeRoom.displayTranslation,
+              );
               return (
                 <section className={classes.chatUnit}>
                   <img
                     src={room.members[indexOfContact].avatar}
                     className={classes.msgAvatar}
+                    alt="contact avatar"
                   />
                   <div>
                     <Typography
@@ -148,7 +155,6 @@ const ChatWindow = () => {
                     >
                       {moment(msg.createdOn).calendar()}
                     </Typography>
-                    {/* handle displayTranslation state.  If no translations just display text */}
                     {userState.user.activeRoom.displayTranslation ? (
                       <ChatBubble
                         message={
@@ -165,13 +171,11 @@ const ChatWindow = () => {
                 </section>
               );
             };
-            {
-              return yours ? (
-                <MessageItemYours key={index} />
-              ) : (
-                <MessageItemTheirs key={index} />
-              );
-            }
+            return yours ? (
+              <MessageItemYours key={index} />
+            ) : (
+              <MessageItemTheirs key={index} />
+            );
           })}
       </div>
       <ChatInput gotoBottom={gotoBottom} />
