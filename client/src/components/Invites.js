@@ -113,7 +113,7 @@ const Invites = () => {
               })
             ) : (
               <Typography variant="body1" className={classes.empytyListHeader}>
-                No requests 😐
+                No requests <span role="img">😐</span>
               </Typography>
             )}
           </ul>
@@ -127,7 +127,7 @@ const Invites = () => {
               ))
             ) : (
               <Typography variant="body1" className={classes.empytyListHeader}>
-                No pending invitations ✅
+                No pending invitations <span role="img">✅</span>
               </Typography>
             )}
           </ul>

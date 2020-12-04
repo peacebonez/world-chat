@@ -85,9 +85,10 @@ const ChatWindow = () => {
   };
 
   useEffect(() => {
+    // works but then pushes to bottom on every translate toggle
+    gotoBottom('section-chat');
     if (userState.user.activeRoom) {
       setRoom(userState.user.activeRoom);
-      gotoBottom('section-chat');
     }
   }, [userState.user]);
 
@@ -100,6 +101,11 @@ const ChatWindow = () => {
         };
       });
     });
+  }, [socket]);
+
+  useEffect(() => {
+    //Not sure why the chat doesn't scroll to bottom upon load.
+    gotoBottom('section-chat');
   }, []);
 
   return (
@@ -115,7 +121,7 @@ const ChatWindow = () => {
 
             const MessageItemYours = () => {
               return (
-                <section key={index} className={classes.chatUnitYours}>
+                <section className={classes.chatUnitYours}>
                   <div>
                     <Typography
                       variant="subtitle2"
@@ -129,11 +135,16 @@ const ChatWindow = () => {
               );
             };
             const MessageItemTheirs = () => {
+              console.log(
+                'displayTranslation:',
+                userState.user.activeRoom.displayTranslation,
+              );
               return (
-                <section key={index} className={classes.chatUnit}>
+                <section className={classes.chatUnit}>
                   <img
                     src={room.members[indexOfContact].avatar}
                     className={classes.msgAvatar}
+                    alt="contact avatar"
                   />
                   <div>
                     <Typography
@@ -142,14 +153,27 @@ const ChatWindow = () => {
                     >
                       {moment(msg.createdOn).calendar()}
                     </Typography>
-                    <ChatBubble message={msg.text} yours={false} />
+                    {userState.user.activeRoom.displayTranslation ? (
+                      <ChatBubble
+                        message={
+                          msg.translations
+                            ? msg.translations[userState.user.primaryLanguage]
+                            : msg.text
+                        }
+                        yours={false}
+                      />
+                    ) : (
+                      <ChatBubble message={msg.text} yours={false} />
+                    )}
                   </div>
                 </section>
               );
             };
-            {
-              return yours ? <MessageItemYours /> : <MessageItemTheirs />;
-            }
+            return yours ? (
+              <MessageItemYours key={index} />
+            ) : (
+              <MessageItemTheirs key={index} />
+            );
           })}
       </div>
       <ChatInput gotoBottom={gotoBottom} />
@@ -159,7 +183,6 @@ const ChatWindow = () => {
 
 const ChatBubble = (props) => {
   const classes = useStyles();
-
   return (
     <section className={props.yours ? classes.bubbleYours : classes.bubble}>
       <Typography variant="subtitle1" className={classes.textInBubble}>

@@ -18,6 +18,9 @@ const InvitationSchema = new Schema({
   toEmail: {
     type: String,
   },
+  avatar: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
