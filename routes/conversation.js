@@ -8,7 +8,6 @@ const translateText = require('../functions/translate');
 //POST a new conversation
 router.post('/add', auth, async (req, res) => {
   const members = req.body;
-
   const memberIDs = members.map((member) => member._id);
 
   try {
@@ -132,7 +131,5 @@ router.put('/read/:id', auth, async (req, res) => {
     return res.status(500).send('Server error');
   }
 });
-
-router.delete('/delete/:id', (req, res) => {});
 
 module.exports = router;

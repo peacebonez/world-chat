@@ -47,6 +47,13 @@ const Sidebar = () => {
   const [contactsShown, setContactsShown] = useState(false);
   const [invitesShown, setInvitesShown] = useState(false);
 
+  const [searchText, setSearchText] = useState('');
+
+  //TODOS
+  //Fetch user
+  //get contacts from user
+  //get converstations from user
+  //map out both to their respective components
   const handleChatsShow = () => {
     setChatsShown(true);
     setContactsShown(false);
@@ -79,11 +86,13 @@ const Sidebar = () => {
         handleChatsShow={handleChatsShow}
         handleContactsShow={handleContactsShow}
         handleInvitesShow={handleInvitesShow}
+        // change state from this component (child to parent)
+        onSearchTextChange={setSearchText} 
       />
       <div className={classes.listContainer}>
-        {chatsShown && <ChatList />}
-        {contactsShown && <Contacts />}
-        {invitesShown && <Invites />}
+        {chatsShown && <ChatList searchText={searchText}/>}
+        {contactsShown && <Contacts searchText={searchText}/>}
+        {invitesShown && <Invites searchText={searchText}/>}
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
   chatList: {},
 }));
 
-const ChatList = () => {
+const ChatList = ({ searchText }) => {
   const { userState, userActions, socket } = useContext(UserContext);
   const classes = useStyles();
 
@@ -25,8 +25,9 @@ const ChatList = () => {
 
   //Fetch all user conversations on load
   useEffect(() => {
-    userActions.fetchConversations();
-  }, []);
+    if (!searchText) userActions.fetchConversations();
+    else userActions.fetchConversations(searchText);
+  }, [searchText]);
 
   //Load up an active chat. TODO- load chat with most recent message
   useEffect(() => {
