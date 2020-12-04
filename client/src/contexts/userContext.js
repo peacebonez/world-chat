@@ -17,6 +17,7 @@ import {
   CHANGE_USER_VIEW,
   MOBILE_MODE,
   TOGGLE_TRANSLATION,
+  SEARCH_QUERY,
 } from '../reducers/userReducer';
 
 const serverURL = process.env.serverURL;
@@ -203,9 +204,10 @@ const UserProvider = (props) => {
         payload: room,
       });
     },
-    fetchConversations: async () => {
+    fetchConversations: async (searchterm = '') => {
       try {
-        const res = await axios.get('/user/conversations');
+        const url = searchterm ? `/user/conversations?searchterm=${searchterm}` : '/user/conversations'
+        const res = await axios.get(url);
         const data = res.data;
         dispatch({ type: GET_CONVERSATIONS, payload: data });
         return data;
