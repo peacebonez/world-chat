@@ -179,7 +179,7 @@ router.get('/conversations', auth, async (req, res) => {
 
     const conversations = await Conversation.find({
       'members._id': { $in: userId.toString() },
-    });
+    }).sort({ 'messages.createdOn': -1 });
 
     if (!conversations.length) {
       return res.status(204).json({ error: 'No conversations found' });
@@ -472,7 +472,6 @@ router.post('/avatar', auth, upload.single('file'), async (req, res) => {
         };
 
         if (user.avatar) delete user.avatar;
-
         user.avatar = newFileUploaded;
         await user.save();
         res.status(200).json(user);
