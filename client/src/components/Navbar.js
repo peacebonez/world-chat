@@ -55,8 +55,6 @@ const Navbar = () => {
     if (userState.user.activeRoom) {
       const friendDisplayed = userState.user.activeRoom.members.find(
         (member) => {
-          console.log('member:', member.email);
-          console.log('userState.user.email:', userState.user.email);
           return member.email !== userState.user.email;
         },
       );
