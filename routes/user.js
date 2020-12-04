@@ -473,10 +473,10 @@ router.post('/avatar', auth, upload.single('file'), async (req, res) => {
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
       region: process.env.AWS_REGION,
     });
-
+    const urlFriendlyEmail = user.email.replace('@', '-');
     const params = {
       Bucket: process.env.AWS_BUCKET,
-      Key: user.email,
+      Key: urlFriendlyEmail,
       Body: file.buffer,
       ContentType: file.mimetype,
       ACL: 'public-read',
@@ -488,14 +488,12 @@ router.post('/avatar', auth, upload.single('file'), async (req, res) => {
       } else {
         const newFileUploaded = {
           name: file.originalname,
-          url: `${s3FileUrl}${user.email}`,
+          url: `${s3FileUrl}${params.Key}`,
         };
 
         if (user.avatar) delete user.avatar;
 
         user.avatar = newFileUploaded;
-        console.log('user.avatar:', user.avatar);
-
         await user.save();
         res.status(200).json(user);
       }

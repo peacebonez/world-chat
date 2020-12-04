@@ -26,9 +26,6 @@ const useStyles = makeStyles((theme) => ({
       zIndex: 1,
       overflow: 'hidden',
     },
-    [theme.breakpoints.only('md')]: {
-      width: '40%',
-    },
   },
   sideBarHidden: {
     transform: 'translateX(-100%)',

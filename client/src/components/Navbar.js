@@ -54,7 +54,9 @@ const Navbar = () => {
   useEffect(() => {
     if (userState.user.activeRoom) {
       const friendDisplayed = userState.user.activeRoom.members.find(
-        (member) => member.email !== userState.user.email,
+        (member) => {
+          return member.email !== userState.user.email;
+        },
       );
       setFriend(friendDisplayed);
 
@@ -73,7 +75,7 @@ const Navbar = () => {
           ) : (
             <>
               <img
-                src={(friend && friend.avatar) || tempAvatar}
+                src={friend && friend.avatar ? friend.avatar : tempAvatar}
                 alt="friend avatar"
                 onClick={handleSideBarView}
               />
