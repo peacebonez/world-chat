@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const InviteOut = ({ invite }) => {
+  console.log('invite out:', invite);
   const classes = useStyles();
   return (
     <li className={classes.inviteItem}>

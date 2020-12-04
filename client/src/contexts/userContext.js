@@ -158,7 +158,7 @@ const UserProvider = (props) => {
     },
     addConversation: async (members) => {
       try {
-        const res = axios.post('/conversation/add', members);
+        const res = await axios.post('/conversation/add', members);
         if (res.status === 409) return;
         if (res.status === 200) {
           const data = res.data;
