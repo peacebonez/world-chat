@@ -108,8 +108,6 @@ const ChatWindow = () => {
     gotoBottom('section-chat');
   }, []);
 
-  console.log('room:', room);
-
   return (
     <div className={classes.chatWindow}>
       <div className={classes.sectionChat} id="section-chat">

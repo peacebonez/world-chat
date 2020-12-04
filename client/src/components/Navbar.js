@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../contexts/userContext';
 
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import testFlag from '../assets/testflag.jpg';
 import tempAvatar from '../assets/temp-avatar.jpg';
 import { Typography, Switch } from '@material-ui/core';
 
@@ -76,8 +75,6 @@ const Navbar = () => {
       setCurrentRoom(userState.user.activeRoom);
     }
   }, [userState.user]);
-
-  console.log('currentRoom:', currentRoom);
 
   return (
     <div className={classes.navBar}>
