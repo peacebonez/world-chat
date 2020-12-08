@@ -3,6 +3,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 require('dotenv').config();
+const { join } = require('path');
 
 const mongoose = require('mongoose');
 const uuid = require('uuid');
@@ -38,7 +39,8 @@ app.use(cors());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(express.static(join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'client', 'build')));
+app.use(express.static(join(__dirname, 'client', 'build')));
+// app.use(express.static(path.join(__dirname, 'client', 'build')));
 
 //Routes
 app.use('/conversation', require('./routes/conversation'));
