@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     width: '100%',
   },
+  sideBarView: {
+    position: 'relative',
+  },
 }));
 
 const Conversation = () => {
@@ -29,6 +32,8 @@ const Conversation = () => {
       className={`${classes.conversation} ${
         userState.isMobileMode && userState.isChatView
           ? classes.conversationFullScreen
+          : userState.isMobileMode && !userState.isChatView
+          ? classes.sideBarView
           : ''
       }`}
     >

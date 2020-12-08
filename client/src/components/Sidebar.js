@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
     transition: 'transform .4s',
     [theme.breakpoints.between('xs', 'sm')]: {
-      width: '100%',
+      width: '101vw',
       zIndex: 1,
       overflow: 'hidden',
     },
@@ -87,12 +87,12 @@ const Sidebar = () => {
         handleContactsShow={handleContactsShow}
         handleInvitesShow={handleInvitesShow}
         // change state from this component (child to parent)
-        onSearchTextChange={setSearchText} 
+        onSearchTextChange={setSearchText}
       />
       <div className={classes.listContainer}>
-        {chatsShown && <ChatList searchText={searchText}/>}
-        {contactsShown && <Contacts searchText={searchText}/>}
-        {invitesShown && <Invites searchText={searchText}/>}
+        {chatsShown && <ChatList searchText={searchText} />}
+        {contactsShown && <Contacts searchText={searchText} />}
+        {invitesShown && <Invites searchText={searchText} />}
       </div>
     </div>
   );

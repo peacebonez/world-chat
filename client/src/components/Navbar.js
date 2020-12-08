@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   navBar: {
+    position: 'fixed',
     width: '100%',
     padding: '0 25px',
     height: 100,
@@ -19,6 +20,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    opacity: '.95',
+    boxShadow: '5px 2px 10px lightgrey',
     '& img': {
       width: '50px',
       height: '50px',

@@ -1,8 +1,7 @@
 import React, { useContext, useState } from 'react';
-import { TextField, Button } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import Smiley from '@material-ui/icons/InsertEmoticonOutlined';
 import PhotosIcon from '@material-ui/icons/PhotoLibraryOutlined';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { UserContext } from '../contexts/userContext';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
   chatInput: {
     width: '100%',
     textAlign: 'center',
+    opacity: '.95',
     background: theme.palette.primary.gray,
     '& input': {
       background: theme.palette.primary.gray,
@@ -50,20 +50,13 @@ const ChatInput = ({ gotoBottom }) => {
           variant="outlined"
           fullWidth
           autoFocus
-          placeholder="Type something... (Press ENTER to send)"
+          placeholder="World Chat"
           InputProps={{
             endAdornment: [<Smiley key={1} />, <PhotosIcon key={2} />],
           }}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        {/* <Button 
-          variant="outlined" 
-          color="primary"
-          onClick={sendMessage}
-        >
-          <ChevronRightIcon />
-        </Button> */}
       </form>
     </div>
   );
