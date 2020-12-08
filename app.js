@@ -1,6 +1,4 @@
-const createError = require('http-errors');
 const express = require('express');
-const { join } = require('path');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -9,12 +7,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const uuid = require('uuid');
 
-const Conversation = require('./models/Conversation');
-const User = require('./models/User');
-
 const { json, urlencoded } = express;
-
-const generateTimestamp = require('./functions/generateTimestamp');
 
 var app = express();
 const http = require('http').createServer(app);
@@ -44,7 +37,7 @@ app.use(json());
 app.use(cors());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(join(__dirname, 'public')));
+// app.use(express.static(join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'client', 'build')));
 
 //Routes
@@ -86,11 +79,6 @@ io.on('connection', (socket) => {
     }
     socket.join(room);
   });
-
-  // when the client emits 'new message', this listens and executes
-  // socket.on('newMessage', (data) => {
-  //   console.log('new message', data);
-  // });
 
   socket.on('messageToClient', (msgData) => {
     console.log('msgData:', msgData);
