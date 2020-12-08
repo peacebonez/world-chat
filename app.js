@@ -45,10 +45,16 @@ app.use(cors());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'client', 'build')));
+
 //Routes
 app.use('/conversation', require('./routes/conversation'));
 app.use('/user', require('./routes/user'));
 app.use('/invitation', require('./routes/invitation'));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+});
 
 // catch 404 and forward to error handler
 // app.use(function (req, res, next) {
