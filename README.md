@@ -2,8 +2,8 @@
 
 World Chat is a unique messenger app that allows different users to live chat and translate their messages on the fly. Language should be no barrier to internet communication!
 
-Create a new account or login with the credentials below:
-email: man@aol.com
+Create a new account or login with the credentials below:\
+email: man@aol.com\
 password: 123456
 
 ## Abstract
@@ -28,9 +28,9 @@ Fork and clone this repository
 
 ### Back-end
 
-`//in root directory`
-`npm install`
-`nodemon`
+`//in root directory`\
+`npm install`\
+`nodemon`\
 
 ### Front-end
 
@@ -66,41 +66,41 @@ Fork and clone this repository
 
 ### Dependencies
 
-google-cloud/translate
-sendgrid/mail
-aws-sdk
-bcrypt
-body-parser
-concurrently
-cookie-parser
-cors
-debug
-dotenv
-express
-express-validator
-http-errors
-jsonwebtoken
-mongoose
-morgan
-multer
-nodemon
-socket.io
-uuid
-material-ui/core
-material-ui/icons
-material-ui/lab
-material-ui/styles
-axios
-email-validator
-js-cookie
-moment
-react
-react-copy-to-clipboard
-react-debounce-input
-react-dom
-react-router-dom
-react-scripts
-socket.io-client
+-google-cloud/translate
+-sendgrid/mail
+-aws-sdk
+-bcrypt
+-body-parser
+-concurrently
+-cookie-parser
+-cors
+-debug
+-dotenv
+-express
+-express-validator
+-http-errors
+-jsonwebtoken
+-mongoose
+-morgan
+-multer
+-nodemon
+-socket.io
+-uuid
+-material-ui/core
+-material-ui/icons
+-material-ui/lab
+-material-ui/styles
+-axios
+-email-validator
+-js-cookie
+-moment
+-react
+-react-copy-to-clipboard
+-react-debounce-input
+-react-dom
+-react-router-dom
+-react-scripts
+-socket.io-client
 
 ### Acknowledgements
 
