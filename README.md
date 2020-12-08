@@ -30,12 +30,12 @@ Fork and clone this repository
 
 `//in root directory`\
 `npm install`\
-`nodemon`\
+`nodemon`
 
 ### Front-end
 
-`cd client`
-`npm install`
+`cd client`\
+`npm install`\
 `npm start`
 
 ## Media
@@ -66,41 +66,41 @@ Fork and clone this repository
 
 ### Dependencies
 
--google-cloud/translate
--sendgrid/mail
--aws-sdk
--bcrypt
--body-parser
--concurrently
--cookie-parser
--cors
--debug
--dotenv
--express
--express-validator
--http-errors
--jsonwebtoken
--mongoose
--morgan
--multer
--nodemon
--socket.io
--uuid
--material-ui/core
--material-ui/icons
--material-ui/lab
--material-ui/styles
--axios
--email-validator
--js-cookie
--moment
--react
--react-copy-to-clipboard
--react-debounce-input
--react-dom
--react-router-dom
--react-scripts
--socket.io-client
+- google-cloud/translate
+- sendgrid/mail
+- aws-sdk
+- bcrypt
+- body-parser
+- concurrently
+- cookie-parser
+- cors
+- debug
+- dotenv
+- express
+- express-validator
+- http-errors
+- jsonwebtoken
+- mongoose
+- morgan
+- multer
+- nodemon
+- socket.io
+- uuid
+- material-ui/core
+- material-ui/icons
+- material-ui/lab
+- material-ui/styles
+- axios
+- email-validator
+- js-cookie
+- moment
+- react
+- react-copy-to-clipboard
+- react-debounce-input
+- react-dom
+- react-router-dom
+- react-scripts
+- socket.io-client
 
 ### Acknowledgements
 
