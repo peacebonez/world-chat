@@ -135,10 +135,6 @@ const ChatWindow = () => {
               );
             };
             const MessageItemTheirs = () => {
-              console.log(
-                'displayTranslation:',
-                userState.user.activeRoom.displayTranslation,
-              );
               return (
                 <section className={classes.chatUnit}>
                   <img
