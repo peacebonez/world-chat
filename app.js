@@ -13,6 +13,7 @@ const { json, urlencoded } = express;
 var app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
+const PORT = process.env.PORT || 3001;
 
 //connect mongoDB database
 const connectDB = async () => {
@@ -90,8 +91,8 @@ io.on('connection', (socket) => {
   });
 });
 
-http.listen(3001, () => {
-  console.log('listening on *:3001');
+http.listen(PORT, () => {
+  console.log(`listening on *:${PORT}`);
 });
 
 module.exports = app;
