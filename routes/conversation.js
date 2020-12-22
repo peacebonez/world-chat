@@ -93,12 +93,9 @@ router.post('/message', auth, async (req, res) => {
       for (const lang of foreignLanguages) {
         translatedText = await translateText(savedMsg.text, lang);
         savedMsg.translations[lang] = translatedText;
-
-        //TODO- set dynamic keys
-        // savedMsg.set(lang, translatedText);
       }
     }
-    console.log('savedMsg:', savedMsg);
+
     conversation.messages.push(savedMsg);
     await conversation.save();
     return res.status(200).json(savedMsg);

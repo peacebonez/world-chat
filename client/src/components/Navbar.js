@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme) => ({
   },
   navBar: {
     position: 'fixed',
-    width: '100%',
     padding: '0 25px',
     height: 100,
     background: '#fff',
@@ -27,6 +26,12 @@ const useStyles = makeStyles((theme) => ({
       height: '50px',
       borderRadius: '50%',
     },
+  },
+  navMobile: {
+    width: '100%',
+  },
+  navBigScreen: {
+    width: '66%',
   },
   chatterName: {
     margin: theme.spacing(2),
@@ -80,7 +85,11 @@ const Navbar = () => {
   }, [userState.user]);
 
   return (
-    <div className={classes.navBar}>
+    <div
+      className={`${classes.navBar} ${
+        userState.isMobileMode ? classes.navMobile : classes.navBigScreen
+      }`}
+    >
       <div>
         <div className={classes.flexCenter}>
           {currentRoom && currentRoom.members.length > 2 ? (
