@@ -17,7 +17,6 @@ import {
   CHANGE_USER_VIEW,
   MOBILE_MODE,
   TOGGLE_TRANSLATION,
-  SEARCH_QUERY,
 } from '../reducers/userReducer';
 
 const serverURL = process.env.serverURL;
@@ -135,6 +134,45 @@ const UserProvider = (props) => {
         });
       }
     },
+    backgroundUpload: async (e) => {
+      e.preventDefault();
+
+      const file = e.target.files[0];
+      console.log('file:', file);
+
+      const data = new FormData();
+      if (!data) {
+        dispatch({
+          type: USER_ERROR,
+          payload: 'Error uploading image',
+        });
+        return;
+      }
+
+      data.append('file', file, file.name);
+      console.log('data:', data);
+
+      try {
+        const res = await axios.post('/user/chat-background', data);
+        console.log('res:', res);
+
+        if (res.status === 200) {
+          dispatch({ type: UPDATE_USER, payload: res.data });
+          return res.data;
+        } else {
+          dispatch({
+            type: USER_ERROR,
+            payload: 'Error uploading image',
+          });
+        }
+      } catch (err) {
+        console.log(err.message);
+        dispatch({
+          type: USER_ERROR,
+          payload: 'Error uploading image',
+        });
+      }
+    },
     fetchPendingInvites: async () => {
       try {
         const res = await axios.get('user/invitations/pending');
@@ -206,7 +244,9 @@ const UserProvider = (props) => {
     },
     fetchConversations: async (searchterm = '') => {
       try {
-        const url = searchterm ? `/user/conversations?searchterm=${searchterm}` : '/user/conversations'
+        const url = searchterm
+          ? `/user/conversations?searchterm=${searchterm}`
+          : '/user/conversations';
         const res = await axios.get(url);
         const data = res.data;
         dispatch({ type: GET_CONVERSATIONS, payload: data });

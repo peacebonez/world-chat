@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
     '& div': {
       display: 'flex',
     },
+    '&:hover': {
+      background: theme.palette.secondary.main,
+    },
   },
   sideBarImg: {
     borderRadius: '100%',

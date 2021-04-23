@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
       alignItems: 'center',
     },
+    '&:hover': {
+      background: theme.palette.secondary.main,
+    },
   },
   sideBarImgWrapper: {
     '& span': {

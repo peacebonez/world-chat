@@ -38,6 +38,13 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0,
     cursor: 'pointer',
   },
+  backgroundUpload: {
+    position: 'absolute',
+    zIndex: 4,
+    width: '100%',
+    opacity: 0,
+    cursor: 'pointer',
+  },
   sideBarImg: {
     borderRadius: '100%',
     overflow: 'hidden',
@@ -103,6 +110,11 @@ const SideBarHeader = () => {
     window.location.reload();
   };
 
+  const handleBackgroundUpload = async (e) => {
+    await userActions.backgroundUpload(e);
+    // window.location.reload();
+  };
+
   useEffect(() => {
     if (userState.user.avatar) {
       setUserAvatar(userState.user.avatar.url);
@@ -154,6 +166,13 @@ const SideBarHeader = () => {
         onClose={handleClose}
       >
         <MenuItem onClick={userActions.logout}>Logout</MenuItem>
+        <input
+          type="file"
+          accept="image/png, image/jpeg"
+          onChange={handleBackgroundUpload}
+          className={classes.backgroundUpload}
+        />
+        <MenuItem onClick={''}>Change Chat Background</MenuItem>
       </Menu>
       {/* Error alerts */}
       <AppAlert trigger={userState.errorMsg} />

@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
   },
   bubbleYours: {
     background:
-      'radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%)',
+      'linear-gradient(0deg, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%)',
     maxWidth: '18rem',
     wordWrap: 'break-word',
     borderRadius: '15px 15px 0px 15px',
@@ -77,6 +77,7 @@ const ChatWindow = () => {
   const classes = useStyles();
   const { socket, userState } = useContext(UserContext);
   const [room, setRoom] = useState(null);
+  const [chatBackground, setChatBackground] = useState(null);
 
   const gotoBottom = (id) => {
     // credit: https://stackoverflow.com/questions/11715646/scroll-automatically-to-the-bottom-of-the-page
@@ -108,8 +109,17 @@ const ChatWindow = () => {
     gotoBottom('section-chat');
   }, []);
 
+  useEffect(() => {
+    if (userState.user.chatBackground) {
+      setChatBackground(userState.user.chatBackground.url);
+    }
+  }, [userState.user]);
+
   return (
-    <div className={classes.chatWindow}>
+    <div
+      className={classes.chatWindow}
+      style={chatBackground && { backgroundImage: `url(${chatBackground})` }}
+    >
       <div className={classes.sectionChat} id="section-chat">
         {room &&
           room.messages.length > 0 &&
